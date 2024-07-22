@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/app_background"
+    tools:context=".ui.profile.SkillSelector">
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_margin="15dp"
+        android:backgroundTint="#3E3E3E"
+        app:cardCornerRadius="50dp"
+        app:cardElevation="0dp">
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="1.5dp"
+            android:backgroundTint="#181818"
+            app:cardCornerRadius="50dp"
+            app:cardElevation="0dp">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="8dp"
+                android:src="@drawable/ic_back" />
+
+        </androidx.cardview.widget.CardView>
+
+    </androidx.cardview.widget.CardView>
+
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="15dp"
+        android:fontFamily="@font/alata"
+        android:text="Select at least 5 skills that you know or you want to learn!"
+        android:textColor="@color/white"
+        android:textSize="25dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnAdd"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="15dp"
+            android:layout_marginBottom="25dp"
+            android:layout_marginTop="25dp"
+            android:background="@drawable/button_shape"
+            android:text="Add Skill"
+            android:layout_weight="1"
+            android:textAllCaps="false"
+            android:textColor="@color/app_2background"/>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnFinish"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="15dp"
+            android:layout_marginBottom="25dp"
+            android:layout_marginTop="25dp"
+            android:background="@drawable/button_shape"
+            android:text="Finish"
+            android:layout_weight="1"
+            android:textAllCaps="false"
+            android:textColor="@color/app_2background"/>
+
+    </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+</LinearLayout>

@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="true" />
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
+    <application
+        android:allowBackup="true"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:fullBackupContent="@xml/backup_rules"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.Loop"
+        tools:targetApi="31">
+        <activity
+            android:name=".ui.profile.self.badges.ExamScore"
+            android:exported="false" />
+        <activity
+            android:name=".ui.profile.self.badges.ExamPage"
+            android:exported="false" />
+        <activity
+            android:name=".ui.profile.self.badges.ExamRulesAndInfo"
+            android:exported="false" />
+        <activity
+            android:name=".ui.profile.self.badges.ManageBadges"
+            android:exported="false" />
+        <activity
+            android:name=".ui.home.loopmeeting.VideoCallScreen"
+            android:exported="true" />
+        <activity
+            android:name=".ui.home.loopmeeting.MeetingLists"
+            android:exported="false" />
+        <activity
+            android:name=".ui.profile.self.ProfileEditing"
+            android:exported="false" />
+        <activity
+            android:name=".ui.profile.followLists.FollowList"
+            android:exported="false" />
+        <activity
+            android:name=".ui.msg.Chatting"
+            android:exported="false" />
+        <activity
+            android:name=".ui.SearchTesting"
+            android:exported="false" />
+        <activity
+            android:name=".ui.profile.others.OthersProfile"
+            android:exported="false" />
+        <activity
+            android:name=".ui.post.CommentReply"
+            android:exported="false" />
+        <activity
+            android:name=".ui.profile.SkillSelector"
+            android:exported="false" />
+        <activity
+            android:name="com.yalantis.ucrop.UCropActivity"
+            android:configChanges="orientation|screenSize"
+            android:screenOrientation="fullSensor" />
+        <activity
+            android:name=".ui.post.MakePost"
+            android:exported="false" />
+        <activity
+            android:name=".ui.auth.Reg"
+            android:exported="false" />
+        <activity
+            android:name=".ui.auth.Login"
+            android:exported="false" />
+        <activity
+            android:name=".ui.auth.ChooseRegOrLog"
+            android:exported="false" />
+        <activity
+            android:name=".ui.post.ActivityPost"
+            android:exported="false" />
+        <activity
+            android:name=".ui.profile.self.Profile"
+            android:exported="false" />
+        <activity
+            android:name=".ui.home.MainHome"
+            android:exported="false" />
+        <activity
+            android:name=".ui.SplashScreen"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <meta-data
+            android:name="preloaded_fonts"
+            android:resource="@array/preloaded_fonts" />
+
+        <provider
+            android:name="androidx.startup.InitializationProvider"
+            android:authorities="${applicationId}.androidx-startup"
+            android:exported="false"
+            tools:node="merge">
+            <meta-data
+                android:name="app.rive.runtime.kotlin.RiveInitializer"
+                android:value="androidx.startup" />
+        </provider>
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_paths" />
+        </provider>
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
+    </application>
+
+</manifest>

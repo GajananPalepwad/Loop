@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "107522375062",
+    "project_id": "loop-4aeac",
+    "storage_bucket": "loop-4aeac.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:107522375062:android:99ce2e01ff9b6a6fb5b1b7",
+        "android_client_info": {
+          "package_name": "com.gn4k.loop"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDrutbweg3db2LtGtb3sztb9aSf5NQO5Jk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

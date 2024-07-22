@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="350dp"
+    android:layout_height="wrap_content"
+    android:background="@drawable/popup_shape"
+    android:backgroundTint="@color/app_background"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <EditText
+        android:id="@+id/editTextTitle"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:textColor="@color/white"
+        android:paddingHorizontal="16dp"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/button_shape_boarder"
+        android:textColorHint="#676767"
+        android:hint="Title" />
+
+    <EditText
+        android:id="@+id/editTextDescription"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/white"
+        android:textColorHint="#676767"
+        android:padding="16dp"
+        android:gravity="top"
+        android:layout_marginVertical="10dp"
+        android:background="@drawable/button_shape_boarder"
+        android:hint="Description"
+        android:inputType="textMultiLine"
+        android:lines="3" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="10dp"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/editTextDate"
+            android:layout_width="0dp"
+            android:layout_height="45dp"
+            android:hint="Select Date"
+            android:textColor="@color/white"
+            android:textColorHint="#676767"
+            android:layout_weight="1"
+            android:layout_marginEnd="15dp"
+            android:focusable="false"
+            android:clickable="true"
+            android:paddingHorizontal="16dp"
+            android:background="@drawable/button_shape_boarder" />
+
+        <EditText
+            android:id="@+id/editTextTime"
+            android:layout_width="0dp"
+            android:layout_height="45dp"
+            android:hint="Select Time"
+            android:textColor="@color/white"
+            android:textColorHint="#676767"
+            android:layout_weight="1"
+            android:focusable="false"
+            android:clickable="true"
+            android:paddingHorizontal="16dp"
+            android:background="@drawable/button_shape_boarder" />
+
+    </LinearLayout>
+
+
+
+    <Button
+        android:id="@+id/buttonCreateMeeting"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/black"
+        android:backgroundTint="@color/white"
+        android:text="Create Meeting" />
+
+</LinearLayout>

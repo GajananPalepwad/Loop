@@ -1,0 +1,95 @@
+package com.gn4k.loop.models
+
+import com.gn4k.loop.R
+import com.gn4k.loop.adapters.PostAdapter
+import com.gn4k.loop.models.response.Post
+
+class StaticVariables {
+    companion object {
+        lateinit var posts: MutableList<Post>
+        lateinit var postAdapter: PostAdapter
+        var isExplore = false
+
+        val badgeDrawables: Map<String, Int> = mapOf(
+            "Adobe XD" to R.drawable.adobe_xd,
+            "Airflow" to R.drawable.airflow,
+            "Ansible" to R.drawable.ansible,
+            "Apache" to R.drawable.apache,
+            "App Engine" to R.drawable.app_engine,
+            "AWS" to R.drawable.aws,
+            "BigQuery" to R.drawable.bigquery,
+            "C" to R.drawable.c,
+            "C#" to R.drawable.csharp,
+            "C++" to R.drawable.c__,
+            "Cassandra" to R.drawable.cassandra,
+            "Chef" to R.drawable.chef,
+            "COBOL" to R.drawable.cobol,
+            "Confluence" to R.drawable.confluence,
+            "Consul" to R.drawable.consul,
+            "CouchDB" to R.drawable.couchdb,
+            "Dart" to R.drawable.dart,
+            "Datadog" to R.drawable.datadog,
+            "Docker" to R.drawable.docker,
+            "Elastic Beanstalk" to R.drawable.elastic_beanstalk,
+            "Elasticsearch" to R.drawable.elasticsearch,
+            "Firebase" to R.drawable.firebase,
+            "Figma" to R.drawable.figma,
+            "Git" to R.drawable.git,
+            "Go" to R.drawable.go,
+            "Grafana" to R.drawable.grafana,
+            "GraphQL" to R.drawable.graphql,
+            "Groovy" to R.drawable.groovy,
+            "Haskell" to R.drawable.haskell,
+            "HTML/CSS" to R.drawable.html,
+            "InVision" to R.drawable.invision,
+            "Java" to R.drawable.java,
+            "JavaScript" to R.drawable.js,
+            "Jenkins" to R.drawable.jenkins,
+            "Jira" to R.drawable.jira,
+            "Kafka" to R.drawable.kafka,
+            "Keras" to R.drawable.keras,
+            "Kotlin" to R.drawable.kotlin,
+            "Kubernetes" to R.drawable.kubernetes,
+            "Logstash" to R.drawable.logstash,
+            "Lua" to R.drawable.lua,
+            "Matlab" to R.drawable.matlab,
+            "MongoDB" to R.drawable.mongodb,
+            "MySQL" to R.drawable.mysql,
+            "Nagios" to R.drawable.nagios,
+            "New Relic" to R.drawable.new_relic,
+            "Nginx" to R.drawable.nginx,
+            "Objective-C" to R.drawable.objective_c,
+            "Perl" to R.drawable.perl,
+            "PHP" to R.drawable.php,
+            "PostgreSQL" to R.drawable.postgresql,
+            "PowerBI" to R.drawable.powerbi,
+            "Presto" to R.drawable.presto,
+            "Prometheus" to R.drawable.prometheus,
+            "Puppet" to R.drawable.puppet,
+            "Python" to R.drawable.py,
+            "PyTorch" to R.drawable.pytorch,
+            "RabbitMQ" to R.drawable.rabbitmq,
+            "R" to R.drawable.r,
+            "Redis" to R.drawable.redis,
+            "REST" to R.drawable.rest,
+            "Ruby" to R.drawable.ruby,
+            "Rust" to R.drawable.rust,
+            "SAS" to R.drawable.sas,
+            "Scala" to R.drawable.scala,
+            "Selenium" to R.drawable.selenium,
+            "Shell" to R.drawable.shell,
+            "Sketch" to R.drawable.sketch,
+            "Spark" to R.drawable.spark,
+            "Splunk" to R.drawable.splunk,
+            "SQL" to R.drawable.sql,
+            "Swift" to R.drawable.swift,
+            "Tableau" to R.drawable.tableau,
+            "TensorFlow" to R.drawable.tensorflow,
+            "Terraform" to R.drawable.terraform,
+            "TypeScript" to R.drawable.typescript,
+            "Vault" to R.drawable.vault,
+            "VBScript" to R.drawable.vbscript
+        )
+
+    }
+}

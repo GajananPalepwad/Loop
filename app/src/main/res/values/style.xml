@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+<!--    <style name="UCropTheme" parent="Theme.AppCompat.Light.NoActionBar">-->
+<!--        <item name=""-->
+<!--    </style>-->
+
+
+    <style name="DialogAnimations"/>
+    <style name="DialogAnimations.SmileWindow">
+        <item name="android:windowEnterAnimation">@anim/slide_in_bottom</item>
+        <item name="android:windowExitAnimation">@anim/slide_out_top</item>
+    </style>
+
+
+    <!-- Define a style for the menu item text -->
+    <style name="MenuItemTextStyle">
+        <item name="android:textColor">#FFFFFF</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:padding">8dp</item>
+    </style>
+
+    <!-- Define a style for the PopupMenu -->
+    <style name="CustomPopupMenu" parent="Widget.AppCompat.PopupMenu.Overflow">
+        <item name="android:popupBackground">@drawable/popup_shape</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/app_color</item>
+        <item name="colorPrimaryDark">@color/app_color</item>
+        <item name="colorAccent">@color/app_background</item>
+    </style>
+</resources>

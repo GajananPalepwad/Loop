@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@color/app_2background"
+    android:padding="16dp">
+
+    <TextView
+        android:id="@+id/questionText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:padding="10dp"
+        android:backgroundTint="@color/app_background"
+        android:background="@drawable/button_shape"
+        android:textColor="@color/white"
+        android:textStyle="bold"/>
+
+    <EditText
+        android:id="@+id/answerText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="14sp"
+        android:textColor="@color/white"
+        android:layout_marginTop="8dp"
+        android:textColorHint="#7A7A7A"
+        android:hint="Type your answer here"
+        android:inputType="text"/>
+</LinearLayout>

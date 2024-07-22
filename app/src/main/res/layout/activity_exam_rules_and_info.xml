@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/app_background">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <!-- Header Section -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="15dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+            
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Rules &amp; Regulations"
+                android:textColor="#FFFFFF"
+                android:textSize="25sp"
+                android:fontFamily="@font/alata"
+                android:textStyle="bold"
+                android:layout_gravity="center_vertical" />
+
+        </LinearLayout>
+
+        <!-- Content Section -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="15dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="15dp"
+                android:text="1. The test will consist of 10 subjective questions."
+                android:textColor="#FFFFFF"
+                android:textSize="16sp"
+                android:fontFamily="@font/alata" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="15dp"
+                android:text="2. You must achieve at least 85% to earn a badge."
+                android:textColor="#FFFFFF"
+                android:textSize="16sp"
+                android:fontFamily="@font/alata" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="15dp"
+                android:text="3. If you close the app during the test, the test will restart with new questions."
+                android:textColor="#FFFFFF"
+                android:textSize="16sp"
+                android:fontFamily="@font/alata" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="15dp"
+                android:text="4. Taking screenshots will result in the test restarting."
+                android:textColor="#FFFFFF"
+                android:textSize="16sp"
+                android:fontFamily="@font/alata" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="15dp"
+                android:text="5. The test will be monitored via video selfie to ensure activity."
+                android:textColor="#FFFFFF"
+                android:textSize="16sp"
+                android:fontFamily="@font/alata" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="15dp"
+                android:text="6. The total test duration is 30 minutes."
+                android:textColor="#FFFFFF"
+                android:textSize="16sp"
+                android:fontFamily="@font/alata" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="15dp"
+                android:text="7. No external help or resources are allowed during the test."
+                android:textColor="#FFFFFF"
+                android:textSize="16sp"
+                android:fontFamily="@font/alata" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="15dp"
+                android:text="8. You can attempt the test only once per day."
+                android:textColor="#FFFFFF"
+                android:textSize="16sp"
+                android:fontFamily="@font/alata" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="15dp"
+                android:text="9. Ensure a stable internet connection for the video selfie monitoring."
+                android:textColor="#FFFFFF"
+                android:textSize="16sp"
+                android:fontFamily="@font/alata" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="10. Any form of cheating or dishonesty will result in disqualification."
+                android:textColor="#FFFFFF"
+                android:textSize="16sp"
+                android:fontFamily="@font/alata" />
+            
+            <CheckBox
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:text="I agree to the terms and conditions"
+                android:textColor="@color/app_color"/>
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btnStart"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="52dp"
+                android:background="@drawable/button_shape"
+                android:text="Start"
+                android:textAllCaps="false"
+                android:textColor="@color/app_2background" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>

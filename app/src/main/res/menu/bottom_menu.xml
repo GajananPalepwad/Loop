@@ -1,0 +1,19 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/nav_home"
+        android:title="Home" />
+    <item
+        android:id="@+id/nav_circle"
+        android:title="Circle" />
+    <item
+        android:id="@+id/nav_play"
+        android:icon="@drawable/ic_play"
+        android:title="Play"
+        android:enabled="false" />
+    <item
+        android:id="@+id/nav_profile"
+        android:title="Profile" />
+    <item
+        android:id="@+id/nav_grid"
+        android:title="Grid" />
+</menu>

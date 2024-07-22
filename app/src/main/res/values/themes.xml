@@ -1,0 +1,26 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Base.Theme.Loop" parent="Theme.Material3.Light.NoActionBar">
+        <!-- Customize your light theme here. -->
+         <item name="colorPrimary">@color/app_color</item>
+        <item name="android:statusBarColor">#0F1112</item>
+        <item name="bottomSheetDialogTheme">@style/AppBottomSheetDialogTheme</item>
+
+    </style>
+
+    <style name="AppBottomSheetDialogTheme"
+        parent="Theme.Design.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/AppModalStyle</item>
+
+    </style>
+
+    <style name="AppModalStyle"
+        parent="Widget.Design.BottomSheet.Modal">
+        <item name="android:background">@drawable/popup_shape</item>
+    </style>
+
+    <style name="Theme.Loop" parent="Base.Theme.Loop" />
+    <style name="fab_3_rounded">
+        <item name="cornerSize">50dp</item>
+    </style>
+</resources>
