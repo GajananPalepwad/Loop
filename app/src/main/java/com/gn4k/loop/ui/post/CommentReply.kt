@@ -9,6 +9,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.gn4k.loop.R
@@ -17,6 +18,7 @@ import com.gn4k.loop.api.RetrofitClient
 import com.gn4k.loop.databinding.ActivityCommentReplyBinding
 import com.gn4k.loop.models.StaticVariables
 import com.gn4k.loop.models.request.LikeDislikeCommentRequest
+import com.gn4k.loop.models.request.Question
 import com.gn4k.loop.models.request.ReplyComment
 import com.gn4k.loop.models.response.Reply
 import com.gn4k.loop.models.response.ReplyListResponse
@@ -25,6 +27,8 @@ import com.gn4k.loop.ui.home.MainHome
 import com.gn4k.loop.ui.profile.others.OthersProfile
 import com.gn4k.loop.ui.profile.self.Profile
 import com.gn4k.loop.ui.profile.self.ProfilePost
+import com.google.ai.client.generativeai.GenerativeModel
+import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -69,11 +73,11 @@ class CommentReply : AppCompatActivity() {
 
         binding.header.setOnClickListener {
             if (authorId != null) {
-                if(authorId.toInt()== MainHome.USER_ID.toInt()){
+                if (authorId.toInt() == MainHome.USER_ID.toInt()) {
                     val intent = Intent(this, Profile::class.java)
                     intent.putExtra("userId", authorId)
                     startActivity(intent)
-                }else {
+                } else {
                     val intent = Intent(this, OthersProfile::class.java)
                     intent.putExtra("userId", authorId)
                     startActivity(intent)
@@ -92,7 +96,10 @@ class CommentReply : AppCompatActivity() {
 
         binding.btnReply.setOnClickListener {
             if (binding.edReply.text.isNotEmpty()) {
-                doReply(commentId, binding.edReply.text.toString(), position)
+                lifecycleScope.launch {
+                    geminiCheckReply(commentId, binding.edReply.text.toString(), position)
+                }
+                binding.edReply.setText("")
             }
         }
 
@@ -102,6 +109,32 @@ class CommentReply : AppCompatActivity() {
 
         binding.btnFocus.setOnClickListener {
             openKeyboard(this, binding.edReply)
+        }
+
+    }
+
+    private suspend fun geminiCheckReply(commentId: Int, reply: String, position: Int) {
+        val generativeModel = GenerativeModel(
+            // The Gemini 1.5 models are versatile and work with both text-only and multimodal prompts
+            modelName = getString(R.string.gemini_model),
+            // Access your API key as a Build Configuration variable (see "Set up your API key" above)
+            apiKey = getString(R.string.gemini_key)
+        )
+
+        try {
+            val response = generativeModel.generateContent(
+                "Does the following text contain only appropriate content, free of misleading information, bad words, vulgarity, hate speech, or any other inappropriate content? Respond with only \"true\" if it is appropriate and \"false\" if it is not.\n" +
+                        "\n" +
+                        "\"$reply\"\n"
+            )
+
+            if (response.text.toString().lowercase().contains("true")) {
+                doReply(commentId, reply, position)
+            } else {
+                Toast.makeText(baseContext, "Inappropriate Content", Toast.LENGTH_SHORT).show()
+            }
+        }catch (e: Exception) {
+            Toast.makeText(baseContext, "Inappropriate Content", Toast.LENGTH_SHORT).show()
         }
 
     }
@@ -206,7 +239,7 @@ class CommentReply : AppCompatActivity() {
                         binding.edReply.setText("")
                         fetchReplyList(commentId)
 
-                        if(!StaticVariables.isExplore){
+                        if (!StaticVariables.isExplore) {
                             StaticVariables.postAdapter.notifyItemChanged(position)
                         }
                     } else {
@@ -243,7 +276,8 @@ class CommentReply : AppCompatActivity() {
             }
         }
     }
-    companion object{
+
+    companion object {
         fun openKeyboard(context: Context, editText: EditText) {
             editText.requestFocus()
             val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager

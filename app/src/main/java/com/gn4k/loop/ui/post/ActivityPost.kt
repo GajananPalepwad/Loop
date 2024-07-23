@@ -10,6 +10,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.gn4k.loop.adapters.CommentsAdapter
@@ -26,7 +27,9 @@ import com.gn4k.loop.ui.home.MainHome
 import com.gn4k.loop.ui.profile.others.OthersProfile
 import com.gn4k.loop.ui.profile.self.Profile
 import com.gn4k.loop.ui.profile.self.ProfilePost
+import com.google.ai.client.generativeai.GenerativeModel
 import com.overflowarchives.linkpreview.ViewListener
+import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -98,7 +101,7 @@ class ActivityPost : AppCompatActivity() {
         binding.timeAgo.text = postTime
         binding.tvContext.text = postContext
 
-        if (isLiked == true) {
+        if (isLiked) {
             binding.btnLike.setImageResource(R.drawable.ic_red_heart)
         } else {
             binding.btnLike.setImageResource(R.drawable.ic_heart)
@@ -125,16 +128,21 @@ class ActivityPost : AppCompatActivity() {
         binding.btnLike.setOnClickListener {
             if (isLiked) {
                 binding.btnLike.setImageResource(R.drawable.ic_heart)
-                doUnlike(postId, false, position)
+                doUnlike(postId, true, position)
+                isLiked = false
             } else {
                 binding.btnLike.setImageResource(R.drawable.ic_red_heart)
-                doLike(postId, true, position)
+                doLike(postId, false, position)
+                isLiked = true
             }
         }
 
         binding.btnComment.setOnClickListener {
             if(binding.edComment.text.isNotEmpty()){
-                doComment(postId, binding.edComment.text.toString(), position)
+                lifecycleScope.launch {
+                    geminiCheckComment(postId, binding.edComment.text.toString(), position)
+                    binding.edComment.setText("")
+                }
             }
         }
 
@@ -142,6 +150,32 @@ class ActivityPost : AppCompatActivity() {
             openKeyboard(this, binding.edComment)
         }
 
+
+    }
+
+    private suspend fun geminiCheckComment(postId: Int, comment: String, position: Int) {
+        val generativeModel = GenerativeModel(
+            // The Gemini 1.5 models are versatile and work with both text-only and multimodal prompts
+            modelName = getString(R.string.gemini_model),
+            // Access your API key as a Build Configuration variable (see "Set up your API key" above)
+            apiKey = getString(R.string.gemini_key)
+        )
+
+        try {
+            val response = generativeModel.generateContent(
+                "Does the following text contain only appropriate content, free of misleading information, bad words, vulgarity, hate speech, or any other inappropriate content? Respond with only \"true\" if it is appropriate and \"false\" if it is not.\n" +
+                        "\n" +
+                        "\"$comment\"\n"
+            )
+
+            if (response.text.toString().lowercase().contains("true")) {
+                doComment(postId, comment, position)
+            } else {
+                Toast.makeText(baseContext, "Inappropriate Content", Toast.LENGTH_SHORT).show()
+            }
+        }catch (e: Exception) {
+            Toast.makeText(baseContext, "Inappropriate Content", Toast.LENGTH_SHORT).show()
+        }
 
     }
 
@@ -222,18 +256,11 @@ class ActivityPost : AppCompatActivity() {
                     val userResponse = response.body()
                     val post = StaticVariables.posts[position]
 
-                    if (isLike) {
                         post.isLiked = true
                         post.likeCount += 1
                         likeCount++
                         binding.likes.text = likeCount.toString()
 
-                    } else {
-                        post.isLiked = false
-                        likeCount--
-                        binding.likes.text = likeCount.toString()
-                        post.likeCount -= 1
-                    }
 
                     if(!StaticVariables.isExplore){
                         StaticVariables.postAdapter.notifyItemChanged(position)
@@ -263,17 +290,11 @@ class ActivityPost : AppCompatActivity() {
                     val userResponse = response.body()
                     val post = StaticVariables.posts[position]
 
-                    if (isLike) {
-                        post.isLiked = true
-                        post.likeCount += 1
-                        likeCount++
-                        binding.likes.text = likeCount.toString()
-                    } else {
                         post.isLiked = false
                         post.likeCount -= 1
                         likeCount--
                         binding.likes.text = likeCount.toString()
-                    }
+
 
                     if(!StaticVariables.isExplore){
                         StaticVariables.postAdapter.notifyItemChanged(position)

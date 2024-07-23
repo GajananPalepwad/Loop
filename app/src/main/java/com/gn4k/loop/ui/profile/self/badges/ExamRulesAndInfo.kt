@@ -8,17 +8,22 @@ import androidx.lifecycle.lifecycleScope
 import com.gn4k.loop.R
 import com.gn4k.loop.databinding.ActivityExamRulesAndInfoBinding
 import com.gn4k.loop.models.request.Question
+import com.gn4k.loop.ui.animation.CustomLoading
 import com.google.ai.client.generativeai.GenerativeModel
 import kotlinx.coroutines.launch
 
 class ExamRulesAndInfo : AppCompatActivity() {
 
     private lateinit var binding: ActivityExamRulesAndInfoBinding
+    lateinit var customLoading: CustomLoading
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityExamRulesAndInfoBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        customLoading = CustomLoading(this)
+        customLoading.startLoading()
 
         val badge = intent.getStringExtra("badge")
 
@@ -27,9 +32,14 @@ class ExamRulesAndInfo : AppCompatActivity() {
         }
 
         binding.btnStart.setOnClickListener {
-            val intent = Intent(this, ExamPage::class.java)
-            intent.putExtra("badge", badge)
-            startActivity(intent)
+
+            if(binding.chechBox.isChecked) {
+                val intent = Intent(this, ExamPage::class.java)
+                intent.putExtra("badge", badge)
+                startActivity(intent)
+            }else{
+
+            }
         }
 
     }
@@ -54,6 +64,7 @@ class ExamRulesAndInfo : AppCompatActivity() {
             .filter { it.endsWith("?") }
             .map { Question(question = it) }
         Toast.makeText(baseContext, "Done", Toast.LENGTH_SHORT).show()
+        customLoading.stopLoading()
         return questions.toMutableList()
     }
 
