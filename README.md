@@ -1,6 +1,3 @@
-
----
-
 <p align="center">
 <img alt="" src="docs/graphics/logos/banner_readme.png"/>
 </p>
@@ -102,5 +99,3 @@ License
 -------
 * [GPL-3.0 License](https://github.com/yourusername/yourproject/blob/main/LICENSE)
 * [Additional Licenses](https://github.com/yourusername/yourproject/blob/main/ADDITIONAL_LICENSES)
-
----
