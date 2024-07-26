@@ -145,7 +145,6 @@ class Login : AppCompatActivity() {
 
                     binding.loginCharacter.controller.fireState(stateMachineName, "success");
 
-
                     val userResponse = response.body()
                     Log.d("Reg", "User login successfully: ${userResponse?.message}")
                     Toast.makeText(this@Login, "User login successfully", Toast.LENGTH_SHORT).show()

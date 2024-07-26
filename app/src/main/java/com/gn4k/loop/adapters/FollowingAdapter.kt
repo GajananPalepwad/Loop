@@ -13,6 +13,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.widget.AppCompatButton
 import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.gn4k.loop.R
@@ -48,7 +49,7 @@ class FollowingAdapter(
     inner class FollowingViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val photoImageView: ImageView = itemView.findViewById(R.id.photoImageView)
         private val usernameTextView: TextView = itemView.findViewById(R.id.usernameTextView)
-        private val badgesTextView: TextView = itemView.findViewById(R.id.badges)
+        private val badges: RecyclerView = itemView.findViewById(R.id.badges)
         private val btnUnfollow: AppCompatButton = itemView.findViewById(R.id.btnUnfollow)
         private val item: LinearLayout = itemView.findViewById(R.id.item)
 
@@ -57,11 +58,11 @@ class FollowingAdapter(
 
         fun bind(following: Following) {
             usernameTextView.text = following.name
-            badgesTextView.text = if (following.badges.isNotEmpty()) {
-                following.badges.joinToString(", ")
-            } else {
-                "No Badge Earned"
-            }
+
+            val badgeAdapter = following.badges?.let { ProfileBadgeAdapter(it, context) }
+            val layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+            badges.layoutManager = layoutManager
+            badges.adapter = badgeAdapter
 
             // Load profile image using Glide
             Glide.with(context)

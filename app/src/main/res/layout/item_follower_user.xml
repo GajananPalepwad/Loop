@@ -43,17 +43,13 @@
             android:textSize="16sp"
             android:textStyle="bold" />
 
-        <TextView
+        <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/badges"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:fontFamily="@font/alata"
-            android:gravity="center_vertical"
-            android:text="No Badge Earned"
-            android:textColor="#9E9E9E"
-            android:textSize="14sp"
-            android:textStyle="bold" />
+            android:layout_marginTop="3dp"
+            android:fontFamily="@font/alata"/>
 
     </LinearLayout>
 

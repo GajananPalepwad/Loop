@@ -2,6 +2,7 @@ package com.gn4k.loop.ui.profile.self
 
 import ApiService
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
@@ -30,6 +31,7 @@ import com.gn4k.loop.ui.home.loopmeeting.MeetingLists
 import com.gn4k.loop.ui.post.MakePost
 import com.gn4k.loop.ui.profile.followLists.FollowList
 import com.gn4k.loop.ui.profile.self.badges.ManageBadges
+import com.gn4k.loop.ui.projects.MakeProject
 import com.google.android.material.navigation.NavigationView
 import com.yalantis.ucrop.UCrop
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -90,13 +92,19 @@ class Profile : AppCompatActivity(), NavigationView.OnNavigationItemSelectedList
         super.onCreate(savedInstanceState)
         binding = ActivityProfileBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        var intentMake = Intent(this, MakePost::class.java)
 
         // Set up DrawerLayout and NavigationView
         drawerLayout = binding.drawerLayout
         navView = binding.navView
 
 
-        toggle = ActionBarDrawerToggle(this, drawerLayout, R.string.navigation_drawer_open, R.string.navigation_drawer_close)
+        toggle = ActionBarDrawerToggle(
+            this,
+            drawerLayout,
+            R.string.navigation_drawer_open,
+            R.string.navigation_drawer_close
+        )
         drawerLayout.addDrawerListener(toggle)
         toggle.syncState()
 
@@ -143,12 +151,14 @@ class Profile : AppCompatActivity(), NavigationView.OnNavigationItemSelectedList
         }
 
         binding.btnPost.setOnClickListener {
+            intentMake = Intent(this, MakePost::class.java)
             binding.btnPost.setTextColor(getColor(R.color.app_color))
             binding.btnProjects.setTextColor(getColor(R.color.white))
             setFragment(ProfilePost())
         }
 
         binding.btnProjects.setOnClickListener {
+            intentMake = Intent(this, MakeProject::class.java)
             binding.btnProjects.setTextColor(getColor(R.color.app_color))
             binding.btnPost.setTextColor(getColor(R.color.white))
             setFragment(ProfileProjects())
@@ -171,8 +181,7 @@ class Profile : AppCompatActivity(), NavigationView.OnNavigationItemSelectedList
         }
 
         binding.btnMakePost.setOnClickListener {
-            val intent = Intent(this, MakePost::class.java)
-            startActivity(intent)
+            startActivity(intentMake)
         }
 
         binding.badges.setOnClickListener {
@@ -209,7 +218,8 @@ class Profile : AppCompatActivity(), NavigationView.OnNavigationItemSelectedList
     }
 
     private fun pickImageFromGallery() {
-        val pickPhotoIntent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+        val pickPhotoIntent =
+            Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
         selectImageLauncher.launch(pickPhotoIntent)
     }
 
@@ -248,16 +258,22 @@ class Profile : AppCompatActivity(), NavigationView.OnNavigationItemSelectedList
         apiService?.uploadProfilePhoto(userIdPart, body)?.enqueue(object : Callback<UserResponse> {
             override fun onResponse(call: Call<UserResponse>, response: Response<UserResponse>) {
                 if (response.isSuccessful) {
-                    Toast.makeText(baseContext, "Profile photo uploaded successfully", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        baseContext,
+                        "Profile photo uploaded successfully",
+                        Toast.LENGTH_SHORT
+                    ).show()
                     startActivity(Intent(baseContext, SplashScreen::class.java))
                     finish()
                 } else {
-                    Toast.makeText(baseContext, "Profile photo upload failed", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(baseContext, "Profile photo upload failed", Toast.LENGTH_SHORT)
+                        .show()
                 }
             }
 
             override fun onFailure(call: Call<UserResponse>, t: Throwable) {
-                Toast.makeText(baseContext, "Network Error: ${t.message}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(baseContext, "Network Error: ${t.message}", Toast.LENGTH_SHORT)
+                    .show()
             }
         })
     }
@@ -302,14 +318,18 @@ class Profile : AppCompatActivity(), NavigationView.OnNavigationItemSelectedList
             R.id.nav_loop_meet -> {
                 startActivity(Intent(this, MeetingLists::class.java))
             }
+
             R.id.nav_settings -> {
                 startActivity(Intent(this, Settings::class.java))
             }
-            R.id.nav_profile -> {
-                startActivity(Intent(this, Profile::class.java))
-            }
+
             R.id.nav_logout -> {
-                // Implement logout logic here
+                val sharedPref = getSharedPreferences("user_data", Context.MODE_PRIVATE)
+                val editor = sharedPref.edit()
+                editor.putString("user_id", "-1")
+                editor.apply()
+                startActivity(Intent(this, SplashScreen::class.java))
+                finish()
             }
         }
         drawerLayout.closeDrawer(navView)

@@ -84,7 +84,7 @@ class SplashScreen : AppCompatActivity() {
                     }
 
 
-                    if (MainHome.USER_ID.equals(-1) || MainHome.USER_ID.isEmpty()) {
+                    if (MainHome.USER_ID == "-1" || MainHome.USER_ID.isEmpty()) {
                         val intent: Intent = Intent(baseContext, ChooseRegOrLog::class.java)
                         startActivity(intent)
                         finish()

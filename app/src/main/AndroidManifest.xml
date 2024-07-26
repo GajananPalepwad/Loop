@@ -26,6 +26,9 @@
         android:theme="@style/Theme.Loop"
         tools:targetApi="31">
         <activity
+            android:name=".ui.projects.ProjectRequestList"
+            android:exported="false" />
+        <activity
             android:name=".ui.profile.self.Settings"
             android:exported="false" />
         <activity

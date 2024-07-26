@@ -27,7 +27,7 @@
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_marginHorizontal="10dp"
+        android:layout_marginStart="10dp"
         android:layout_weight="1"
         android:orientation="vertical">
 
@@ -36,7 +36,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:maxLines="1"
             android:fontFamily="@font/alata"
             android:gravity="center_vertical"
             android:text="Angela Smith"
@@ -44,24 +43,27 @@
             android:textSize="16sp"
             android:textStyle="bold" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/badges"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_marginTop="3dp"
-            android:fontFamily="@font/alata"/>
-
     </LinearLayout>
 
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/btnUnfollow"
+        android:id="@+id/btnAccept"
         android:layout_width="wrap_content"
-        android:layout_height="35dp"
+        android:layout_height="match_parent"
+        android:text="Accept"
         android:textAllCaps="false"
-        android:layout_gravity="center_vertical"
+        android:backgroundTint="@color/green"
+        android:textColor="@color/white"
+        android:background="@drawable/button_shape"/>
+
+    <ImageButton
+        android:id="@+id/btnReject"
+        android:layout_width="50dp"
+        android:layout_height="match_parent"
+        android:src="@drawable/ic_cross"
+        android:backgroundTint="@color/red"
+        android:layout_marginHorizontal="10dp"
         android:background="@drawable/button_shape"
-        android:backgroundTint="@color/white"
-        android:text="Unfollow"/>
+        app:tint="@color/white" />
+
 
 </LinearLayout>

@@ -1,4 +1,5 @@
 import com.gn4k.loop.models.request.AddBadgeRequest
+import com.gn4k.loop.models.request.AddProjectRequest
 import com.gn4k.loop.models.request.CreateMeetRequest
 import com.gn4k.loop.models.response.Post
 import com.gn4k.loop.models.request.CreatePostRequestForLinkNCode
@@ -171,4 +172,9 @@ interface ApiService {
     @POST("project_join_request.php")
     fun sendProjectJoinRequest(@Body request: JoinRequest): Call<CreateMeetingResponse>
 
+    @POST("add_project.php")
+    fun addProject(@Body request: AddProjectRequest): Call<CreateMeetingResponse>
+
+    @POST("accept_reject_project_request.php")
+    fun acceptRejectProjectRequest(@Body request: JoinRequest): Call<CreateMeetingResponse>
 }
