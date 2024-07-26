@@ -60,7 +60,7 @@ class MakeProject : AppCompatActivity() {
 
         binding.spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
-                binding.edStatus.setText(statusOptions[position])
+                 binding.edStatus.setText(statusOptions[position])
             }
 
             override fun onNothingSelected(parent: AdapterView<*>) {

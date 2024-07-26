@@ -23,4 +23,10 @@
     <style name="fab_3_rounded">
         <item name="cornerSize">50dp</item>
     </style>
+
+        <style name="CustomNavigationViewItemText" parent="TextAppearance.AppCompat.Body1">
+            <item name="android:fontFamily">@font/alata</item>
+            <item name="android:textSize">16sp</item>
+            <!-- Add other text appearance attributes as needed -->
+        </style>
 </resources>

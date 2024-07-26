@@ -26,6 +26,9 @@
         android:theme="@style/Theme.Loop"
         tools:targetApi="31">
         <activity
+            android:name=".ui.profile.self.Settings"
+            android:exported="false" />
+        <activity
             android:name=".ui.projects.MakeProject"
             android:exported="false" />
         <activity
@@ -94,17 +97,17 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
 
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-<!--            <intent-filter>-->
-<!--                <action android:name="android.intent.action.VIEW" />-->
-<!--                <category android:name="android.intent.category.BROWSABLE" />-->
-<!--                <category android:name="android.intent.category.DEFAULT"/>-->
-<!--                <data android:scheme="http"/>-->
-<!--                <data android:scheme="https"/>-->
-<!--                <data android:host="loop.io"/>-->
-<!--            </intent-filter>-->
+            <!-- <intent-filter> -->
+            <!-- <action android:name="android.intent.action.VIEW" /> -->
+            <!-- <category android:name="android.intent.category.BROWSABLE" /> -->
+            <!-- <category android:name="android.intent.category.DEFAULT"/> -->
+            <!-- <data android:scheme="http"/> -->
+            <!-- <data android:scheme="https"/> -->
+            <!-- <data android:host="loop.io"/> -->
+            <!-- </intent-filter> -->
         </activity>
 
         <meta-data

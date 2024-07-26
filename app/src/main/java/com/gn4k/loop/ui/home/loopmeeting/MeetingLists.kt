@@ -40,7 +40,7 @@ class MeetingLists : AppCompatActivity() {
     private var transaction = supportFragmentManager.beginTransaction()
     lateinit var binding: ActivityMeetingListsBinding
 
-    private var sampleToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcGlrZXkiOiIxNjU0OTU4OC1jMzBiLTQwMTktODg4MS1jNzI0ODZmNzUzZmMiLCJwZXJtaXNzaW9ucyI6WyJhbGxvd19qb2luIl0sImlhdCI6MTcyMTQ3NDQxMiwiZXhwIjoxODc5MjYyNDEyfQ.GdRnQxmYVvEiFKRVwhT_V-43_ECp3_HMJhak__Q9lTQ"
+    private var sampleToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcGlrZXkiOiIxNjU0OTU4OC1jMzBiLTQwMTktODg4MS1jNzI0ODZmNzUzZmMiLCJwZXJtaXNzaW9ucyI6WyJhbGxvd19qb2luIl0sImlhdCI6MTcyMTk5MjI0NiwiZXhwIjoxODc5NzgwMjQ2fQ.LJbbgQ22NfM-jFl3aPMUyC9rvciUmPj90hRx7COtu_Y"
 
     private var selectedDate: String? = null
     private var selectedTime: String? = null

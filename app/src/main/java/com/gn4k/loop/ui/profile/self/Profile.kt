@@ -7,12 +7,15 @@ import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
+import android.view.MenuItem
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.FileProvider
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
@@ -23,9 +26,11 @@ import com.gn4k.loop.databinding.ActivityProfileBinding
 import com.gn4k.loop.models.response.UserResponse
 import com.gn4k.loop.ui.SplashScreen
 import com.gn4k.loop.ui.home.MainHome
+import com.gn4k.loop.ui.home.loopmeeting.MeetingLists
 import com.gn4k.loop.ui.post.MakePost
 import com.gn4k.loop.ui.profile.followLists.FollowList
 import com.gn4k.loop.ui.profile.self.badges.ManageBadges
+import com.google.android.material.navigation.NavigationView
 import com.yalantis.ucrop.UCrop
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
@@ -35,7 +40,7 @@ import retrofit2.Callback
 import retrofit2.Response
 import java.io.File
 
-class Profile : AppCompatActivity() {
+class Profile : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
     lateinit var binding: ActivityProfileBinding
 
@@ -44,6 +49,10 @@ class Profile : AppCompatActivity() {
 
     private var imageUri: Uri? = null
     private var croppedImageUri: Uri? = null
+
+    private lateinit var drawerLayout: DrawerLayout
+    private lateinit var navView: NavigationView
+    private lateinit var toggle: ActionBarDrawerToggle
 
     private val selectImageLauncher: ActivityResultLauncher<Intent> =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
@@ -82,10 +91,23 @@ class Profile : AppCompatActivity() {
         binding = ActivityProfileBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        // Set up DrawerLayout and NavigationView
+        drawerLayout = binding.drawerLayout
+        navView = binding.navView
+
+
+        toggle = ActionBarDrawerToggle(this, drawerLayout, R.string.navigation_drawer_open, R.string.navigation_drawer_close)
+        drawerLayout.addDrawerListener(toggle)
+        toggle.syncState()
+
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
+        navView.setNavigationItemSelectedListener(this)
+
         binding.tvName.text = MainHome.USER_NAME
         Glide
             .with(baseContext)
-            .load(getString(R.string.base_url)+MainHome.USER_PHOTO_URL)
+            .load(getString(R.string.base_url) + MainHome.USER_PHOTO_URL)
             .centerCrop()
             .placeholder(R.drawable.ic_profile)
             .into(binding.imgProfile)
@@ -101,7 +123,6 @@ class Profile : AppCompatActivity() {
         binding.badges.layoutManager = layoutManager
         binding.badges.adapter = badgeAdapter
 
-
         binding.btnEditProfile.setOnClickListener {
             val intent = Intent(this, ProfileEditing::class.java)
             startActivity(intent)
@@ -115,6 +136,10 @@ class Profile : AppCompatActivity() {
 
         binding.addProfile.setOnClickListener {
             pickImageFromGallery()
+        }
+
+        binding.btnOptions.setOnClickListener {
+            drawerLayout.openDrawer(navView)
         }
 
         binding.btnPost.setOnClickListener {
@@ -227,7 +252,7 @@ class Profile : AppCompatActivity() {
                     startActivity(Intent(baseContext, SplashScreen::class.java))
                     finish()
                 } else {
-                    Toast.makeText(baseContext, "Failed to upload profile photo", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(baseContext, "Profile photo upload failed", Toast.LENGTH_SHORT).show()
                 }
             }
 
@@ -249,8 +274,46 @@ class Profile : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        super.onBackPressed()
+        if (drawerLayout.isDrawerOpen(navView)) {
+            drawerLayout.closeDrawer(navView)
+        } else {
+            super.onBackPressed()
+        }
         finish()
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return if (toggle.onOptionsItemSelected(item)) {
+            true
+        } else super.onOptionsItemSelected(item)
+    }
+
+    override fun onNavigationItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.nav_badges_manager -> {
+                startActivity(Intent(this, ManageBadges::class.java))
+            }
+//            R.id.nav_recently_commented -> {
+//                startActivity(Intent(this, RecentlyCommented::class.java))
+//            }
+//            R.id.nav_recently_liked -> {
+//                startActivity(Intent(this, RecentlyLiked::class.java))
+//            }
+            R.id.nav_loop_meet -> {
+                startActivity(Intent(this, MeetingLists::class.java))
+            }
+            R.id.nav_settings -> {
+                startActivity(Intent(this, Settings::class.java))
+            }
+            R.id.nav_profile -> {
+                startActivity(Intent(this, Profile::class.java))
+            }
+            R.id.nav_logout -> {
+                // Implement logout logic here
+            }
+        }
+        drawerLayout.closeDrawer(navView)
+        return true
     }
 
     private fun setFragment(fragment: Fragment) {
