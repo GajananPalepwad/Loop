@@ -4,9 +4,11 @@ package com.gn4k.loop.adapters
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.gn4k.loop.R
+import com.gn4k.loop.models.StaticVariables
 
 class SkillsAdapter(
     private val skills: MutableSet<String>,
@@ -24,6 +26,8 @@ class SkillsAdapter(
         holder.itemView.setOnClickListener {
             removeSkill(skill)
         }
+
+        holder.badgeIcon.setImageResource(StaticVariables.badgeDrawables[skill] ?: R.drawable.java)
     }
 
     override fun getItemCount(): Int {
@@ -32,5 +36,6 @@ class SkillsAdapter(
 
     class SkillViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val skillTextView: TextView = itemView.findViewById(R.id.skillTextView)
+        val badgeIcon: ImageView = itemView.findViewById(R.id.badgeIcon)
     }
 }

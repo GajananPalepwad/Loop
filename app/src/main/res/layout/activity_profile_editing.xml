@@ -63,7 +63,7 @@
             android:layout_height="wrap_content"
             android:hint="Name"
             android:textColor="@color/white"
-            android:inputType="textEmailAddress" />
+            android:inputType="textPersonName" />
     </com.google.android.material.textfield.TextInputLayout>
 
 
@@ -84,7 +84,7 @@
             android:layout_height="wrap_content"
             android:hint="About Me"
             android:textColor="@color/white"
-            android:inputType="textEmailAddress" />
+            android:inputType="textMultiLine" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -104,7 +104,7 @@
             android:layout_height="wrap_content"
             android:hint="Location"
             android:textColor="@color/white"
-            android:inputType="textEmailAddress" />
+            android:inputType="textPostalAddress" />
     </com.google.android.material.textfield.TextInputLayout>
 
 
@@ -125,7 +125,7 @@
             android:layout_height="wrap_content"
             android:hint="Website"
             android:textColor="@color/white"
-            android:inputType="textEmailAddress" />
+            android:inputType="textWebEditText" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <androidx.appcompat.widget.AppCompatButton

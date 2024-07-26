@@ -9,6 +9,14 @@
     android:backgroundTint="@color/app_2background"
     android:padding="8dp">
 
+    <ImageView
+        android:id="@+id/badgeIcon"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_gravity="center_vertical"
+        android:layout_marginHorizontal="3dp"
+        android:src="@drawable/java"/>
+
     <TextView
         android:id="@+id/skillTextView"
         android:layout_width="0dp"

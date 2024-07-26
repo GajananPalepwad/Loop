@@ -6,6 +6,7 @@ import com.gn4k.loop.models.request.FollowUnfollowRequest
 import com.gn4k.loop.models.request.GetPostsByAuthorRequest
 import com.gn4k.loop.models.request.HomeFeedRequest
 import com.gn4k.loop.models.request.JoinLeaveMeetRequest
+import com.gn4k.loop.models.request.JoinRequest
 import com.gn4k.loop.models.request.LikeDislikeCommentRequest
 import com.gn4k.loop.models.request.LikeDislikeReplyRequest
 import com.gn4k.loop.models.request.LikeDislikeRequest
@@ -28,6 +29,7 @@ import com.gn4k.loop.models.response.FetchCommentsResponse
 import com.gn4k.loop.models.response.FollowUnfollowResponse
 import com.gn4k.loop.models.response.FollowerResponse
 import com.gn4k.loop.models.response.FollowingResponse
+import com.gn4k.loop.models.response.GetProjects
 import com.gn4k.loop.models.response.MarkSeenResponse
 import com.gn4k.loop.models.response.MeetingResponse
 import com.gn4k.loop.models.response.Posts
@@ -160,6 +162,13 @@ interface ApiService {
     @POST("add_badge.php")
     fun addBadges(@Body request: AddBadgeRequest): Call<CreateMeetingResponse>
 
+    @GET("get_all_projects.php")
+    fun fetchAllProjects(@Query("status") status: String): Call<GetProjects>
 
+    @GET("get_projects_by_author.php")
+    fun fetchProjectByAuthor(@Query("authorId") authorId: Int): Call<GetProjects>
+
+    @POST("project_join_request.php")
+    fun sendProjectJoinRequest(@Body request: JoinRequest): Call<CreateMeetingResponse>
 
 }

@@ -58,7 +58,6 @@ class OthersProfile : AppCompatActivity() {
 
     }
 
-
     lateinit var binding: ActivityOthersProfileBinding
     private var transaction = supportFragmentManager.beginTransaction()
 
@@ -80,7 +79,7 @@ class OthersProfile : AppCompatActivity() {
         binding.btnProjects.setOnClickListener {
             binding.btnProjects.setTextColor(getColor(R.color.app_color))
             binding.btnPost.setTextColor(getColor(R.color.white))
-            setFragment(ProfileProjects())
+            setFragment(OthersProfileProjects())
         }
 
         binding.btnFollow.setOnClickListener {
@@ -220,7 +219,8 @@ class OthersProfile : AppCompatActivity() {
                         binding.tvFollowingC.text = userFollowingCount
 
                         val badgeAdapter = ProfileBadgeAdapter(userBadges, baseContext)
-                        val layoutManager = LinearLayoutManager(baseContext, LinearLayoutManager.HORIZONTAL, false)
+                        val layoutManager =
+                            LinearLayoutManager(baseContext, LinearLayoutManager.HORIZONTAL, false)
                         binding.badges.layoutManager = layoutManager
                         binding.badges.adapter = badgeAdapter
 

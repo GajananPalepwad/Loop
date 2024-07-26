@@ -83,6 +83,7 @@ class SplashScreen : AppCompatActivity() {
                         userResponse.is_following
                     }
 
+
                     if (MainHome.USER_ID.equals(-1) || MainHome.USER_ID.isEmpty()) {
                         val intent: Intent = Intent(baseContext, ChooseRegOrLog::class.java)
                         startActivity(intent)
@@ -104,8 +105,7 @@ class SplashScreen : AppCompatActivity() {
 
             override fun onFailure(call: Call<UserAllDataResponse?>, t: Throwable) {
                 Log.d("Reg", "Network Error: ${t.message}")
-                Toast.makeText(this@SplashScreen, "Network Error: ${t.message}", Toast.LENGTH_SHORT)
-                    .show()
+                Toast.makeText(this@SplashScreen, "Network Error: ${t.message}", Toast.LENGTH_SHORT).show()
             }
         })
     }
@@ -114,8 +114,7 @@ class SplashScreen : AppCompatActivity() {
         when (response.code()) {
             400 -> {
                 Log.d("Reg", "Missing required fields")
-                Toast.makeText(this, "Missing required fields", Toast.LENGTH_SHORT)
-                    .show()
+                Toast.makeText(this, "Missing required fields", Toast.LENGTH_SHORT).show()
             }
 
             404 -> {
@@ -129,8 +128,7 @@ class SplashScreen : AppCompatActivity() {
 
             else -> {
                 Log.d("Reg", "Unexpected Error: ${response.message()}")
-                Toast.makeText(this, "Unexpected Error: ${response.code()}", Toast.LENGTH_SHORT)
-                    .show()
+                Toast.makeText(this, "Unexpected Error: ${response.code()}", Toast.LENGTH_SHORT).show()
             }
         }
     }

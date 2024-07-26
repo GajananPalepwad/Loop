@@ -8,6 +8,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
 import androidx.fragment.app.Fragment
 import com.gn4k.loop.R
+import com.gn4k.loop.notifi1.NotificationSender
+import com.gn4k.loop.notifi1.NotificationSubscription
 import com.gn4k.loop.ui.home.loopmeeting.MeetingLists
 
 class MainHome : AppCompatActivity() {
@@ -27,6 +29,14 @@ class MainHome : AppCompatActivity() {
         setContentView(R.layout.activity_home)
 
         setFragment(HomeFeed())
+
+        val notificationSubscription = NotificationSubscription(this)
+
+//        notificationSubscription.subscribeToTopic("gn")
+
+
+        val notificationSender = NotificationSender(this)
+        notificationSender.sendNotificationToTopic("gn", "Title", "Message")
 
 
         nav = findViewById(R.id.nav_bar)
@@ -62,6 +72,7 @@ class MainHome : AppCompatActivity() {
         btnProject.setOnClickListener {
             allLightLogo()
             btnProject.setImageResource(R.drawable.ic_project)
+            setFragment(Projects())
         }
     }
 

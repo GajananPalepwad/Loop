@@ -16,6 +16,7 @@ firebaseInappmessagingDisplay = "21.0.0"
 firebaseMessaging = "24.0.0"
 volley = "1.2.1"
 firebaseAuth = "23.0.0"
+firebaseVertexai = "16.0.0-beta03"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -32,6 +33,7 @@ firebase-inappmessaging-display = { group = "com.google.firebase", name = "fireb
 firebase-messaging = { group = "com.google.firebase", name = "firebase-messaging", version.ref = "firebaseMessaging" }
 volley = { group = "com.android.volley", name = "volley", version.ref = "volley" }
 firebase-auth = { group = "com.google.firebase", name = "firebase-auth", version.ref = "firebaseAuth" }
+firebase-vertexai = { group = "com.google.firebase", name = "firebase-vertexai", version.ref = "firebaseVertexai" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
