@@ -17,8 +17,16 @@ import com.gn4k.loop.R
 import com.gn4k.loop.models.response.Conversation
 import com.gn4k.loop.ui.msg.Chatting
 import com.gn4k.loop.ui.post.ActivityPost
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Locale
+import java.util.TimeZone
+import java.util.concurrent.TimeUnit
 
-class ConversationAdapter(private var conversations: List<Conversation>, private val activity: Context) :
+class ConversationAdapter(
+    private var conversations: List<Conversation>,
+    private val activity: Context
+) :
     RecyclerView.Adapter<ConversationAdapter.ConversationViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ConversationViewHolder {
@@ -46,12 +54,13 @@ class ConversationAdapter(private var conversations: List<Conversation>, private
         private val txtLastMessage: TextView = itemView.findViewById(R.id.tvLastMsg)
         private val item: LinearLayout = itemView.findViewById(R.id.item)
         private val unseenDot: CardView = itemView.findViewById(R.id.unseenDot)
+        private val time: TextView = itemView.findViewById(R.id.tvTime)
 
         fun bind(conversation: Conversation) {
             txtUserName.text = conversation.opposite_user_name
             txtLastMessage.text = conversation.last_message
 
-            if(!conversation.is_seen_by_user){
+            if (!conversation.is_seen_by_user) {
                 txtLastMessage.apply {
                     setTypeface(null, Typeface.BOLD)
                     setTextColor(ContextCompat.getColor(context, android.R.color.white))
@@ -59,11 +68,13 @@ class ConversationAdapter(private var conversations: List<Conversation>, private
                 }
             }
 
-                Glide.with(activity)
-                    .load(activity.getString(R.string.base_url) + conversation.opposite_user_photo_url)
-                    .centerCrop()
-                    .placeholder(R.drawable.ic_profile)
-                    .into(imgProfile)
+            Glide.with(activity)
+                .load(activity.getString(R.string.base_url) + conversation.opposite_user_photo_url)
+                .centerCrop()
+                .placeholder(R.drawable.ic_profile)
+                .into(imgProfile)
+
+            time.text = formatDateTime(conversation.last_message_sent_at)
 
             item.setOnClickListener {
                 val intent = Intent(activity, Chatting::class.java)
@@ -74,9 +85,33 @@ class ConversationAdapter(private var conversations: List<Conversation>, private
 
                 activity.startActivity(intent)
             }
-
-
-
         }
     }
+
+    fun formatDateTime(dateTimeString: String): String {
+        // Define the input and output date formats
+        val inputFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+        inputFormat.timeZone = TimeZone.getTimeZone("UTC")
+        val timeFormat = SimpleDateFormat("hh:mm a", Locale.getDefault())
+        val dayFormat = SimpleDateFormat("EEEE", Locale.getDefault())
+        val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+
+        // Parse the input datetime string
+        val date = inputFormat.parse(dateTimeString) ?: return ""
+
+        // Get the current time and calculate the difference
+        val currentTime = Calendar.getInstance().time
+        val diffInMillis = currentTime.time - date.time
+
+        // Calculate the difference in days
+        val diffInDays = TimeUnit.MILLISECONDS.toDays(diffInMillis)
+
+        return when {
+            diffInDays < 1 -> timeFormat.format(date) // Less than 1 day ago
+            diffInDays < 7 -> dayFormat.format(date) // Less than 1 week ago
+            else -> dateFormat.format(date) // More than 1 week ago
+        }
+    }
+
+
 }
