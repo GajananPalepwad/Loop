@@ -34,34 +34,34 @@ class ExamScore : AppCompatActivity() {
         binding = ActivityExamScoreBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-//        val score = intent.getStringExtra("score")?.toInt()
-//        val badge = intent.getStringExtra("badge")
-//
-//        binding.tvScore.text = score.toString()
-//
-//        if (score != null) {
-//            binding.scoreProgressBar.progress = score
-//
-//            if (score >= 60) {
-//                binding.tvMsg.text = "Congratulations! You passed."
-//                binding.btnCollect.text = "Collect Your Badge"
-//            } else {
-//                binding.animation.visibility = View.GONE
-//                binding.tvMsg.text = "Better luck next time!"
-//                binding.btnCollect.text = "Quit"
-//            }
-//
-//            // Add click listener to button if needed
-//            binding.btnCollect.setOnClickListener {
-//                if (score >= 60) {
-//                    addBadge(badge.toString())
-//                } else {
-//                    val intent: Intent = Intent(baseContext, MainHome::class.java)
-//                    startActivity(intent)
-//                    finish()
-//                }
-//            }
-//        }
+        val score = intent.getStringExtra("score")?.toInt()
+        val badge = intent.getStringExtra("badge")
+
+        binding.tvScore.text = score.toString()
+
+        if (score != null) {
+            binding.scoreProgressBar.progress = score
+
+            if (score >= 60) {
+                binding.tvMsg.text = "Congratulations! You passed."
+                binding.btnCollect.text = "Collect Your Badge"
+            } else {
+                binding.animation.visibility = View.GONE
+                binding.tvMsg.text = "Better luck next time!"
+                binding.btnCollect.text = "Quit"
+            }
+
+            // Add click listener to button if needed
+            binding.btnCollect.setOnClickListener {
+                if (score >= 60) {
+                    addBadge(badge.toString())
+                } else {
+                    val intent: Intent = Intent(baseContext, MainHome::class.java)
+                    startActivity(intent)
+                    finish()
+                }
+            }
+        }
 
     }
 

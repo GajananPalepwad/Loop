@@ -16,6 +16,7 @@ import com.gn4k.loop.adapters.BadgeAdapter
 import com.gn4k.loop.api.RetrofitClient
 import com.gn4k.loop.databinding.ActivityManageBadgesBinding
 import com.gn4k.loop.models.response.Skill
+import com.gn4k.loop.ui.home.MainHome
 import `in`.galaxyofandroid.spinerdialog.SpinnerDialog
 import retrofit2.Call
 import retrofit2.Callback
@@ -49,17 +50,21 @@ class ManageBadges : AppCompatActivity() {
 
         fetchSkills()
 
-        val badges = listOf(
-            "Java",
-            "Kotlin",
-            "Python",
-            "C++",
-            "JavaScript"
-            // Add more badges as needed
-        )
+        val badges = MainHome.USER_BADGES
 
         binding.recyclerView.layoutManager = LinearLayoutManager(this)
         binding.recyclerView.adapter = BadgeAdapter(this, badges)
+
+        binding.back.setOnClickListener {
+            onBackPressed()
+            finish()
+        }
+
+        if (badges.isEmpty()) {
+            binding.imgEmpty.visibility = RecyclerView.VISIBLE
+        } else {
+            binding.imgEmpty.visibility = RecyclerView.GONE
+        }
 
         binding.btnAddBadge.setOnClickListener {
             spinnerDialog.showSpinerDialog()

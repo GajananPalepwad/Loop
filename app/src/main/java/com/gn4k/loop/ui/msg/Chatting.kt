@@ -18,6 +18,7 @@ import com.gn4k.loop.models.response.ChattingRespnse
 import com.gn4k.loop.models.response.MarkSeenResponse
 import com.gn4k.loop.models.response.Msg
 import com.gn4k.loop.models.response.SendMsgResponse
+import com.gn4k.loop.ui.animation.CustomLoading
 import com.gn4k.loop.ui.home.MainHome
 import com.gn4k.loop.ui.profile.others.OthersProfile
 import com.gn4k.loop.ui.profile.self.Profile
@@ -33,11 +34,15 @@ class Chatting : AppCompatActivity() {
     lateinit var userId: String
     var lastMessageId: Int = 0
     var isPolling = true
+    lateinit var loading: CustomLoading
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityChattingBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        loading = CustomLoading(this)
+        loading.startLoading()
 
         val conversationId = intent.getStringExtra("conversation_id")
         userId = intent.getStringExtra("user_id").toString()
@@ -166,8 +171,10 @@ class Chatting : AppCompatActivity() {
                             markSeen(lastMessageId, MainHome.USER_ID.toInt())
                         }
                         startLongPolling(conversationId, userId.toInt())
+                        loading.stopLoading()
                     } else {
 //                    handleErrorResponse(response)
+                        loading.stopLoading()
                     }
                 }
 
@@ -175,6 +182,7 @@ class Chatting : AppCompatActivity() {
                     Log.d("Reg", "Network Error: ${t.message}")
                     Toast.makeText(baseContext, "Network Error: ${t.message}", Toast.LENGTH_SHORT)
                         .show()
+                    loading.stopLoading()
                 }
             })
     }

@@ -30,6 +30,7 @@ import com.gn4k.loop.ui.post.MakePost
 import com.gn4k.loop.ui.profile.self.Profile
 import com.gn4k.loop.models.response.Post
 import com.gn4k.loop.models.response.Posts
+import com.gn4k.loop.ui.animation.CustomLoading
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -38,12 +39,16 @@ import java.util.Calendar
 class HomeFeed : Fragment() {
 
     private lateinit var binding: FragmentHomeFeedBinding
+    lateinit var loading: CustomLoading
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentHomeFeedBinding.inflate(inflater, container, false)
+        loading = CustomLoading(activity)
+        loading.startLoading()
+
         binding.tvName.text = MainHome.USER_NAME
 
         posts = mutableListOf()
@@ -70,6 +75,10 @@ class HomeFeed : Fragment() {
             startActivity(intent)
         }
 
+        binding.btnExplore.setOnClickListener {
+            parentFragmentManager.beginTransaction().replace(R.id.container, Explore()).addToBackStack(null).commit()
+        }
+
 
         binding.recyclerView.layoutManager = LinearLayoutManager(activity)
 
@@ -77,12 +86,14 @@ class HomeFeed : Fragment() {
             if (binding.nest.getChildAt(0).bottom <= scrollY + binding.nest.height) {
 //                Toast.makeText(context, "We are at end", Toast.LENGTH_SHORT).show()
                 fetchHomeFeed()
+                loading.startLoading()
             }
         }
 
         binding.refreshLayout.setOnRefreshListener {
             posts.clear()
             fetchHomeFeed()
+            loading.startLoading()
         }
 
         fetchHomeFeed()
@@ -106,27 +117,34 @@ class HomeFeed : Fragment() {
                         if (homeFeedResponse != null) {
                             posts.addAll(homeFeedResponse.posts as MutableList<Post>)
                             var postIds: MutableList<Int> = mutableListOf()
-                            if(homeFeedResponse.posts.size>=1) {
+                            if (homeFeedResponse.posts.size >= 1) {
                                 postIds.add(homeFeedResponse.posts[0].postId.toInt())
-                                if(homeFeedResponse.posts.size>=2) {
-                                postIds.add(homeFeedResponse.posts[1].postId.toInt())
-                                    if(homeFeedResponse.posts.size>=3) {
-                                postIds.add(homeFeedResponse.posts[2].postId.toInt())
-                                        if(homeFeedResponse.posts.size>=4) {
+                                if (homeFeedResponse.posts.size >= 2) {
+                                    postIds.add(homeFeedResponse.posts[1].postId.toInt())
+                                    if (homeFeedResponse.posts.size >= 3) {
+                                        postIds.add(homeFeedResponse.posts[2].postId.toInt())
+                                        if (homeFeedResponse.posts.size >= 4) {
                                             postIds.add(homeFeedResponse.posts[3].postId.toInt())
                                         }
                                     }
                                 }
                             }
                             binding.refreshLayout.isRefreshing = false
-//                            markPostSeen(postIds)
-//TODO()/////////////////////////////////
+                            markPostSeen(postIds)
                         }
 
                         var homeFeedAdapter = activity?.let { HomeFeedAdapter(posts, it) }
                         binding.recyclerView.adapter = homeFeedAdapter
 
+                        if (homeFeedResponse != null) {
+                            if (homeFeedResponse.posts.isEmpty()) {
+                                binding.empty.visibility = View.VISIBLE
+                            } else {
+                                binding.empty.visibility = View.GONE
+                            }
 
+                        }
+                        loading.stopLoading()
                     }
                 }
 
@@ -134,6 +152,7 @@ class HomeFeed : Fragment() {
                     Log.d("Reg", "Network Error: ${t.message}")
                     Toast.makeText(context, "Network Error: ${t.message}", Toast.LENGTH_SHORT)
                         .show()
+                    loading.stopLoading()
                 }
             })
     }

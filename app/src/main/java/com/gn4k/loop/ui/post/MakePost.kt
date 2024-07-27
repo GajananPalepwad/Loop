@@ -26,6 +26,7 @@ import com.gn4k.loop.databinding.ActivityMakePostBinding
 import com.gn4k.loop.models.request.CreatePostRequestForLinkNCode
 import com.gn4k.loop.models.response.CreatePostResponse
 import com.gn4k.loop.models.response.Skill
+import com.gn4k.loop.ui.animation.CustomLoading
 import com.gn4k.loop.ui.home.MainHome
 import `in`.galaxyofandroid.spinerdialog.SpinnerDialog
 import okhttp3.MultipartBody
@@ -53,6 +54,8 @@ class MakePost : AppCompatActivity() {
     var tagListSpinner: List<String> = java.util.ArrayList()
 
     lateinit var spinnerDialog: SpinnerDialog
+
+    lateinit var loading: CustomLoading
 
     private val selectImageLauncher: ActivityResultLauncher<Intent> =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
@@ -86,10 +89,16 @@ class MakePost : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMakePostBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        loading = CustomLoading(this)
 
         val BASE_URL = getString(R.string.base_url)
         val retrofit = RetrofitClient.getClient(BASE_URL)
         apiService = retrofit?.create(ApiService::class.java)
+
+        binding.back.setOnClickListener {
+            onBackPressed()
+            finish()
+        }
 
         binding.btnChooseType.setOnClickListener {
             animateBottomMargin(binding.btnContainer, 0)
@@ -130,6 +139,8 @@ class MakePost : AppCompatActivity() {
         }
 
         binding.btnPost.setOnClickListener {
+
+            loading.startLoading()
 
             if (type == "photo") {
                 val context = binding.edContext.text.toString()
@@ -365,7 +376,9 @@ class MakePost : AppCompatActivity() {
                     val createPostResponse = response.body()
                     Toast.makeText(this@MakePost, createPostResponse?.message ?: "Post created successfully", Toast.LENGTH_SHORT).show()
                     onBackPressed()
+                    loading.stopLoading()
                 } else {
+                    loading.stopLoading()
                     handleErrorResponse(response)
                 }
             }
@@ -373,6 +386,7 @@ class MakePost : AppCompatActivity() {
             override fun onFailure(call: Call<CreatePostResponse>, t: Throwable) {
                 Log.d("MakePostActivity", "Network Error: ${t.message}")
                 Toast.makeText(this@MakePost, "Network Error: ${t.message}", Toast.LENGTH_SHORT).show()
+                loading.stopLoading()
             }
         })
     }

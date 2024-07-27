@@ -11,6 +11,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.gn4k.loop.R
 import com.gn4k.loop.adapters.QuestionAdapter
 import com.gn4k.loop.databinding.ActivityExamPageBinding
+import com.gn4k.loop.models.request.Question
+import com.gn4k.loop.ui.animation.CustomLoading
 import com.google.ai.client.generativeai.GenerativeModel
 import com.google.gson.Gson
 import kotlinx.coroutines.launch
@@ -20,26 +22,28 @@ class ExamPage : AppCompatActivity() {
     lateinit var binding: ActivityExamPageBinding
     lateinit var badge: String
     private lateinit var countDownTimer: CountDownTimer
-
+    lateinit var loading: CustomLoading
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityExamPageBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        loading = CustomLoading(this)
 
         badge = intent.getStringExtra("badge").toString()
 
         binding.tvBadge.text = "Test for $badge Badge"
 
         binding.recyclerView.layoutManager = LinearLayoutManager(this)
-        val adapter = QuestionAdapter(ExamRulesAndInfo.question) {
+        val adapter = QuestionAdapter(question) {
             updateQuestionIndicators()
         }
         binding.recyclerView.adapter = adapter
 
         binding.btnSubmit.setOnClickListener {
+            loading.startLoading()
             val json = toJson()
-            Log.d("JSON", json)
+//            Log.d("JSON", json)
             lifecycleScope.launch {
                 geminiGiveScore(json)
             }
@@ -62,6 +66,7 @@ class ExamPage : AppCompatActivity() {
     }
 
     private fun extractFirstInteger(input: String) {
+        loading.stopLoading()
         val regex = "\\d+".toRegex()
         val matchResult = regex.find(input)
         val score = matchResult?.value?.toInt() ?: -1
@@ -69,6 +74,7 @@ class ExamPage : AppCompatActivity() {
         intent.putExtra("score", score.toString())
         intent.putExtra("badge", badge)
         startActivity(intent)
+        finish()
     }
 
 
@@ -86,7 +92,7 @@ class ExamPage : AppCompatActivity() {
             binding.q10
         )
         for (i in indicators.indices) {
-            if (i < ExamRulesAndInfo.question.size && ExamRulesAndInfo.question[i].answer.isNotEmpty()) {
+            if (i < question.size && question[i].answer.isNotEmpty()) {
                 indicators[i].setBackgroundColor(ContextCompat.getColor(this, R.color.green))
             } else {
                 indicators[i].setBackgroundColor(ContextCompat.getColor(this, R.color.red))
@@ -94,9 +100,9 @@ class ExamPage : AppCompatActivity() {
         }
     }
 
-    fun toJson(): String {
+    private fun toJson(): String {
         val gson = Gson()
-        return gson.toJson(ExamRulesAndInfo.question)
+        return gson.toJson(question)
     }
 
     private fun startTimer() {
@@ -118,6 +124,10 @@ class ExamPage : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         countDownTimer.cancel()
+    }
+
+    companion object{
+        var question: MutableList<Question> = mutableListOf()
     }
 
 }

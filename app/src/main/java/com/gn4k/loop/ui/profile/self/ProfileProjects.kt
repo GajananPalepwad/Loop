@@ -35,6 +35,7 @@ class ProfileProjects : Fragment() {
         // Inflate the layout for this fragment
         binding = FragmentProfileProjectsBinding.inflate(inflater, container, false)
 
+        Profile.loading.startLoading()
 
         fetchAllProjects()
 
@@ -66,8 +67,17 @@ class ProfileProjects : Fragment() {
                         binding.recyclerView.adapter = projectAdapter
                         binding.recyclerView.layoutManager = LinearLayoutManager(context)
 
+                        if (projects.isEmpty()) {
+                            binding.imgEmpty.visibility = View.VISIBLE
+                        } else {
+                            binding.imgEmpty.visibility = View.GONE
+                        }
+
+                        Profile.loading.stopLoading()
+
                     } else {
 //                    handleErrorResponse(response)
+                        Profile.loading.stopLoading()
                     }
                 }
 
@@ -75,6 +85,7 @@ class ProfileProjects : Fragment() {
                     Log.d("Reg", "Network Error: ${t.message}")
                     Toast.makeText(context, "Network Error: ${t.message}", Toast.LENGTH_SHORT)
                         .show()
+                    Profile.loading.stopLoading()
                 }
             })
     }

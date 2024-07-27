@@ -2,12 +2,14 @@ package com.gn4k.loop.adapters
 
 import android.content.Context
 import android.content.Intent
+import android.content.res.ColorStateList
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.cardview.widget.CardView
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.gn4k.loop.R
@@ -18,11 +20,13 @@ import com.gn4k.loop.ui.profile.self.Profile
 
 class ImageAdapter(
     private val imageUrls: List<ParticipantList>,
-    private val context: Context
+    private val context: Context,
+    private val authorId: Int
 ) : RecyclerView.Adapter<ImageAdapter.ImageViewHolder>() {
 
     inner class ImageViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val photoImageView: ImageView = itemView.findViewById(R.id.photoImageView)
+        val ring: CardView = itemView.findViewById(R.id.ring)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ImageViewHolder {
@@ -38,6 +42,11 @@ class ImageAdapter(
             .load(context.getString(R.string.base_url) + imageUrl.photo_url)
             .placeholder(R.drawable.ic_profile)
             .into(holder.photoImageView)
+
+        if(authorId == imageUrl.id){
+            val color = ContextCompat.getColor(context, R.color.app_color)
+            holder.ring.setBackgroundTintList(ColorStateList.valueOf(color))
+        }
 
         holder.photoImageView.setOnClickListener {
             if(imageUrl.id == MainHome.USER_ID.toInt()){

@@ -26,6 +26,7 @@ import com.gn4k.loop.models.request.CreateMeetRequest
 import com.gn4k.loop.models.response.CreateMeetingResponse
 import com.gn4k.loop.models.response.CreatePostResponse
 import com.gn4k.loop.models.response.MeetingResponse
+import com.gn4k.loop.ui.animation.CustomLoading
 import com.gn4k.loop.ui.home.MainHome
 import live.videosdk.rtc.android.VideoSDK
 import org.json.JSONException
@@ -45,10 +46,18 @@ class MeetingLists : AppCompatActivity() {
     private var selectedDate: String? = null
     private var selectedTime: String? = null
 
+    lateinit var loading: CustomLoading
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMeetingListsBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        loading = CustomLoading(this)
+
+        binding.back.setOnClickListener {
+            onBackPressed()
+        }
+
 
         // Check for necessary permissions before initializing
         if (checkPermissions()) {
@@ -98,6 +107,7 @@ class MeetingLists : AppCompatActivity() {
         buttonCreateMeeting.setOnClickListener {
             if(editTextTitle.text.isNotEmpty() && editTextDescription.text.isNotEmpty()) {
                 createMeeting(sampleToken, editTextTitle.text.toString(), editTextDescription.text.toString(), dateTime)
+                loading.startLoading()
             }
         }
 
@@ -164,15 +174,19 @@ class MeetingLists : AppCompatActivity() {
                         val meetingResponse = response.body()
                         dialog.cancel()
                         Toast.makeText(baseContext, meetingResponse?.message, Toast.LENGTH_SHORT).show()
+                        loading.stopLoading()
+                        switchToAllMeetings()
+
                     } else {
 //                    handleErrorResponse(response)
+                        loading.stopLoading()
                     }
                 }
 
                 override fun onFailure(call: Call<CreateMeetingResponse?>, t: Throwable) {
                     Log.d("Reg", "Network Error: ${t.message}")
-                    Toast.makeText(baseContext, "Network Error: ${t.message}", Toast.LENGTH_SHORT)
-                        .show()
+                    Toast.makeText(baseContext, "Network Error: ${t.message}", Toast.LENGTH_SHORT).show()
+                    loading.stopLoading()
                 }
             })
     }
@@ -195,10 +209,8 @@ class MeetingLists : AppCompatActivity() {
 
                 override fun onError(anError: ANError) {
                     anError.printStackTrace()
-                    Toast.makeText(
-                        this@MeetingLists, anError.message,
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    Toast.makeText(this@MeetingLists, anError.message, Toast.LENGTH_SHORT).show()
+                    loading.stopLoading()
                 }
             })
     }

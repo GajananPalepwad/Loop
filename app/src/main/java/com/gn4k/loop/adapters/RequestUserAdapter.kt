@@ -1,6 +1,7 @@
 package com.gn4k.loop.adapters
 
 import ApiService
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.util.Log
@@ -13,6 +14,7 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.cardview.widget.CardView
 import androidx.core.widget.NestedScrollView
 import androidx.recyclerview.widget.RecyclerView
@@ -30,9 +32,10 @@ import retrofit2.Callback
 import retrofit2.Response
 
 class RequestUserAdapter(
-    private val imageUrls: List<ParticipantList>,
+    private val imageUrls: MutableList<ParticipantList>,
     private val context: Context,
-    private val projectId: Int
+    private val projectId: Int,
+    private val acceptedUserAdapter: AcceptedUserAdapter
 ) : RecyclerView.Adapter<RequestUserAdapter.ImageViewHolder>() {
 
     inner class ImageViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -60,29 +63,45 @@ class RequestUserAdapter(
             .into(holder.photoImageView)
 
         holder.acceptButton.setOnClickListener {
-            acceptRejectProjectRequest(imageUrl.id, "accept")
+            showConfirmationDialog(holder.itemView.context, imageUrl.id, "accept", holder.adapterPosition)
         }
 
         holder.rejectButton.setOnClickListener {
-            acceptRejectProjectRequest(imageUrl.id, "reject")
+            showConfirmationDialog(holder.itemView.context, imageUrl.id, "reject", holder.adapterPosition)
         }
 
         holder.main.setOnClickListener {
-            if(imageUrl.id == MainHome.USER_ID.toInt()){
+            if (imageUrl.id == MainHome.USER_ID.toInt()) {
                 val intent = Intent(context, Profile::class.java)
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 intent.putExtra("userId", imageUrl.id.toString())
                 context.startActivity(intent)
-            }else {
+            } else {
                 val intent = Intent(context, OthersProfile::class.java)
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 intent.putExtra("userId", imageUrl.id.toString())
                 context.startActivity(intent)
             }
         }
     }
 
-    private fun acceptRejectProjectRequest(userId: Int, action: String) {
+    private fun showConfirmationDialog(context: Context, userId: Int, action: String, position: Int) {
+        val title = if (action == "accept") "Confirm Accept" else "Confirm Reject"
+        val message = if (action == "accept") "Are you sure you want to accept this request?" else "Are you sure you want to reject this request?"
+
+        AlertDialog.Builder(context, R.style.DarkAlertDialogTheme)
+            .setTitle(title)
+            .setMessage(message)
+            .setPositiveButton("Yes") { _, _ ->
+                acceptRejectProjectRequest(userId, action, position)
+            }
+            .setNegativeButton("No") { dialog, _ ->
+                dialog.dismiss()
+            }
+            .show()
+    }
+
+    private fun acceptRejectProjectRequest(userId: Int, action: String, position: Int) {
         val BASE_URL = context.getString(R.string.base_url)
         val retrofit = RetrofitClient.getClient(BASE_URL)
         val apiService = retrofit?.create(ApiService::class.java)
@@ -96,8 +115,18 @@ class RequestUserAdapter(
                     if (response.isSuccessful) {
                         val meetingResponse = response.body()
                         Toast.makeText(context, meetingResponse?.message, Toast.LENGTH_SHORT).show()
+                        // Update the lists based on the action
+                        if (action == "accept") {
+                            val acceptedParticipant = imageUrls[position]
+                            imageUrls.removeAt(position)
+                            notifyDataSetChanged()
+                            acceptedUserAdapter.addParticipant(acceptedParticipant)
+                        } else if (action == "reject") {
+                            imageUrls.removeAt(position)
+                            notifyDataSetChanged()
+                        }
                     } else {
-//                    handleErrorResponse(response)
+                        // Handle error response
                     }
                 }
 
@@ -111,5 +140,11 @@ class RequestUserAdapter(
 
     override fun getItemCount(): Int {
         return imageUrls.size
+    }
+
+    // Add a method to add a participant to the list
+    fun addParticipant(participant: ParticipantList) {
+        imageUrls.add(participant)
+        notifyDataSetChanged()
     }
 }

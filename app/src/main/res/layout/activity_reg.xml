@@ -10,6 +10,7 @@
     tools:context=".ui.auth.Reg">
 
     <androidx.cardview.widget.CardView
+        android:id="@+id/back"
         android:layout_width="45dp"
         android:layout_height="45dp"
         android:layout_margin="15dp"

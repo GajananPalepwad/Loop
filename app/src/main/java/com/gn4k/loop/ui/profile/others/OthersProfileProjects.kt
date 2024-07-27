@@ -28,6 +28,7 @@ class OthersProfileProjects: Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentProfileProjectsBinding.inflate(inflater, container, false)
+        OthersProfile.loading.startLoading()
 
         fetchAllProjects(OthersProfile.userId)
 
@@ -59,8 +60,18 @@ class OthersProfileProjects: Fragment() {
                         binding.recyclerView.adapter = projectAdapter
                         binding.recyclerView.layoutManager = LinearLayoutManager(context)
 
+                        if (projects.isEmpty()) {
+                            binding.imgEmpty.visibility = View.VISIBLE
+                        }else{
+                            binding.imgEmpty.visibility = View.GONE
+                        }
+
+                        OthersProfile.loading.stopLoading()
                     } else {
 //                    handleErrorResponse(response)
+                        Toast.makeText(context, "Something went wrong", Toast.LENGTH_SHORT)
+                            .show()
+                        OthersProfile.loading.stopLoading()
                     }
                 }
 
@@ -68,6 +79,7 @@ class OthersProfileProjects: Fragment() {
                     Log.d("Reg", "Network Error: ${t.message}")
                     Toast.makeText(context, "Network Error: ${t.message}", Toast.LENGTH_SHORT)
                         .show()
+                    OthersProfile.loading.stopLoading()
                 }
             })
     }

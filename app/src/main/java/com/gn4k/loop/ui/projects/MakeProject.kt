@@ -18,6 +18,7 @@ import com.gn4k.loop.models.request.AddProjectRequest
 import com.gn4k.loop.models.request.Person
 import com.gn4k.loop.models.response.CreateMeetingResponse
 import com.gn4k.loop.models.response.Skill
+import com.gn4k.loop.ui.animation.CustomLoading
 import com.gn4k.loop.ui.home.MainHome
 import com.overflowarchives.linkpreview.ViewListener
 import `in`.galaxyofandroid.spinerdialog.SpinnerDialog
@@ -34,12 +35,15 @@ class MakeProject : AppCompatActivity() {
     var tagListSpinner: List<String> = java.util.ArrayList()
     lateinit var spinnerDialog: SpinnerDialog
 
+    lateinit var loading: CustomLoading
+
     private val statusOptions = arrayOf("Yet to start", "In progress", "Completed", "On hold")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMakeProjectBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        loading = CustomLoading(this)
 
         val BASE_URL = getString(R.string.base_url)
         val retrofit = RetrofitClient.getClient(BASE_URL)
@@ -50,6 +54,11 @@ class MakeProject : AppCompatActivity() {
         binding.recyclerView.adapter = skillsAdapter
 
         setupStatusSelection()
+
+        binding.back.setOnClickListener {
+            onBackPressed()
+            finish()
+        }
 
         // Initialize spinnerDialog for skills
         spinnerDialog = SpinnerDialog(
@@ -79,6 +88,7 @@ class MakeProject : AppCompatActivity() {
         }
 
         binding.btnPost.setOnClickListener {
+            loading.startLoading()
             submitProject()
         }
     }
@@ -94,7 +104,7 @@ class MakeProject : AppCompatActivity() {
     }
 
     private fun showStatusDialog() {
-        AlertDialog.Builder(this)
+        AlertDialog.Builder(this, R.style.DarkAlertDialogTheme)
             .setTitle("Select Status")
             .setItems(statusOptions) { dialog, which ->
                 binding.edStatus.setText(statusOptions[which])
@@ -152,15 +162,18 @@ class MakeProject : AppCompatActivity() {
         apiService?.addProject(addProjectRequest)?.enqueue(object : Callback<CreateMeetingResponse> {
             override fun onResponse(call: Call<CreateMeetingResponse>, response: Response<CreateMeetingResponse>) {
                 if (response.isSuccessful) {
+                    loading.stopLoading()
                     val createProjectRequest = response.body()
                     Toast.makeText(this@MakeProject, createProjectRequest?.message ?: "Project created successfully", Toast.LENGTH_SHORT).show()
                     onBackPressed()
                 } else {
+                    loading.stopLoading()
                     Toast.makeText(this@MakeProject, "Failed to create project", Toast.LENGTH_SHORT).show()
                 }
             }
 
             override fun onFailure(call: Call<CreateMeetingResponse>, t: Throwable) {
+                loading.stopLoading()
                 Log.d("MakeProject", "Network Error: ${t.message}")
                 Toast.makeText(this@MakeProject, "Network Error: ${t.message}", Toast.LENGTH_SHORT).show()
             }

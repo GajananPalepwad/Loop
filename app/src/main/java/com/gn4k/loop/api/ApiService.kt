@@ -177,4 +177,7 @@ interface ApiService {
 
     @POST("accept_reject_project_request.php")
     fun acceptRejectProjectRequest(@Body request: JoinRequest): Call<CreateMeetingResponse>
+
+    @GET("remove_contributor.php")
+    fun removeContributor(@Query("projectId") projectId: Int, @Query("userId") userId: Int): Call<GetProjects>
 }

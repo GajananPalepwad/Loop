@@ -35,6 +35,10 @@ class Reg : AppCompatActivity() {
         val retrofit = RetrofitClient.getClient(BASE_URL)
         apiService = retrofit?.create(ApiService::class.java)
 
+        binding.back.setOnClickListener {
+            onBackPressed()
+        }
+
         binding.btnReg.setOnClickListener {
 
             binding.tilPassword.error = null

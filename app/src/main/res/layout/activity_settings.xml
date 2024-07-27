@@ -7,6 +7,7 @@
     android:background="@color/app_background">
 
     <TextView
+        android:id="@+id/back"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Settings"
@@ -22,6 +23,7 @@
         android:background="?android:attr/listDivider" />
 
     <LinearLayout
+        android:id="@+id/deleteProfile"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
@@ -31,7 +33,6 @@
         android:focusable="true"
         android:background="@color/app_2background"
         android:onClick="deleteProfile">
-
 
         <TextView
             android:layout_width="0dp"
@@ -52,6 +53,7 @@
         android:background="?android:attr/listDivider" />
 
     <LinearLayout
+        android:id="@+id/notificationSettings"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
@@ -61,8 +63,8 @@
         android:focusable="true"
         android:background="@color/app_2background">
 
-
         <Switch
+            android:id="@+id/notification"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -73,7 +75,6 @@
             android:textColor="@color/white"
             android:gravity="center_vertical"
             tools:ignore="UseSwitchCompatOrMaterialXml" />
-
     </LinearLayout>
 
     <View
@@ -90,7 +91,6 @@
         android:clickable="true"
         android:focusable="true"
         android:background="@color/app_2background">
-
 
         <TextView
             android:layout_width="0dp"

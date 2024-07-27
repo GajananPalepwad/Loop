@@ -19,6 +19,7 @@ import com.gn4k.loop.databinding.FragmentMeetListsBinding
 import com.gn4k.loop.models.response.ChattingRespnse
 import com.gn4k.loop.models.response.MeetingObject
 import com.gn4k.loop.models.response.MeetingResponse
+import com.gn4k.loop.ui.animation.CustomLoading
 import com.gn4k.loop.ui.home.MainHome
 import retrofit2.Call
 import retrofit2.Callback
@@ -30,6 +31,7 @@ class AllMeetLists : Fragment() {
     lateinit var adapter: MeetingListAdapter
     private var sampleToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcGlrZXkiOiI5MGM5NzUxOS04YmI3LTQ4MGQtOTA5Ny05OWQzOWFiYjkwMjgiLCJwZXJtaXNzaW9ucyI6WyJhbGxvd19qb2luIl0sImlhdCI6MTcyMTMwNTAzMSwiZXhwIjoxNzIxOTA5ODMxfQ.NNyJp7OsUwW6zEmKroOsDK6lIbO3Zqh2DlVLpRieBC4"
 
+    lateinit var loading: CustomLoading
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -37,6 +39,8 @@ class AllMeetLists : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         binding = FragmentMeetListsBinding.inflate(layoutInflater, container, false)
+        loading = CustomLoading(activity)
+        loading.startLoading()
 
         binding.recyclerView.layoutManager = LinearLayoutManager(context)
 
@@ -79,15 +83,20 @@ class AllMeetLists : Fragment() {
 
                         binding.recyclerView.adapter = adapter
 
+                        if(adapter.itemCount == 0){
+                            binding.imgEmpty.visibility = View.VISIBLE
+                        }
+                        loading.stopLoading()
                     } else {
 //                    handleErrorResponse(response)
+                        loading.stopLoading()
                     }
                 }
 
                 override fun onFailure(call: Call<MeetingResponse?>, t: Throwable) {
                     Log.d("Reg", "Network Error: ${t.message}")
-                    Toast.makeText(context, "Network Error: ${t.message}", Toast.LENGTH_SHORT)
-                        .show()
+                    Toast.makeText(context, "Network Error: ${t.message}", Toast.LENGTH_SHORT).show()
+                    loading.stopLoading()
                 }
             })
     }

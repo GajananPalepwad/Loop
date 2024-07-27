@@ -49,6 +49,10 @@ class SkillSelector : AppCompatActivity() {
         skillsAdapter = SkillsAdapter(selectedSkills) { skill -> removeSkill(skill) }
         binding.recyclerView.adapter = skillsAdapter
 
+        binding.back.setOnClickListener {
+            onBackPressed()
+        }
+
         // Initialize spinnerDialog with an empty list to avoid uninitialized property access exception
         spinnerDialog = SpinnerDialog(
             this,

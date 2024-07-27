@@ -16,6 +16,7 @@
         android:orientation="horizontal">
 
         <androidx.cardview.widget.CardView
+            android:id="@+id/back"
             android:layout_width="45dp"
             android:layout_height="45dp"
             android:layout_marginHorizontal="15dp"
@@ -59,6 +60,14 @@
         android:layout_height="wrap_content"
         tools:listitem="@layout/item_badges"
         tools:itemCount="5"/>
+
+    <ImageView
+        android:id="@+id/imgEmpty"
+        android:layout_width="140dp"
+        android:layout_height="140dp"
+        android:layout_gravity="center_horizontal"
+        android:visibility="gone"
+        android:src="@drawable/ic_empty"/>
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btnAddBadge"

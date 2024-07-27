@@ -36,6 +36,7 @@ class ProfilePost : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentPostBinding.inflate(inflater, container, false)
+        Profile.loading.startLoading()
 
         val BASE_URL = getString(R.string.base_url)
         val retrofit = RetrofitClient.getClient(BASE_URL)
@@ -54,20 +55,29 @@ class ProfilePost : Fragment() {
                 if (response.isSuccessful) {
                     posts = (response.body() as MutableList<Post>?)!!
                     if (posts != null) {
-
                         StaticVariables.postAdapter = activity?.let { PostAdapter(posts, MainHome.USER_NAME, MainHome.USER_PHOTO_URL, it) }!!
                         binding.recyclerView.adapter = StaticVariables.postAdapter
                     } else {
                         Toast.makeText(activity, "No posts found", Toast.LENGTH_SHORT).show()
                     }
+
+                    if (posts.isEmpty()) {
+                        binding.imgEmpty.visibility = View.VISIBLE
+                    } else {
+                        binding.imgEmpty.visibility = View.GONE
+                    }
+
+                    Profile.loading.stopLoading()
                 } else {
                     handleErrorResponse(response)
+                    Profile.loading.stopLoading()
                 }
             }
 
             override fun onFailure(call: Call<List<Post>>, t: Throwable) {
                 Log.d("YourActivity", "Network Error: ${t.message}")
                 Toast.makeText(activity, "Network Error: ${t.message}", Toast.LENGTH_SHORT).show()
+                Profile.loading.stopLoading()
             }
         })
     }

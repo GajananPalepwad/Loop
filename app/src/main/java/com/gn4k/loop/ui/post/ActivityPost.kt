@@ -23,6 +23,7 @@ import com.gn4k.loop.models.request.MakeCommentRequest
 import com.gn4k.loop.models.response.Comment
 import com.gn4k.loop.models.response.FetchCommentsResponse
 import com.gn4k.loop.models.response.UserResponse
+import com.gn4k.loop.ui.animation.CustomLoading
 import com.gn4k.loop.ui.home.MainHome
 import com.gn4k.loop.ui.profile.others.OthersProfile
 import com.gn4k.loop.ui.profile.self.Profile
@@ -43,12 +44,15 @@ class ActivityPost : AppCompatActivity() {
     var likeCount by Delegates.notNull<Int>()
     var commentCount by Delegates.notNull<Int>()
 
+    lateinit var loading: CustomLoading
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityPostBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
+        loading = CustomLoading(this)
+        loading.startLoading()
 
         val postType = intent.getStringExtra("post_type")
         val postLink = intent.getStringExtra("post_link")
@@ -64,6 +68,11 @@ class ActivityPost : AppCompatActivity() {
         val position = intent.getIntExtra("adapter_position", -1)
 
         fetchCommentsList(postId)
+
+        binding.back.setOnClickListener {
+            onBackPressed()
+            finish()
+        }
 
         when (postType) {
             "photo" -> {
@@ -140,6 +149,7 @@ class ActivityPost : AppCompatActivity() {
         binding.btnComment.setOnClickListener {
             if(binding.edComment.text.isNotEmpty()){
                 lifecycleScope.launch {
+                    loading.startLoading()
                     geminiCheckComment(postId, binding.edComment.text.toString(), position)
                     binding.edComment.setText("")
                 }
@@ -153,7 +163,8 @@ class ActivityPost : AppCompatActivity() {
 
     }
 
-    private suspend fun geminiCheckComment(postId: Int, comment: String, position: Int) {
+    private suspend fun
+            geminiCheckComment(postId: Int, comment: String, position: Int) {
         val generativeModel = GenerativeModel(
             // The Gemini 1.5 models are versatile and work with both text-only and multimodal prompts
             modelName = getString(R.string.gemini_model),
@@ -172,9 +183,11 @@ class ActivityPost : AppCompatActivity() {
                 doComment(postId, comment, position)
             } else {
                 Toast.makeText(baseContext, "Inappropriate Content", Toast.LENGTH_SHORT).show()
+                loading.stopLoading()
             }
         }catch (e: Exception) {
             Toast.makeText(baseContext, "Inappropriate Content", Toast.LENGTH_SHORT).show()
+            loading.stopLoading()
         }
 
     }
@@ -186,6 +199,7 @@ class ActivityPost : AppCompatActivity() {
     }
 
     private fun fetchCommentsList(postId: Int) {
+
         val BASE_URL = getString(R.string.base_url)
         val retrofit = RetrofitClient.getClient(BASE_URL)
         val apiService = retrofit?.create(ApiService::class.java)
@@ -199,15 +213,17 @@ class ActivityPost : AppCompatActivity() {
                     adapter = commentList?.let { CommentsAdapter(it, baseContext) }!!
                     binding.commentsRecyclerView.layoutManager = LinearLayoutManager(baseContext)
                     binding.commentsRecyclerView.adapter = adapter
-
+                    loading.stopLoading()
                 } else {
 //                    handleErrorResponse(response)
+                    loading.stopLoading()
                 }
             }
 
             override fun onFailure(call: Call<FetchCommentsResponse?>, t: Throwable) {
                 Log.d("Reg", "Network Error: ${t.message}")
                 Toast.makeText(baseContext, "Network Error: ${t.message}", Toast.LENGTH_SHORT).show()
+                loading.stopLoading()
             }
         })
     }

@@ -28,6 +28,10 @@ class FollowList : AppCompatActivity() {
 
         binding.tvName.text = name
 
+        binding.back.setOnClickListener {
+            onBackPressed()
+        }
+
 
         when (type) {
             "follower" -> switchToFollowers()

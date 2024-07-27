@@ -24,6 +24,7 @@ import com.gn4k.loop.models.request.UserRequest
 import com.gn4k.loop.models.response.FollowUnfollowResponse
 import com.gn4k.loop.models.response.UserAllDataResponse
 import com.gn4k.loop.models.response.UserResponse
+import com.gn4k.loop.ui.animation.CustomLoading
 import com.gn4k.loop.ui.home.MainHome
 import com.gn4k.loop.ui.msg.Chatting
 import com.gn4k.loop.ui.profile.followLists.FollowList
@@ -55,7 +56,7 @@ class OthersProfile : AppCompatActivity() {
         var userFollowingCount: String = ""
         var isFollowing: Boolean = false
         var isFollowedBy: Boolean = false
-
+        lateinit var loading: CustomLoading
     }
 
     lateinit var binding: ActivityOthersProfileBinding
@@ -66,9 +67,16 @@ class OthersProfile : AppCompatActivity() {
         binding = ActivityOthersProfileBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        loading = CustomLoading(this)
+
         userId = intent.getStringExtra("userId")?.toInt()!!
 
         setFragment(OthersProfilePost())
+
+        binding.back.setOnClickListener {
+            onBackPressed()
+            finish()
+        }
 
         binding.btnPost.setOnClickListener {
             binding.btnPost.setTextColor(getColor(R.color.app_color))

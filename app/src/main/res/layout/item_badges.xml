@@ -9,10 +9,10 @@
 
     <ImageView
         android:id="@+id/iconImageView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
         android:gravity="center_vertical"
-        android:src="@drawable/ic_back"/>
+        android:src="@drawable/java"/>
 
     <TextView
         android:id="@+id/badgeTextView"

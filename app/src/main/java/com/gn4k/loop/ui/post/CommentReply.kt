@@ -23,6 +23,7 @@ import com.gn4k.loop.models.request.ReplyComment
 import com.gn4k.loop.models.response.Reply
 import com.gn4k.loop.models.response.ReplyListResponse
 import com.gn4k.loop.models.response.UserResponse
+import com.gn4k.loop.ui.animation.CustomLoading
 import com.gn4k.loop.ui.home.MainHome
 import com.gn4k.loop.ui.profile.others.OthersProfile
 import com.gn4k.loop.ui.profile.self.Profile
@@ -43,10 +44,14 @@ class CommentReply : AppCompatActivity() {
     var commentCount by Delegates.notNull<Int>()
     lateinit var replyList: MutableList<Reply>
 
+    lateinit var loading: CustomLoading
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityCommentReplyBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        loading = CustomLoading(this)
+        loading.startLoading()
 
 
         val userPhotoUrl = intent.getStringExtra("user_photo_url")
@@ -70,6 +75,10 @@ class CommentReply : AppCompatActivity() {
         binding.username.text = MainHome.USER_NAME
         binding.timeAgo.text = postTime
         binding.tvReply.text = postContext
+
+        binding.back.setOnClickListener {
+            onBackPressed()
+        }
 
         binding.header.setOnClickListener {
             if (authorId != null) {
@@ -97,6 +106,7 @@ class CommentReply : AppCompatActivity() {
         binding.btnReply.setOnClickListener {
             if (binding.edReply.text.isNotEmpty()) {
                 lifecycleScope.launch {
+                    loading.startLoading()
                     geminiCheckReply(commentId, binding.edReply.text.toString(), position)
                 }
                 binding.edReply.setText("")
@@ -132,9 +142,11 @@ class CommentReply : AppCompatActivity() {
                 doReply(commentId, reply, position)
             } else {
                 Toast.makeText(baseContext, "Inappropriate Content", Toast.LENGTH_SHORT).show()
+                loading.stopLoading()
             }
         }catch (e: Exception) {
             Toast.makeText(baseContext, "Inappropriate Content", Toast.LENGTH_SHORT).show()
+            loading.stopLoading()
         }
 
     }
@@ -158,9 +170,12 @@ class CommentReply : AppCompatActivity() {
                         val adapter = replyList?.let { ReplyAdapter(it, baseContext, binding) }
                         binding.ReplyRecyclerView.layoutManager = LinearLayoutManager(baseContext)
                         binding.ReplyRecyclerView.adapter = adapter
+                        loading.stopLoading()
 
                     } else {
 //                    handleErrorResponse(response)
+                        loading.stopLoading()
+
                     }
                 }
 
@@ -168,6 +183,7 @@ class CommentReply : AppCompatActivity() {
                     Log.d("Reg", "Network Error: ${t.message}")
                     Toast.makeText(baseContext, "Network Error: ${t.message}", Toast.LENGTH_SHORT)
                         .show()
+                    loading.stopLoading()
                 }
             })
     }

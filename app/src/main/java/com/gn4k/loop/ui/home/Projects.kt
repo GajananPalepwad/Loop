@@ -19,6 +19,7 @@ import com.gn4k.loop.databinding.FragmentProjectsBinding
 import com.gn4k.loop.models.StaticVariables.Companion.posts
 import com.gn4k.loop.models.response.GetProjects
 import com.gn4k.loop.models.response.Project
+import com.gn4k.loop.ui.animation.CustomLoading
 import com.gn4k.loop.ui.projects.MakeProject
 import retrofit2.Call
 import retrofit2.Callback
@@ -30,6 +31,7 @@ class Projects : Fragment() {
     private lateinit var projectAdapter: ProjectAdapter
     private var projectList: List<Project> = listOf()
     var filter = "all"
+    lateinit var loading: CustomLoading
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -37,6 +39,9 @@ class Projects : Fragment() {
     ): View? {
 
         binding = FragmentProjectsBinding.inflate(layoutInflater, container, false)
+        loading = CustomLoading(activity)
+        loading.startLoading()
+
         fetchAllProjects("all")
 
         binding.btnAddProject.setOnClickListener {
@@ -46,26 +51,31 @@ class Projects : Fragment() {
 
         binding.btnAll.setOnClickListener {
             fetchAllProjects("all")
+            loading.startLoading()
             filter = "all"
         }
 
         binding.btnYetToStart.setOnClickListener {
             fetchAllProjects("Yet to start")
+            loading.startLoading()
             filter = "Yet to start"
         }
 
         binding.btnInProgress.setOnClickListener {
             fetchAllProjects("In progress")
+            loading.startLoading()
             filter = "In progress"
         }
 
         binding.btnCompleted.setOnClickListener {
             fetchAllProjects("Completed")
+            loading.startLoading()
             filter = "Completed"
         }
 
         binding.btnOnHold.setOnClickListener {
             fetchAllProjects("On hold")
+            loading.startLoading()
             filter = "On hold"
         }
 
@@ -81,6 +91,8 @@ class Projects : Fragment() {
 
         binding.refreshLayout.setOnRefreshListener {
             fetchAllProjects(filter)
+            binding.searchBox.text.clear()
+            loading.startLoading()
         }
 
         return binding.root
@@ -104,8 +116,12 @@ class Projects : Fragment() {
                         binding.recyclerView.adapter = projectAdapter
                         binding.recyclerView.layoutManager = LinearLayoutManager(context)
                         binding.refreshLayout.isRefreshing = false
+
+                        binding.imgEmpty.visibility = if (projectList.isEmpty()) View.VISIBLE else View.GONE
+                        loading.stopLoading()
                     } else {
                         // handleErrorResponse(response)
+                        loading.stopLoading()
                     }
                 }
 
@@ -113,6 +129,7 @@ class Projects : Fragment() {
                     Log.d("Reg", "Network Error: ${t.message}")
                     Toast.makeText(context, "Network Error: ${t.message}", Toast.LENGTH_SHORT)
                         .show()
+                    loading.stopLoading()
                 }
             })
     }

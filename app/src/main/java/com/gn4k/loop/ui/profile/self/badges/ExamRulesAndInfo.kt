@@ -28,7 +28,7 @@ class ExamRulesAndInfo : AppCompatActivity() {
         val badge = intent.getStringExtra("badge")
 
         lifecycleScope.launch {
-            question = geminiCreateQuestions("Give me 10 $badge questions with hard level but every question must have \"?\" mark at the end")
+            ExamPage.question = geminiCreateQuestions("Give me 10 $badge questions with hard level but every question must have \"?\" mark at the end")
         }
 
         binding.btnStart.setOnClickListener {
@@ -37,8 +37,9 @@ class ExamRulesAndInfo : AppCompatActivity() {
                 val intent = Intent(this, ExamPage::class.java)
                 intent.putExtra("badge", badge)
                 startActivity(intent)
+                finish()
             }else{
-
+                Toast.makeText(baseContext, "Please accept the terms and conditions", Toast.LENGTH_SHORT).show()
             }
         }
 
@@ -68,9 +69,7 @@ class ExamRulesAndInfo : AppCompatActivity() {
         return questions.toMutableList()
     }
 
-    companion object{
-        var question: MutableList<Question> = mutableListOf()
-    }
+
 
 
 }

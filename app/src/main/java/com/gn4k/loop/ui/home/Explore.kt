@@ -22,6 +22,7 @@ import com.gn4k.loop.models.response.ExploreResponse
 import com.gn4k.loop.models.response.Post
 import com.gn4k.loop.models.response.SearchUser
 import com.gn4k.loop.models.response.SearchUserResponse
+import com.gn4k.loop.ui.animation.CustomLoading
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -37,12 +38,15 @@ class Explore : Fragment() {
     lateinit var userList: MutableList<SearchUser>
     private var debounceJob: Job? = null
 
+    lateinit var loading: CustomLoading
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentExploreBinding.inflate(layoutInflater, container, false)
-
+        loading = CustomLoading(activity)
+        loading.startLoading()
         posts = mutableListOf()
 
         binding.searchBox.addTextChangedListener(object : TextWatcher {
@@ -70,6 +74,7 @@ class Explore : Fragment() {
         binding.nest.setOnScrollChangeListener { _, _, scrollY, _, _ ->
             if (binding.nest.getChildAt(0).bottom <= scrollY + binding.nest.height) {
                 fetchExploreList()
+                loading.startLoading()
             }
         }
 
@@ -107,6 +112,7 @@ class Explore : Fragment() {
                         binding.exploreRecyclerView.adapter = adapter
                         binding.refreshLayout.isRefreshing = false
 
+                        loading.stopLoading()
 
                     }
                 }
@@ -115,6 +121,7 @@ class Explore : Fragment() {
                     Log.d("Reg", "Network Error: ${t.message}")
                     Toast.makeText(context, "Network Error: ${t.message}", Toast.LENGTH_SHORT)
                         .show()
+                    loading.stopLoading()
                 }
             })
     }

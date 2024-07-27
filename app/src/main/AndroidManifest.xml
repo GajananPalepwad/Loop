@@ -29,7 +29,7 @@
             android:name=".ui.projects.ProjectRequestList"
             android:exported="false" />
         <activity
-            android:name=".ui.profile.self.Settings"
+            android:name=".ui.profile.self.drawer.Settings"
             android:exported="false" />
         <activity
             android:name=".ui.projects.MakeProject"

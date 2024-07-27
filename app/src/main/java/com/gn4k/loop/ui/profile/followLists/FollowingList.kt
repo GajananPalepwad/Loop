@@ -18,6 +18,7 @@ import com.gn4k.loop.databinding.FragmentFollowingListBinding
 import com.gn4k.loop.models.request.UserRequest
 import com.gn4k.loop.models.response.Following
 import com.gn4k.loop.models.response.FollowingResponse
+import com.gn4k.loop.ui.animation.CustomLoading
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -28,11 +29,16 @@ class FollowingList : Fragment() {
     lateinit var followingList: List<Following>
     lateinit var adapter: FollowingAdapter
 
+    lateinit var loading: CustomLoading
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentFollowingListBinding.inflate(layoutInflater, container, false)
+
+        loading = CustomLoading(activity)
+        loading.startLoading()
 
         fetchList()
 
@@ -65,6 +71,11 @@ class FollowingList : Fragment() {
                         adapter = context?.let { FollowingAdapter(it, followingList) }!!
                         binding.recyclerView.layoutManager = LinearLayoutManager(context)
                         binding.recyclerView.adapter = adapter
+
+                        binding.imgEmpty.visibility = if (followingList.isEmpty()) View.VISIBLE else View.GONE
+                        loading.stopLoading()
+                    }else{
+                        loading.stopLoading()
                     }
                 }
 
@@ -72,6 +83,7 @@ class FollowingList : Fragment() {
                     Log.d("Reg", "Network Error: ${t.message}")
                     Toast.makeText(context, "Network Error: ${t.message}", Toast.LENGTH_SHORT)
                         .show()
+                    loading.stopLoading()
                 }
             })
     }

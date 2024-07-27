@@ -34,7 +34,15 @@ class ProfileEditing : AppCompatActivity() {
         binding.edLocation.setText(MainHome.USER_LOCATION)
         binding.edWebsite.setText(MainHome.USER_WEBSITE)
 
+        binding.back.setOnClickListener {
+            onBackPressed()
+        }
+
         binding.btnUpdate.setOnClickListener {
+
+            binding.tilName.error = null
+            binding.tilAbout.error = null
+            binding.tilLocation.error = null
 
             if (binding.edName.text.toString().isEmpty()) {
                 binding.tilName.error = "Name is required"

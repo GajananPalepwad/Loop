@@ -21,6 +21,7 @@ import com.gn4k.loop.models.request.UserRequest
 import com.gn4k.loop.models.response.Follower
 import com.gn4k.loop.models.response.FollowerResponse
 import com.gn4k.loop.models.response.SearchUserResponse
+import com.gn4k.loop.ui.animation.CustomLoading
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -32,12 +33,15 @@ class FollowerList : Fragment() {
 
     lateinit var followerList: MutableList<Follower>
     lateinit var adapter: FollowerAdapter
+    lateinit var loading: CustomLoading
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentFollowingListBinding.inflate(layoutInflater, container, false)
+        loading = CustomLoading(activity)
+        loading.startLoading()
 
         fetchList()
 
@@ -63,7 +67,8 @@ class FollowerList : Fragment() {
         adapter.updateList(filteredList)
     }
 
-    private fun fetchList() {
+    private fun
+            fetchList() {
         val BASE_URL = getString(R.string.base_url)
         val retrofit = RetrofitClient.getClient(BASE_URL)
         val apiService = retrofit?.create(ApiService::class.java)
@@ -79,6 +84,13 @@ class FollowerList : Fragment() {
                         adapter = context?.let { FollowerAdapter(it, followerList) }!!
                         binding.recyclerView.layoutManager = LinearLayoutManager(context)
                         binding.recyclerView.adapter = adapter
+
+                        binding.imgEmpty.visibility = if (followerList.isEmpty()) View.VISIBLE else View.GONE
+
+                        loading.stopLoading()
+                    } else {
+                        // handleErrorResponse(response)
+                        loading.stopLoading()
                     }
                 }
 
@@ -86,6 +98,7 @@ class FollowerList : Fragment() {
                     Log.d("Reg", "Network Error: ${t.message}")
                     Toast.makeText(context, "Network Error: ${t.message}", Toast.LENGTH_SHORT)
                         .show()
+                    loading.stopLoading()
                 }
             })
     }

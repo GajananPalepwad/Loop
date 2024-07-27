@@ -83,7 +83,7 @@ class ProjectAdapter(
         holder.rcTags.adapter = badgeAdapter
 
 
-        val imageAdapter = ImageAdapter(project.joined_persons, context)
+        val imageAdapter = ImageAdapter(project.joined_persons, context, project.author_id)
         holder.rvParticipants.adapter = imageAdapter
         holder.rvParticipants.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
 

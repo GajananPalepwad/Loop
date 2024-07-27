@@ -80,7 +80,7 @@ class ProfileProjectAdapter(
         holder.btnCheckJoinRequest.setText("${project.requested_people.size}+ Join Requests")
 
 
-        val imageAdapter = ImageAdapter(project.joined_persons, context)
+        val imageAdapter = ImageAdapter(project.joined_persons, context, project.author_id)
         holder.rvParticipants.adapter = imageAdapter
         holder.rvParticipants.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
 
@@ -91,6 +91,7 @@ class ProfileProjectAdapter(
             intent.putExtra("joinedPersons", ArrayList(project.joined_persons))
             intent.putExtra("requestPersons", ArrayList(project.requested_people))
             intent.putExtra("projectId", project.project_id.toString())
+            intent.putExtra("authorId", project.author_id.toString())
             context.startActivity(intent)
 
         }

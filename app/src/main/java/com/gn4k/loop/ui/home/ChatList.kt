@@ -18,6 +18,7 @@ import com.gn4k.loop.databinding.FragmentChatListBinding
 import com.gn4k.loop.models.StaticVariables.Companion.posts
 import com.gn4k.loop.models.response.Conversation
 import com.gn4k.loop.models.response.ConversationsResponse
+import com.gn4k.loop.ui.animation.CustomLoading
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -27,12 +28,15 @@ class ChatList : Fragment() {
     lateinit var binding: FragmentChatListBinding
     private lateinit var conversationsList: MutableList<Conversation>
     private lateinit var adapter: ConversationAdapter
+    lateinit var loading: CustomLoading
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentChatListBinding.inflate(layoutInflater, container, false)
+        loading = CustomLoading(activity)
+        loading.startLoading()
         setupRecyclerView()
         setupSearchBox()
         fetchConversationsList()
@@ -91,14 +95,21 @@ class ChatList : Fragment() {
                         adapter.updateList(conversationsList)
                         binding.refreshLayout.isRefreshing = false
 
+                        binding.imgEmpty.visibility = if (conversationsList.isEmpty()) View.VISIBLE else View.GONE
+                        loading.stopLoading()
+
                     } else {
                         showErrorToast("Failed to fetch conversations")
+                        binding.refreshLayout.isRefreshing = false
+                        loading.stopLoading()
                     }
                 }
 
                 override fun onFailure(call: Call<ConversationsResponse?>, t: Throwable) {
                     Log.d("Reg", "Network Error: ${t.message}")
                     showErrorToast("Network Error: ${t.message}")
+                    binding.refreshLayout.isRefreshing = false
+                    loading.stopLoading()
                 }
             })
     }

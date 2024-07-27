@@ -26,11 +26,13 @@ import com.gn4k.loop.api.RetrofitClient
 import com.gn4k.loop.databinding.ActivityProfileBinding
 import com.gn4k.loop.models.response.UserResponse
 import com.gn4k.loop.ui.SplashScreen
+import com.gn4k.loop.ui.animation.CustomLoading
 import com.gn4k.loop.ui.home.MainHome
 import com.gn4k.loop.ui.home.loopmeeting.MeetingLists
 import com.gn4k.loop.ui.post.MakePost
 import com.gn4k.loop.ui.profile.followLists.FollowList
 import com.gn4k.loop.ui.profile.self.badges.ManageBadges
+import com.gn4k.loop.ui.profile.self.drawer.Settings
 import com.gn4k.loop.ui.projects.MakeProject
 import com.google.android.material.navigation.NavigationView
 import com.yalantis.ucrop.UCrop
@@ -55,6 +57,10 @@ class Profile : AppCompatActivity(), NavigationView.OnNavigationItemSelectedList
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var navView: NavigationView
     private lateinit var toggle: ActionBarDrawerToggle
+
+    companion object {
+        lateinit var loading: CustomLoading
+    }
 
     private val selectImageLauncher: ActivityResultLauncher<Intent> =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
@@ -92,11 +98,17 @@ class Profile : AppCompatActivity(), NavigationView.OnNavigationItemSelectedList
         super.onCreate(savedInstanceState)
         binding = ActivityProfileBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        loading = CustomLoading(this)
+
         var intentMake = Intent(this, MakePost::class.java)
 
         // Set up DrawerLayout and NavigationView
         drawerLayout = binding.drawerLayout
         navView = binding.navView
+
+        binding.back.setOnClickListener {
+            onBackPressed()
+        }
 
 
         toggle = ActionBarDrawerToggle(
@@ -324,16 +336,34 @@ class Profile : AppCompatActivity(), NavigationView.OnNavigationItemSelectedList
             }
 
             R.id.nav_logout -> {
-                val sharedPref = getSharedPreferences("user_data", Context.MODE_PRIVATE)
-                val editor = sharedPref.edit()
-                editor.putString("user_id", "-1")
-                editor.apply()
-                startActivity(Intent(this, SplashScreen::class.java))
-                finish()
+                showLogoutConfirmationDialog()
             }
         }
         drawerLayout.closeDrawer(navView)
         return true
+    }
+
+
+    private fun showLogoutConfirmationDialog() {
+        AlertDialog.Builder(this, R.style.DarkAlertDialogTheme)
+            .setTitle("Confirm Logout")
+            .setMessage("Are you sure you want to log out?")
+            .setPositiveButton("Yes") { _, _ ->
+                performLogout()
+            }
+            .setNegativeButton("No") { dialog, _ ->
+                dialog.dismiss()
+            }
+            .show()
+    }
+
+    private fun performLogout() {
+        val sharedPref = getSharedPreferences("user_data", Context.MODE_PRIVATE)
+        val editor = sharedPref.edit()
+        editor.putString("user_id", "-1")
+        editor.apply()
+        startActivity(Intent(this, SplashScreen::class.java))
+        finish()
     }
 
     private fun setFragment(fragment: Fragment) {

@@ -22,6 +22,7 @@
             android:paddingVertical="7dp">
 
             <androidx.cardview.widget.CardView
+                android:id="@+id/back"
                 android:layout_width="45dp"
                 android:layout_height="45dp"
                 android:layout_gravity="center_vertical"

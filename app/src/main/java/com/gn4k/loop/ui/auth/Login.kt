@@ -50,6 +50,10 @@ class Login : AppCompatActivity() {
 
         Rive.init(this)
 
+        binding.back.setOnClickListener {
+            onBackPressed()
+        }
+
 
         binding.edEmail.setOnFocusChangeListener { view, b ->
             if (b) {
