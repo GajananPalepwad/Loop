@@ -20,6 +20,7 @@ import com.gn4k.loop.models.response.CreateMeetingResponse
 import com.gn4k.loop.models.response.Project
 import com.gn4k.loop.ui.home.MainHome
 import com.gn4k.loop.ui.projects.ProjectRequestList
+import com.gn4k.loop.ui.projects.UpdateProject
 import com.overflowarchives.linkpreview.TelegramPreview
 import com.overflowarchives.linkpreview.ViewListener
 import retrofit2.Call
@@ -39,6 +40,7 @@ class ProfileProjectAdapter(
         val linkPreview: TelegramPreview = itemView.findViewById(R.id.link_preview)
         val rvParticipants: RecyclerView = itemView.findViewById(R.id.rvParticipants)
         val btnCheckJoinRequest: Button = itemView.findViewById(R.id.btnCheckRequest)
+        val btnEditProject: Button = itemView.findViewById(R.id.btnEditProject)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProjectViewHolder {
@@ -86,14 +88,28 @@ class ProfileProjectAdapter(
 
         // Handle join button click
         holder.btnCheckJoinRequest.setOnClickListener {
-
             val intent = Intent(context, ProjectRequestList::class.java)
             intent.putExtra("joinedPersons", ArrayList(project.joined_persons))
             intent.putExtra("requestPersons", ArrayList(project.requested_people))
             intent.putExtra("projectId", project.project_id.toString())
             intent.putExtra("authorId", project.author_id.toString())
             context.startActivity(intent)
+        }
 
+        holder.btnEditProject.setOnClickListener {
+            if (project.author_id == MainHome.USER_ID.toInt()) {
+                val intent = Intent(context, UpdateProject::class.java)
+                intent.putExtra("projectId", project.project_id.toString())
+                intent.putExtra("authorId", project.author_id.toString())
+                intent.putExtra("title", project.title)
+                intent.putExtra("description", project.description)
+                intent.putExtra("status", project.status)
+                intent.putExtra("link", project.link_preview)
+                intent.putExtra("tags", ArrayList(project.tags))
+                context.startActivity(intent)
+            }else{
+                Toast.makeText(context, "You are not the owner of this project", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 

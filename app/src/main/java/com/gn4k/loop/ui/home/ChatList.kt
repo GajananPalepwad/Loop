@@ -19,6 +19,8 @@ import com.gn4k.loop.models.StaticVariables.Companion.posts
 import com.gn4k.loop.models.response.Conversation
 import com.gn4k.loop.models.response.ConversationsResponse
 import com.gn4k.loop.ui.animation.CustomLoading
+import com.gn4k.loop.ui.profile.followLists.FollowerList
+import com.gn4k.loop.ui.profile.followLists.FollowingList
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -29,6 +31,7 @@ class ChatList : Fragment() {
     private lateinit var conversationsList: MutableList<Conversation>
     private lateinit var adapter: ConversationAdapter
     lateinit var loading: CustomLoading
+    var tab = "primary"
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -45,12 +48,44 @@ class ChatList : Fragment() {
             fetchConversationsList()
         }
 
+        binding.btnPrimary.setOnClickListener {
+            switchToPrimary()
+        }
+
+        binding.btnRequests.setOnClickListener {
+            switchToRequested()
+        }
+
         return binding.root
+    }
+
+    private fun switchToPrimary() {
+        activity?.let { binding.btnPrimary.setTextColor(it.getColor(R.color.app_color)) }
+        activity?.let { binding.btnRequests.setTextColor(it.getColor(R.color.white)) }
+        binding.btnRequests.isEnabled = true
+        binding.btnPrimary.isEnabled = false
+        tab = "primary"
+        loading.startLoading()
+        fetchConversationsList()
+    }
+
+    private fun switchToRequested() {
+        activity?.let { binding.btnRequests.setTextColor(it.getColor(R.color.app_color)) }
+        activity?.let { binding.btnPrimary.setTextColor(it.getColor(R.color.white)) }
+        binding.btnRequests.isEnabled = false
+        binding.btnPrimary.isEnabled = true
+        tab = "requested"
+        loading.startLoading()
+        fetchRequestedConversationsList()
     }
 
     override fun onResume() {
         super.onResume()
-        fetchConversationsList()  // Fetch conversations when the fragment is resumed
+        if (tab == "primary") {
+            fetchConversationsList()
+        }else{
+            fetchRequestedConversationsList()
+        }
     }
 
     private fun setupRecyclerView() {
@@ -77,6 +112,51 @@ class ChatList : Fragment() {
         adapter.updateList(filteredList)
     }
 
+    private fun fetchRequestedConversationsList() {
+        val BASE_URL = getString(R.string.base_url)
+        val retrofit = RetrofitClient.getClient(BASE_URL)
+        val apiService = retrofit?.create(ApiService::class.java)
+
+        apiService?.fetchRequestedConversation(MainHome.USER_ID.toInt())
+            ?.enqueue(object : Callback<ConversationsResponse?> {
+                override fun onResponse(
+                    call: Call<ConversationsResponse?>,
+                    response: Response<ConversationsResponse?>
+                ) {
+                    if (response.isSuccessful) {
+                        val conversationsResponse = response.body()
+                        conversationsList = conversationsResponse?.conversations?.toMutableList() ?: mutableListOf()
+                        binding.recyclerView.adapter = adapter
+                        adapter.updateList(conversationsList)
+                        binding.refreshLayout.isRefreshing = false
+
+                        binding.imgEmpty.visibility = if (conversationsList.isEmpty()) View.VISIBLE else View.GONE
+                        loading.stopLoading()
+
+
+                        if (conversationsResponse != null) {
+                            if(conversationsResponse.excluded_count!=0){
+                                binding.btnPrimary.text = "Primary (${conversationsResponse.excluded_count})"
+                                binding.btnRequests.text = "Requests"
+                            }
+                        }
+
+                    } else {
+                        showErrorToast("Failed to fetch conversations")
+                        binding.refreshLayout.isRefreshing = false
+                        loading.stopLoading()
+                    }
+                }
+
+                override fun onFailure(call: Call<ConversationsResponse?>, t: Throwable) {
+                    Log.d("Reg", "Network Error: ${t.message}")
+                    showErrorToast("Network Error: ${t.message}")
+                    binding.refreshLayout.isRefreshing = false
+                    loading.stopLoading()
+                }
+            })
+    }
+
     private fun fetchConversationsList() {
         val BASE_URL = getString(R.string.base_url)
         val retrofit = RetrofitClient.getClient(BASE_URL)
@@ -97,6 +177,13 @@ class ChatList : Fragment() {
 
                         binding.imgEmpty.visibility = if (conversationsList.isEmpty()) View.VISIBLE else View.GONE
                         loading.stopLoading()
+
+                        if (conversationsResponse != null) {
+                            if(conversationsResponse.excluded_count!=0){
+                                binding.btnRequests.text = "Requests (${conversationsResponse.excluded_count})"
+                                binding.btnPrimary.text = "Primary"
+                            }
+                        }
 
                     } else {
                         showErrorToast("Failed to fetch conversations")

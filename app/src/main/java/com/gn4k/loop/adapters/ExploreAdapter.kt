@@ -47,10 +47,12 @@ class ExploreAdapter(private val posts: List<Post>, private val activity: Contex
                     .placeholder(R.drawable.post_placeholder)
                     .into(holder.postImage)
             }
+
             "code_snippet" -> {
                 holder.codeContainer.visibility = View.VISIBLE
                 holder.codeContainer.setText(post.link)
             }
+
             "link" -> {
                 holder.linkPreview.visibility = View.VISIBLE
                 val formattedUrl = post.link?.let { formatUrl(it) }
@@ -59,6 +61,7 @@ class ExploreAdapter(private val posts: List<Post>, private val activity: Contex
                     override fun onFailedToLoad(e: Exception?) {}
                 })
             }
+
             "only_caption" -> {
                 // Handle only caption
             }
@@ -143,8 +146,8 @@ class ExploreAdapter(private val posts: List<Post>, private val activity: Contex
         val username: TextView = itemView.findViewById(R.id.username)
         val item: CardView = itemView.findViewById(R.id.item)
 
-        }
     }
+}
 
 
 

@@ -36,7 +36,7 @@ class ProfilePost : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentPostBinding.inflate(inflater, container, false)
-        Profile.loading.startLoading()
+
 
         val BASE_URL = getString(R.string.base_url)
         val retrofit = RetrofitClient.getClient(BASE_URL)
@@ -48,7 +48,9 @@ class ProfilePost : Fragment() {
         return binding.root
     }
 
+
     private fun getPostsByAuthor(authorId: String) {
+        Profile.loading.startLoading()
         val request = GetPostsByAuthorRequest(author_id = authorId, MainHome.USER_ID)
         apiService?.getPostsByAuthor(request)?.enqueue(object : Callback<List<Post>> {
             override fun onResponse(call: Call<List<Post>>, response: Response<List<Post>>) {

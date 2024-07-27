@@ -23,6 +23,7 @@ import com.gn4k.loop.models.response.Post
 import com.gn4k.loop.models.request.LikeDislikeRequest
 import com.gn4k.loop.models.response.UserResponse
 import com.gn4k.loop.ui.home.MainHome
+import com.gn4k.loop.ui.post.ViewImageInFull
 import com.gn4k.loop.ui.profile.others.OthersProfile
 import com.gn4k.loop.ui.profile.self.Profile
 import com.overflowarchives.linkpreview.TelegramPreview
@@ -125,6 +126,12 @@ class PostAdapter(private val postList: MutableList<Post>, private val userName:
             }
         }
 
+        holder.postImage.setOnClickListener {
+            val intent = Intent(activity, ViewImageInFull::class.java)
+            intent.putExtra("image_url", post.link)
+            activity.startActivity(intent)
+        }
+
         holder.item.setOnClickListener {
 
             StaticVariables.isExplore = false
@@ -144,6 +151,25 @@ class PostAdapter(private val postList: MutableList<Post>, private val userName:
             intent.putExtra("adapter_position", position.toInt())
             activity.startActivity(intent)
 
+        }
+
+        holder.codeContainer.setOnClickListener{
+            StaticVariables.isExplore = false
+
+            val intent = Intent(activity, ActivityPost::class.java)
+            intent.putExtra("post_type", post.type)
+            intent.putExtra("post_link", post.link)
+            intent.putExtra("user_photo_url", profileUrl)
+            intent.putExtra("user_name", userName)
+            intent.putExtra("post_time", timeAgo(post.time))
+            intent.putExtra("post_context", post.context)
+            intent.putExtra("is_liked", post.isLiked)
+            intent.putExtra("like_count", post.likeCount.toInt())
+            intent.putExtra("comment_count", post.commentCount.toInt())
+            intent.putExtra("post_id", post.postId.toInt())
+            intent.putExtra("author_id", post.authorId)
+            intent.putExtra("adapter_position", position.toInt())
+            activity.startActivity(intent)
         }
 
 

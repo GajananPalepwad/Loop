@@ -133,6 +133,12 @@ class ActivityPost : AppCompatActivity() {
             }
         }
 
+        binding.postImage.setOnClickListener {
+            val intent = Intent(this, ViewImageInFull::class.java)
+            intent.putExtra("image_url", postLink)
+            startActivity(intent)
+        }
+
 
         binding.btnLike.setOnClickListener {
             if (isLiked) {

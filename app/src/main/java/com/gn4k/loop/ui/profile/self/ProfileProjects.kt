@@ -43,6 +43,11 @@ class ProfileProjects : Fragment() {
 
     }
 
+    override fun onResume() {
+        super.onResume()
+        fetchAllProjects()
+    }
+
     private fun fetchAllProjects() {
         val BASE_URL = getString(R.string.base_url)
         val retrofit = RetrofitClient.getClient(BASE_URL)

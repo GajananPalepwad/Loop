@@ -85,7 +85,9 @@ dependencies {
     }
 
     implementation("com.google.ai.client.generativeai:generativeai:0.9.0")
-    implementation ("com.google.code.gson:gson:2.10.1")
+    implementation("com.google.code.gson:gson:2.10.1")
+
+    implementation ("com.github.MikeOrtiz:TouchImageView:1.4.1")
 
 
 

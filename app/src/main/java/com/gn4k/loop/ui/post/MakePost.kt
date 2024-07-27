@@ -336,14 +336,17 @@ class MakePost : AppCompatActivity() {
                 if (response.isSuccessful) {
                     val createPostResponse = response.body()
                     Toast.makeText(this@MakePost, createPostResponse?.message ?: "Post created successfully", Toast.LENGTH_SHORT).show()
+                    loading.stopLoading()
                     onBackPressed()
                 } else {
                     handleErrorResponse(response)
+                    loading.stopLoading()
                 }
             }
 
             override fun onFailure(call: Call<CreatePostResponse>, t: Throwable) {
                 Log.d("CreatePostActivity", "Network Error: ${t.message}")
+                loading.stopLoading()
                 Toast.makeText(this@MakePost, "Network Error: ${t.message}", Toast.LENGTH_SHORT).show()
             }
         })
@@ -364,6 +367,8 @@ class MakePost : AppCompatActivity() {
 
         if (context.isEmpty()) {
             Toast.makeText(this, "Context is required.", Toast.LENGTH_SHORT).show()
+            loading.stopLoading()
+
             return
         }
 

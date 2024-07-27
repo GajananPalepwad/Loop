@@ -16,6 +16,7 @@ import com.gn4k.loop.api.RetrofitClient
 import com.gn4k.loop.databinding.ActivityMakeProjectBinding
 import com.gn4k.loop.models.request.AddProjectRequest
 import com.gn4k.loop.models.request.Person
+import com.gn4k.loop.models.request.UpdateProjectRequest
 import com.gn4k.loop.models.response.CreateMeetingResponse
 import com.gn4k.loop.models.response.Skill
 import com.gn4k.loop.ui.animation.CustomLoading
@@ -26,11 +27,11 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class MakeProject : AppCompatActivity() {
+class UpdateProject : AppCompatActivity() {
 
     lateinit var binding: ActivityMakeProjectBinding
     lateinit var apiService: ApiService
-    private val selectedSkills = mutableSetOf<String>()
+    private var selectedSkills = mutableSetOf<String>()
     private lateinit var skillsAdapter: SkillsAdapter
     var tagListSpinner: List<String> = java.util.ArrayList()
     lateinit var spinnerDialog: SpinnerDialog
@@ -44,6 +45,28 @@ class MakeProject : AppCompatActivity() {
         binding = ActivityMakeProjectBinding.inflate(layoutInflater)
         setContentView(binding.root)
         loading = CustomLoading(this)
+
+        val projectId = intent.getStringExtra("projectId")
+        val projectTitle = intent.getStringExtra("title")
+        val projectDescription = intent.getStringExtra("description")
+        val projectStatus = intent.getStringExtra("status")
+        val projectLink = intent.getStringExtra("link")
+        val tagList = intent.getStringArrayListExtra("tags")!!
+
+
+        binding.edTitle.setText(projectTitle)
+        binding.edDescription.setText(projectDescription)
+        binding.edStatus.setText(projectStatus)
+        binding.edLink.setText(projectLink)
+        selectedSkills = tagList.toMutableSet()
+
+        val formattedUrl = formatUrl(projectLink.toString())
+        binding.linkPreview.loadUrl(formattedUrl, object : ViewListener {
+            override fun onPreviewSuccess(status: Boolean) {}
+            override fun onFailedToLoad(e: Exception?) {}
+        })
+
+        binding.btnPost.text = "Update"
 
         val BASE_URL = getString(R.string.base_url)
         val retrofit = RetrofitClient.getClient(BASE_URL)
@@ -89,7 +112,7 @@ class MakeProject : AppCompatActivity() {
 
         binding.btnPost.setOnClickListener {
             loading.startLoading()
-            submitProject()
+            submitProject(projectId!!.toInt())
         }
     }
 
@@ -113,7 +136,7 @@ class MakeProject : AppCompatActivity() {
             .show()
     }
 
-    private fun submitProject() {
+    private fun submitProject(projectId: Int) {
         val title = binding.edTitle.text.toString().trim()
         val description = binding.edDescription.text.toString().trim()
         val status = binding.edStatus.text.toString().trim()
@@ -143,39 +166,33 @@ class MakeProject : AppCompatActivity() {
             return
         }
 
-        val joinedPersons = listOf(Person(MainHome.USER_ID.toInt()))
-        val requestedPersons = listOf<Person>()
 
-        val authorId = MainHome.USER_ID.toInt()
-
-        val addProjectRequest = AddProjectRequest(
+        val updateProject = UpdateProjectRequest(
+            project_id = projectId,
             title = title,
             description = description,
             status = status,
             link_preview = link,
-            joined_persons = joinedPersons,
-            requested_persons = requestedPersons,
             tags = tags,
-            author_id = authorId
         )
 
-        apiService?.addProject(addProjectRequest)?.enqueue(object : Callback<CreateMeetingResponse> {
+        apiService?.updateProject(updateProject)?.enqueue(object : Callback<CreateMeetingResponse> {
             override fun onResponse(call: Call<CreateMeetingResponse>, response: Response<CreateMeetingResponse>) {
                 if (response.isSuccessful) {
                     loading.stopLoading()
                     val createProjectRequest = response.body()
-                    Toast.makeText(this@MakeProject, createProjectRequest?.message ?: "Project created successfully", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@UpdateProject, createProjectRequest?.message ?: "Project created successfully", Toast.LENGTH_SHORT).show()
                     onBackPressed()
                 } else {
                     loading.stopLoading()
-                    Toast.makeText(this@MakeProject, "Failed to create project", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@UpdateProject, "Failed to create project", Toast.LENGTH_SHORT).show()
                 }
             }
 
             override fun onFailure(call: Call<CreateMeetingResponse>, t: Throwable) {
                 loading.stopLoading()
                 Log.d("MakeProject", "Network Error: ${t.message}")
-                Toast.makeText(this@MakeProject, "Network Error: ${t.message}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@UpdateProject, "Network Error: ${t.message}", Toast.LENGTH_SHORT).show()
             }
         })
     }
@@ -191,7 +208,7 @@ class MakeProject : AppCompatActivity() {
                     if (skills != null) {
                         tagListSpinner = skills.map { it.skill }
                         spinnerDialog = SpinnerDialog(
-                            this@MakeProject,
+                            this@UpdateProject,
                             tagListSpinner as ArrayList<String?>,
                             "Select or Search Skills",
                             R.style.DialogAnimations_SmileWindow,
@@ -205,30 +222,18 @@ class MakeProject : AppCompatActivity() {
                             addSkill(item)
                         }
                     } else {
-                        Log.e(
-                            "SkillSelector",
-                            "Response not successful: ${response.errorBody()?.string()}"
-                        )
-                        Toast.makeText(
-                            baseContext,
-                            "Failed to fetch skills",
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        Log.e("SkillSelector", "Response not successful: ${response.errorBody()?.string()}")
+                        Toast.makeText(baseContext, "Failed to fetch skills", Toast.LENGTH_SHORT).show()
                     }
                 } else {
-                    Log.e(
-                        "SkillSelector",
-                        "Response not successful: ${response.errorBody()?.string()}"
-                    )
-                    Toast.makeText(baseContext, "Failed to fetch skills", Toast.LENGTH_SHORT)
-                        .show()
+                    Log.e("SkillSelector", "Response not successful: ${response.errorBody()?.string()}")
+                    Toast.makeText(baseContext, "Failed to fetch skills", Toast.LENGTH_SHORT).show()
                 }
             }
 
             override fun onFailure(call: Call<Skill>, t: Throwable) {
                 Log.d("Reg", "Network Error: ${t.message}")
-                Toast.makeText(baseContext, "Network Error: ${t.message}", Toast.LENGTH_SHORT)
-                    .show()
+                Toast.makeText(baseContext, "Network Error: ${t.message}", Toast.LENGTH_SHORT).show()
             }
         })
     }

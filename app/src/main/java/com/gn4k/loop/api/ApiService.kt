@@ -1,45 +1,5 @@
-import com.gn4k.loop.models.request.AddBadgeRequest
-import com.gn4k.loop.models.request.AddProjectRequest
-import com.gn4k.loop.models.request.CreateMeetRequest
-import com.gn4k.loop.models.response.Post
-import com.gn4k.loop.models.request.CreatePostRequestForLinkNCode
-import com.gn4k.loop.models.request.FollowUnfollowRequest
-import com.gn4k.loop.models.request.GetPostsByAuthorRequest
-import com.gn4k.loop.models.request.HomeFeedRequest
-import com.gn4k.loop.models.request.JoinLeaveMeetRequest
-import com.gn4k.loop.models.request.JoinRequest
-import com.gn4k.loop.models.request.LikeDislikeCommentRequest
-import com.gn4k.loop.models.request.LikeDislikeReplyRequest
-import com.gn4k.loop.models.request.LikeDislikeRequest
-import com.gn4k.loop.models.request.LoginRequest
-import com.gn4k.loop.models.request.MakeCommentRequest
-import com.gn4k.loop.models.request.MarkSeenPostRequest
-import com.gn4k.loop.models.request.MarkSeenRequest
-import com.gn4k.loop.models.request.RegisterRequest
-import com.gn4k.loop.models.request.ReplyComment
-import com.gn4k.loop.models.request.SendMsgRequest
-import com.gn4k.loop.models.request.UpdateProfileRequest
-import com.gn4k.loop.models.request.UserIdRequest
-import com.gn4k.loop.models.request.UserRequest
-import com.gn4k.loop.models.response.ChattingRespnse
-import com.gn4k.loop.models.response.ConversationsResponse
-import com.gn4k.loop.models.response.CreateMeetingResponse
-import com.gn4k.loop.models.response.CreatePostResponse
-import com.gn4k.loop.models.response.ExploreResponse
-import com.gn4k.loop.models.response.FetchCommentsResponse
-import com.gn4k.loop.models.response.FollowUnfollowResponse
-import com.gn4k.loop.models.response.FollowerResponse
-import com.gn4k.loop.models.response.FollowingResponse
-import com.gn4k.loop.models.response.GetProjects
-import com.gn4k.loop.models.response.MarkSeenResponse
-import com.gn4k.loop.models.response.MeetingResponse
-import com.gn4k.loop.models.response.Posts
-import com.gn4k.loop.models.response.ReplyListResponse
-import com.gn4k.loop.models.response.SearchUserResponse
-import com.gn4k.loop.models.response.SendMsgResponse
-import com.gn4k.loop.models.response.Skill
-import com.gn4k.loop.models.response.UserAllDataResponse
-import com.gn4k.loop.models.response.UserResponse
+import com.gn4k.loop.models.request.*
+import com.gn4k.loop.models.response.*
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Call
@@ -47,6 +7,7 @@ import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Multipart
 import retrofit2.http.POST
+import retrofit2.http.PUT
 import retrofit2.http.Part
 import retrofit2.http.Query
 
@@ -124,6 +85,9 @@ interface ApiService {
     @GET("explore.php")
     fun fetchExplore(@Query("user_id") userId: Int): Call<ExploreResponse>
 
+    @GET("get_request_conversation.php")
+    fun fetchRequestedConversation(@Query("user_id") userId: Int): Call<ConversationsResponse>
+
     @GET("get_conversations.php")
     fun fetchConversation(@Query("user_id") userId: Int): Call<ConversationsResponse>
 
@@ -174,6 +138,9 @@ interface ApiService {
 
     @POST("add_project.php")
     fun addProject(@Body request: AddProjectRequest): Call<CreateMeetingResponse>
+
+    @PUT("update_project.php")
+    fun updateProject(@Body request: UpdateProjectRequest): Call<CreateMeetingResponse>
 
     @POST("accept_reject_project_request.php")
     fun acceptRejectProjectRequest(@Body request: JoinRequest): Call<CreateMeetingResponse>

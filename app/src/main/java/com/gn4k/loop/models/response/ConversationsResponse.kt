@@ -2,7 +2,8 @@ package com.gn4k.loop.models.response
 
 data class ConversationsResponse(
     val status: String,
-    val conversations: List<Conversation>
+    val conversations: List<Conversation>,
+    val excluded_count: Int
 )
 
 
