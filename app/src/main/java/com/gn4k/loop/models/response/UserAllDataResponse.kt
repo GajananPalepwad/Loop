@@ -7,6 +7,7 @@ data class UserAllDataResponse(
     val user: User,
     val is_following: Boolean, //i am following other
     val is_followed_by: Boolean, // other following me
+    val gemini_key: String,
     )
 
 data class User(

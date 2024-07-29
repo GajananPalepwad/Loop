@@ -433,7 +433,7 @@
         android:fitsSystemWindows="true"
         app:itemBackground="@drawable/nav_item_background"
         app:itemTextAppearance="@style/CustomNavigationViewItemText"
-        app:menu="@menu/drawer_menu"
+        app:menu="@menu/profile_drawer_menu"
         app:itemTextColor="@color/white"
         android:width="210dp" />
 

@@ -4,22 +4,19 @@ import ApiService
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.gn4k.loop.R
 import com.gn4k.loop.api.RetrofitClient
-import com.gn4k.loop.models.request.RegisterRequest
 import com.gn4k.loop.models.request.UserRequest
-import com.gn4k.loop.models.response.Skills
 import com.gn4k.loop.models.response.UserAllDataResponse
-import com.gn4k.loop.models.response.UserResponse
 import com.gn4k.loop.ui.auth.ChooseRegOrLog
-import com.gn4k.loop.ui.home.HomeFeed
 import com.gn4k.loop.ui.home.MainHome
+import com.gn4k.loop.ui.post.DeepLinkPost
 import com.gn4k.loop.ui.profile.SkillSelector
+import com.gn4k.loop.ui.profile.others.OthersProfile
+import com.gn4k.loop.ui.profile.self.Profile
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -35,11 +32,11 @@ class SplashScreen : AppCompatActivity() {
         val sharedPref = getSharedPreferences("user_data", Context.MODE_PRIVATE)
         MainHome.USER_ID = sharedPref.getString("user_id", "").toString()
 
-        if(MainHome.USER_ID=="" || MainHome.USER_ID==null){
+        if (MainHome.USER_ID == "" || MainHome.USER_ID == null) {
             val intent: Intent = Intent(baseContext, ChooseRegOrLog::class.java)
             startActivity(intent)
             finish()
-        }else{
+        } else {
             val user = UserRequest(MainHome.USER_ID.toInt(), MainHome.USER_ID.toInt())
             getUserData(user)
         }
@@ -80,22 +77,69 @@ class SplashScreen : AppCompatActivity() {
                         MainHome.USER_SKILLS = userResponse.user.skills ?: emptyList()
                         MainHome.USER_FOLLOWERS_COUNT = userResponse.user.followers_count.toString()
                         MainHome.USER_FOLLOWING_COUNT = userResponse.user.following_count.toString()
+                        MainHome.GEMINI_KEY = userResponse.gemini_key
                         userResponse.is_following
                     }
 
 
                     if (MainHome.USER_ID == "-1" || MainHome.USER_ID.isEmpty()) {
+
                         val intent: Intent = Intent(baseContext, ChooseRegOrLog::class.java)
                         startActivity(intent)
                         finish()
+
                     } else if (MainHome.USER_SKILLS.isEmpty()) {
+
                         val intent: Intent = Intent(baseContext, SkillSelector::class.java)
                         startActivity(intent)
                         finish()
+
                     } else {
-                        val intent: Intent = Intent(baseContext, MainHome::class.java)
-                        startActivity(intent)
-                        finish()
+
+                        val uri = intent.data
+
+                        if (uri != null) {
+
+                            val postId = uri.getQueryParameter("post")?.toIntOrNull()
+                            val userId = uri.getQueryParameter("user")?.toIntOrNull()
+
+                            if (postId != null) {
+
+                                val intent = Intent(baseContext, DeepLinkPost::class.java)
+                                intent.putExtra("postId", postId)
+                                startActivity(intent)
+                                finish()
+
+                            } else if (userId != null) {
+
+                                if (userId == MainHome.USER_ID.toInt()) {
+
+                                    val intent = Intent(baseContext, Profile::class.java)
+                                    intent.putExtra("userId", userId)
+                                    startActivity(intent)
+                                    finish()
+
+                                } else {
+
+                                    val intent = Intent(baseContext, OthersProfile::class.java)
+                                    intent.putExtra("userId", userId.toString())
+                                    startActivity(intent)
+                                    finish()
+
+                                }
+                            } else {
+
+                                val intent: Intent = Intent(baseContext, MainHome::class.java)
+                                startActivity(intent)
+                                finish()
+                            }
+                        } else {
+
+                            val intent: Intent = Intent(baseContext, MainHome::class.java)
+                            startActivity(intent)
+                            finish()
+
+                        }
                     }
 
                 } else {
@@ -105,7 +149,8 @@ class SplashScreen : AppCompatActivity() {
 
             override fun onFailure(call: Call<UserAllDataResponse?>, t: Throwable) {
                 Log.d("Reg", "Network Error: ${t.message}")
-                Toast.makeText(this@SplashScreen, "Network Error: ${t.message}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@SplashScreen, "Network Error: ${t.message}", Toast.LENGTH_SHORT)
+                    .show()
             }
         })
     }
@@ -128,7 +173,8 @@ class SplashScreen : AppCompatActivity() {
 
             else -> {
                 Log.d("Reg", "Unexpected Error: ${response.message()}")
-                Toast.makeText(this, "Unexpected Error: ${response.code()}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Unexpected Error: ${response.code()}", Toast.LENGTH_SHORT)
+                    .show()
             }
         }
     }

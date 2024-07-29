@@ -18,6 +18,7 @@ import com.gn4k.loop.api.RetrofitClient
 import com.gn4k.loop.models.request.LikeDislikeCommentRequest
 import com.gn4k.loop.models.response.Comment
 import com.gn4k.loop.models.response.UserResponse
+import com.gn4k.loop.notificationModel.SaveNotificationInDB
 import com.gn4k.loop.ui.home.MainHome
 import com.gn4k.loop.ui.post.ActivityPost
 import com.gn4k.loop.ui.post.CommentReply
@@ -52,7 +53,7 @@ class CommentsAdapter(private val commentsList: List<Comment>, private val activ
         }
 
         holder.btnLike.setOnClickListener {
-            doLikeAndUnlike(comment.id, holder, position)
+            doLikeAndUnlike(comment.id, holder, position, comment.post_id, comment.author_id)
         }
 
         holder.username.text = comment.author_name
@@ -78,6 +79,7 @@ class CommentsAdapter(private val commentsList: List<Comment>, private val activ
         holder.item.setOnClickListener {
             val intent = Intent(activity, CommentReply::class.java)
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.putExtra("postId", comment.post_id)
             intent.putExtra("user_photo_url", comment.author_photo_url)
             intent.putExtra("post_time", timeAgo(comment.created_at))
             intent.putExtra("post_context", comment.comment_text)
@@ -85,14 +87,14 @@ class CommentsAdapter(private val commentsList: List<Comment>, private val activ
             intent.putExtra("like_count", comment.like_count.toInt())
             intent.putExtra("comment_count", comment.comment_count.toInt())
             intent.putExtra("comment_id", comment.id.toInt())
-            intent.putExtra("author_id", comment.author_name)
+            intent.putExtra("author_id", comment.author_id.toString())
             intent.putExtra("adapter_position", position.toInt())
             activity.startActivity(intent)
         }
 
     }
 
-    private fun doLikeAndUnlike(commentId: Int, holder: CommentViewHolder, position: Int) {
+    private fun doLikeAndUnlike(commentId: Int, holder: CommentViewHolder, position: Int, postId: Int, authorId: Int) {
         val BASE_URL = activity.getString(R.string.base_url)
         val retrofit = RetrofitClient.getClient(BASE_URL)
         val apiService = retrofit?.create(ApiService::class.java)
@@ -109,6 +111,14 @@ class CommentsAdapter(private val commentsList: List<Comment>, private val activ
                         comment.liked = true
                         comment.like_count += 1
                         holder.btnLike.setImageResource(R.drawable.ic_red_heart)
+                        SaveNotificationInDB().save(
+                            activity,
+                            MainHome.USER_ID.toInt(),
+                            authorId.toInt(),
+                            postId,
+                            "likes",
+                            "${MainHome.USER_NAME} liked your comment"
+                        )
                     } else {
                         comment.liked = false
                         comment.like_count -= 1

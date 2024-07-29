@@ -30,13 +30,13 @@ class OthersProfileProjects: Fragment() {
         binding = FragmentProfileProjectsBinding.inflate(inflater, container, false)
         OthersProfile.loading.startLoading()
 
-        fetchAllProjects(OthersProfile.userId)
+        fetchUserProjects(OthersProfile.userId)
 
         return binding.root
 
     }
 
-    private fun fetchAllProjects(id: Int) {
+    private fun fetchUserProjects(id: Int) {
         val BASE_URL = getString(R.string.base_url)
         val retrofit = RetrofitClient.getClient(BASE_URL)
         val apiService = retrofit?.create(ApiService::class.java)

@@ -45,7 +45,7 @@ class HomeFeedAdapter(private val postList: MutableList<Post>, private val activ
         val profileImage: ImageView = itemView.findViewById(R.id.profileImage)
         val username: TextView = itemView.findViewById(R.id.username)
         val timeAgo: TextView = itemView.findViewById(R.id.timeAgo)
-        val tvContext: ReadMoreTextView = itemView.findViewById(R.id.tvContext)
+        val tvCaption: ReadMoreTextView = itemView.findViewById(R.id.tvContext)
         val postImage: ImageView = itemView.findViewById(R.id.postImage)
         val codeContainer: EditText = itemView.findViewById(R.id.codeContainer)
         val linkPreview: TelegramPreview = itemView.findViewById(R.id.link_preview)
@@ -100,10 +100,10 @@ class HomeFeedAdapter(private val postList: MutableList<Post>, private val activ
 
         holder.username.text = post.author_name
         holder.timeAgo.text = timeAgo(post.time)
-        holder.tvContext.text = post.context
+        holder.tvCaption.text = post.context
 
-        holder.tvContext.setCollapsedTextColor(R.color.app_color)
-        holder.tvContext.setExpandedTextColor(R.color.app_color)
+        holder.tvCaption.setCollapsedTextColor(R.color.app_color)
+        holder.tvCaption.setExpandedTextColor(R.color.app_color)
 
         if (post.isLiked == true) {
             holder.btnLikes.setImageResource(R.drawable.ic_red_heart)
@@ -139,47 +139,15 @@ class HomeFeedAdapter(private val postList: MutableList<Post>, private val activ
         }
 
         holder.item.setOnClickListener {
-
-            StaticVariables.isExplore = true
-
-            val intent = Intent(activity, ActivityPost::class.java)
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-
-            intent.putExtra("post_type", post.type)
-            intent.putExtra("post_link", post.link)
-            intent.putExtra("user_photo_url", post.author_photo_url)
-            intent.putExtra("user_name", post.author_name)
-            intent.putExtra("post_time", timeAgo(post.time))
-            intent.putExtra("post_context", post.context)
-            intent.putExtra("is_liked", post.isLiked)
-            intent.putExtra("like_count", post.likeCount.toInt())
-            intent.putExtra("comment_count", post.commentCount.toInt())
-            intent.putExtra("post_id", post.postId.toInt())
-            intent.putExtra("author_id", post.authorId)
-            intent.putExtra("adapter_position", position.toInt())
-            activity.startActivity(intent)
-
+            openPost(post, position)
         }
 
         holder.codeContainer.setOnClickListener{
-            StaticVariables.isExplore = true
+            openPost(post, position)
+        }
 
-            val intent = Intent(activity, ActivityPost::class.java)
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-
-            intent.putExtra("post_type", post.type)
-            intent.putExtra("post_link", post.link)
-            intent.putExtra("user_photo_url", post.author_photo_url)
-            intent.putExtra("user_name", post.author_name)
-            intent.putExtra("post_time", timeAgo(post.time))
-            intent.putExtra("post_context", post.context)
-            intent.putExtra("is_liked", post.isLiked)
-            intent.putExtra("like_count", post.likeCount.toInt())
-            intent.putExtra("comment_count", post.commentCount.toInt())
-            intent.putExtra("post_id", post.postId.toInt())
-            intent.putExtra("author_id", post.authorId)
-            intent.putExtra("adapter_position", position.toInt())
-            activity.startActivity(intent)
+        holder.tvCaption.setOnClickListener {
+            openPost(post, position)
         }
 
 
@@ -192,6 +160,42 @@ class HomeFeedAdapter(private val postList: MutableList<Post>, private val activ
                 doLike(post.postId.toInt(), true, holder, position)
             }
         }
+
+        holder.btnShares.setOnClickListener {
+            sharePostLink(post.postId.toInt())
+        }
+
+    }
+
+    fun openPost(post: Post, position: Int){
+        StaticVariables.isExplore = true
+
+        val intent = Intent(activity, ActivityPost::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+        intent.putExtra("post_type", post.type)
+        intent.putExtra("post_link", post.link)
+        intent.putExtra("user_photo_url", post.author_photo_url)
+        intent.putExtra("user_name", post.author_name)
+        intent.putExtra("post_time", timeAgo(post.time))
+        intent.putExtra("post_context", post.context)
+        intent.putExtra("is_liked", post.isLiked)
+        intent.putExtra("like_count", post.likeCount.toInt())
+        intent.putExtra("comment_count", post.commentCount.toInt())
+        intent.putExtra("post_id", post.postId.toInt())
+        intent.putExtra("author_id", post.authorId)
+        intent.putExtra("adapter_position", position.toInt())
+        activity.startActivity(intent)
+    }
+
+    private fun sharePostLink(postId: Int) {
+        val shareableLink = "https://loop.42web.io?post=$postId"
+        val shareIntent = Intent().apply {
+            action = Intent.ACTION_SEND
+            putExtra(Intent.EXTRA_TEXT, "Check out this post from Loop: $shareableLink")
+            type = "text/plain"
+        }
+        activity.startActivity(Intent.createChooser(shareIntent, "Share post via"))
     }
 
     private fun showOptionMenu(view: View) {

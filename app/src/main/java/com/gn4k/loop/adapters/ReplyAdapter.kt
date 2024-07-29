@@ -21,6 +21,7 @@ import com.gn4k.loop.models.request.LikeDislikeCommentRequest
 import com.gn4k.loop.models.request.LikeDislikeReplyRequest
 import com.gn4k.loop.models.response.Reply
 import com.gn4k.loop.models.response.UserResponse
+import com.gn4k.loop.notificationModel.SaveNotificationInDB
 import com.gn4k.loop.ui.home.MainHome
 import com.gn4k.loop.ui.post.CommentReply
 import com.gn4k.loop.ui.profile.others.OthersProfile
@@ -32,7 +33,7 @@ import java.time.Duration
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
-class ReplyAdapter(private val commentsList: MutableList<Reply>, private val activity: Context, private val binding: ActivityCommentReplyBinding) : RecyclerView.Adapter<ReplyAdapter.CommentViewHolder>() {
+class ReplyAdapter(private val commentsList: MutableList<Reply>, private val activity: Context, private val binding: ActivityCommentReplyBinding, private val postId: Int) : RecyclerView.Adapter<ReplyAdapter.CommentViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CommentViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_reply, parent, false)
@@ -54,7 +55,7 @@ class ReplyAdapter(private val commentsList: MutableList<Reply>, private val act
         }
 
         holder.btnLike.setOnClickListener {
-            doLikeAndUnlike(comment.id, holder, position)
+            doLikeAndUnlike(comment.id, holder, position, comment.author_id)
         }
 
         holder.username.text = comment.author_name
@@ -85,7 +86,7 @@ class ReplyAdapter(private val commentsList: MutableList<Reply>, private val act
 
     }
 
-    private fun doLikeAndUnlike(replyId: Int, holder: CommentViewHolder, position: Int) {
+    private fun doLikeAndUnlike(replyId: Int, holder: CommentViewHolder, position: Int, authorId: Int) {
         val BASE_URL = activity.getString(R.string.base_url)
         val retrofit = RetrofitClient.getClient(BASE_URL)
         val apiService = retrofit?.create(ApiService::class.java)
@@ -106,6 +107,14 @@ class ReplyAdapter(private val commentsList: MutableList<Reply>, private val act
                         comment.liked = true
                         comment.like_count += 1
                         holder.btnLike.setImageResource(R.drawable.ic_heart)
+                        SaveNotificationInDB().save(
+                            activity,
+                            MainHome.USER_ID.toInt(),
+                            authorId.toInt(),
+                            postId,
+                            "likes",
+                            "${MainHome.USER_NAME} liked your comment"
+                        )
                     }
 
                     notifyItemChanged(position)

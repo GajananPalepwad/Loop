@@ -28,7 +28,7 @@ class ProjectRequestList : AppCompatActivity() {
 
         if (project != null && authorId != null) {
             val acceptedUserAdapter = AcceptedUserAdapter(joinedPersons ?: arrayListOf(), this, project.toInt(), authorId.toInt())
-            val requestUserAdapter = RequestUserAdapter(requestPersons ?: arrayListOf(), this, project.toInt(), acceptedUserAdapter)
+            val requestUserAdapter = RequestUserAdapter(requestPersons ?: arrayListOf(), this, project.toInt(), acceptedUserAdapter, authorId.toInt())
 
             binding.rcRequest.adapter = requestUserAdapter
             binding.rcRequest.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)

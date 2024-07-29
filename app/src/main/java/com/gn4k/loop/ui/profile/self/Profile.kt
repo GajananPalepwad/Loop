@@ -31,6 +31,8 @@ import com.gn4k.loop.ui.home.MainHome
 import com.gn4k.loop.ui.home.loopmeeting.MeetingLists
 import com.gn4k.loop.ui.post.MakePost
 import com.gn4k.loop.ui.profile.followLists.FollowList
+import com.gn4k.loop.ui.profile.others.OthersProfile.Companion.userId
+import com.gn4k.loop.ui.profile.others.OthersProfile.Companion.userName
 import com.gn4k.loop.ui.profile.self.badges.ManageBadges
 import com.gn4k.loop.ui.profile.self.drawer.Settings
 import com.gn4k.loop.ui.projects.MakeProject
@@ -318,6 +320,10 @@ class Profile : AppCompatActivity(), NavigationView.OnNavigationItemSelectedList
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
+
+            R.id.nav_share -> {
+                shareProfileLink()
+            }
             R.id.nav_badges_manager -> {
                 startActivity(Intent(this, ManageBadges::class.java))
             }
@@ -341,6 +347,17 @@ class Profile : AppCompatActivity(), NavigationView.OnNavigationItemSelectedList
         }
         drawerLayout.closeDrawer(navView)
         return true
+    }
+
+
+    private fun shareProfileLink() {
+        val shareableLink = "https://loop.42web.io?user=${MainHome.USER_ID}"
+        val shareIntent = Intent().apply {
+            action = Intent.ACTION_SEND
+            putExtra(Intent.EXTRA_TEXT, "See my profile on Loop: $shareableLink")
+            type = "text/plain"
+        }
+        startActivity(Intent.createChooser(shareIntent, "Share post via"))
     }
 
 

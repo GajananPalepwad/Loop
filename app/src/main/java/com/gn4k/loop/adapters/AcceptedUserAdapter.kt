@@ -23,6 +23,7 @@ import com.gn4k.loop.R
 import com.gn4k.loop.api.RetrofitClient
 import com.gn4k.loop.models.response.GetProjects
 import com.gn4k.loop.models.response.ParticipantList
+import com.gn4k.loop.notificationModel.SaveNotificationInDB
 import com.gn4k.loop.ui.home.MainHome
 import com.gn4k.loop.ui.profile.others.OthersProfile
 import com.gn4k.loop.ui.profile.self.Profile
@@ -66,7 +67,7 @@ class AcceptedUserAdapter(
             showConfirmationDialog(holder.itemView.context, imageUrl.id, imageUrl.name)
         }
 
-        if(MainHome.USER_ID.toInt() == imageUrl.id || MainHome.USER_ID.toInt() == authorId){
+        if(MainHome.USER_ID.toInt() != authorId){
             holder.rejectButton.visibility = View.GONE
         }
 
@@ -116,6 +117,14 @@ class AcceptedUserAdapter(
                         val msgResponse = response.body()
                         // Remove the participant from the list and notify the adapter
                         imageUrls.removeAll { it.id == id }
+                        SaveNotificationInDB().save(
+                            context,
+                            MainHome.USER_ID.toInt(),
+                            authorId,
+                            projectId,
+                            "projects",
+                            "${MainHome.USER_NAME} removed you as a contributor to this project"
+                        )
                         notifyDataSetChanged()
                     } else {
                         // Handle error response

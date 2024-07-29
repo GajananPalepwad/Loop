@@ -1,0 +1,33 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/nav_share"
+        android:title="Share Profile via" />
+
+    <item
+        android:id="@+id/nav_badges_manager"
+        android:title="Badges Manager" />
+
+    <item
+        android:id="@+id/nav_recently_commented"
+        android:title="Recent comments" />
+
+    <item
+        android:id="@+id/nav_recently_liked"
+        android:title="Recently likes" />
+
+    <item
+        android:id="@+id/nav_loop_meet"
+        android:title="Loop meet" />
+
+    <item
+        android:id="@+id/nav_settings"
+        android:title="Settings" />
+    <item
+        android:id="@+id/nav_saved"
+        android:title="Saved" />
+
+    <item
+        android:id="@+id/nav_logout"
+        android:title="Logout" />
+</menu>

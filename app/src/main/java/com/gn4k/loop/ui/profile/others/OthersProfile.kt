@@ -6,10 +6,13 @@ import android.content.res.ColorStateList
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
+import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
+import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
@@ -24,17 +27,22 @@ import com.gn4k.loop.models.request.UserRequest
 import com.gn4k.loop.models.response.FollowUnfollowResponse
 import com.gn4k.loop.models.response.UserAllDataResponse
 import com.gn4k.loop.models.response.UserResponse
+import com.gn4k.loop.notificationModel.SaveNotificationInDB
 import com.gn4k.loop.ui.animation.CustomLoading
 import com.gn4k.loop.ui.home.MainHome
+import com.gn4k.loop.ui.home.loopmeeting.MeetingLists
 import com.gn4k.loop.ui.msg.Chatting
 import com.gn4k.loop.ui.profile.followLists.FollowList
 import com.gn4k.loop.ui.profile.self.ProfilePost
 import com.gn4k.loop.ui.profile.self.ProfileProjects
+import com.gn4k.loop.ui.profile.self.badges.ManageBadges
+import com.gn4k.loop.ui.profile.self.drawer.Settings
+import com.google.android.material.navigation.NavigationView
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class OthersProfile : AppCompatActivity() {
+class OthersProfile : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
     companion object {
         var userId: Int = 0
@@ -61,6 +69,10 @@ class OthersProfile : AppCompatActivity() {
 
     lateinit var binding: ActivityOthersProfileBinding
     private var transaction = supportFragmentManager.beginTransaction()
+    private lateinit var drawerLayout: DrawerLayout
+    private lateinit var navView: NavigationView
+    private lateinit var toggle: ActionBarDrawerToggle
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -72,6 +84,24 @@ class OthersProfile : AppCompatActivity() {
         userId = intent.getStringExtra("userId")?.toInt()!!
 
         setFragment(OthersProfilePost())
+
+        drawerLayout = binding.drawerLayout
+        navView = binding.navView
+
+        toggle = ActionBarDrawerToggle(
+            this,
+            drawerLayout,
+            R.string.navigation_drawer_open,
+            R.string.navigation_drawer_close
+        )
+        drawerLayout.addDrawerListener(toggle)
+        toggle.syncState()
+
+
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
+        navView.setNavigationItemSelectedListener(this)
+
 
         binding.back.setOnClickListener {
             onBackPressed()
@@ -88,6 +118,10 @@ class OthersProfile : AppCompatActivity() {
             binding.btnProjects.setTextColor(getColor(R.color.app_color))
             binding.btnPost.setTextColor(getColor(R.color.white))
             setFragment(OthersProfileProjects())
+        }
+
+        binding.btnOptions.setOnClickListener {
+            drawerLayout.openDrawer(navView)
         }
 
         binding.btnFollow.setOnClickListener {
@@ -107,6 +141,15 @@ class OthersProfile : AppCompatActivity() {
                     Color.parseColor("#181818")
                 )
                 followUnfollow(userId, "follow")
+
+                SaveNotificationInDB().save(
+                    baseContext,
+                    MainHome.USER_ID.toInt(),
+                    userId,
+                    1,
+                    "follows",
+                    "${MainHome.USER_NAME} started following you"
+                )
             }
 
         }
@@ -308,6 +351,39 @@ class OthersProfile : AppCompatActivity() {
             }
         }
     }
+
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return if (toggle.onOptionsItemSelected(item)) {
+            true
+        } else super.onOptionsItemSelected(item)
+    }
+
+    override fun onNavigationItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.nav_share -> {
+                shareProfileLink()
+            }
+            R.id.nav_block -> {
+                Toast.makeText(this, "Block", Toast.LENGTH_SHORT).show()
+            }
+
+        }
+        drawerLayout.closeDrawer(navView)
+        return true
+    }
+
+    private fun shareProfileLink() {
+        val shareableLink = "https://loop.42web.io?user=$userId"
+        val shareIntent = Intent().apply {
+            action = Intent.ACTION_SEND
+            putExtra(Intent.EXTRA_TEXT, "See $userName's profile on Loop: $shareableLink")
+            type = "text/plain"
+        }
+        startActivity(Intent.createChooser(shareIntent, "Share post via"))
+    }
+
+
 
     override fun onBackPressed() {
         super.onBackPressed()

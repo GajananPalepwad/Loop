@@ -9,6 +9,7 @@ import com.gn4k.loop.R
 import com.gn4k.loop.databinding.ActivityExamRulesAndInfoBinding
 import com.gn4k.loop.models.request.Question
 import com.gn4k.loop.ui.animation.CustomLoading
+import com.gn4k.loop.ui.home.MainHome
 import com.google.ai.client.generativeai.GenerativeModel
 import kotlinx.coroutines.launch
 
@@ -25,10 +26,13 @@ class ExamRulesAndInfo : AppCompatActivity() {
         customLoading = CustomLoading(this)
         customLoading.startLoading()
 
-        val badge = intent.getStringExtra("badge")
+        var badge = intent.getStringExtra("badge")
 
         lifecycleScope.launch {
-            ExamPage.question = geminiCreateQuestions("Give me 10 $badge questions with hard level but every question must have \"?\" mark at the end")
+            if(badge=="C"){
+                badge = "C language"
+            }
+            ExamPage.question = geminiCreateQuestions("Give me 10 $badge subjective questions with medium level but every question must have \"?\" mark at the end")
         }
 
         binding.btnStart.setOnClickListener {
@@ -50,7 +54,7 @@ class ExamRulesAndInfo : AppCompatActivity() {
             // The Gemini 1.5 models are versatile and work with both text-only and multimodal prompts
             modelName = getString(R.string.gemini_model),
             // Access your API key as a Build Configuration variable (see "Set up your API key" above)
-            apiKey = getString(R.string.gemini_key)
+            apiKey = MainHome.GEMINI_KEY
         )
 
         val response = generativeModel.generateContent(prompt)

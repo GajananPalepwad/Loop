@@ -2,11 +2,13 @@ package com.gn4k.loop.adapters
 
 import ApiService
 import android.content.Context
+import android.content.Intent
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -19,7 +21,9 @@ import com.gn4k.loop.models.request.JoinRequest
 import com.gn4k.loop.models.request.UserRequest
 import com.gn4k.loop.models.response.CreateMeetingResponse
 import com.gn4k.loop.models.response.Project
+import com.gn4k.loop.notificationModel.SaveNotificationInDB
 import com.gn4k.loop.ui.home.MainHome
+import com.gn4k.loop.ui.projects.ProjectRequestList
 import com.overflowarchives.linkpreview.TelegramPreview
 import com.overflowarchives.linkpreview.ViewListener
 import retrofit2.Call
@@ -39,6 +43,7 @@ class ProjectAdapter(
         val linkPreview: TelegramPreview = itemView.findViewById(R.id.link_preview)
         val rvParticipants: RecyclerView = itemView.findViewById(R.id.rvParticipants)
         val joinButton: Button = itemView.findViewById(R.id.btnJoin)
+        val item: LinearLayout = itemView.findViewById(R.id.item)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProjectViewHolder {
@@ -92,9 +97,26 @@ class ProjectAdapter(
             sendRequestToJoinProject(project.project_id)
             if (holder.joinButton.text == "Request to Join"){
                 holder.joinButton.text = "Requested"
+                SaveNotificationInDB().save(
+                    context,
+                    MainHome.USER_ID.toInt(),
+                    project.author_id,
+                    project.project_id,
+                    "projects",
+                    "${MainHome.USER_NAME} wants to join your project"
+                )
             }else{
                 holder.joinButton.text = "Request to Join"
             }
+        }
+
+        holder.item.setOnClickListener {
+            val intent = Intent(context, ProjectRequestList::class.java)
+            intent.putExtra("joinedPersons", ArrayList(project.joined_persons))
+            intent.putExtra("requestPersons", ArrayList(project.requested_people))
+            intent.putExtra("projectId", project.project_id.toString())
+            intent.putExtra("authorId", project.author_id.toString())
+            context.startActivity(intent)
         }
 
 
@@ -114,6 +136,7 @@ class ProjectAdapter(
                     if (response.isSuccessful) {
                         val meetingResponse = response.body()
                         Toast.makeText(context, meetingResponse?.message, Toast.LENGTH_SHORT).show()
+
                     } else {
 //                    handleErrorResponse(response)
                     }

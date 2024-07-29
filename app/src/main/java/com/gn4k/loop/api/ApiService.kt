@@ -39,6 +39,9 @@ interface ApiService {
     @POST("get_posts_by_author.php")
     fun getPostsByAuthor(@Body request: GetPostsByAuthorRequest): Call<List<Post>>
 
+    @POST("get_post_by_id.php")
+    fun getPostById(@Body request: GetPostByIdRequest): Call<Post>
+
     @POST("home_feed.php")
     fun getHomeFeed(@Body request: HomeFeedRequest): Call<Posts>
 
@@ -147,4 +150,10 @@ interface ApiService {
 
     @GET("remove_contributor.php")
     fun removeContributor(@Query("projectId") projectId: Int, @Query("userId") userId: Int): Call<GetProjects>
+
+    @POST("send_notification.php")
+    fun saveNotification(@Body request: NotificationRequest): Call<CreateMeetingResponse>
+
+    @GET("fetch_notifications.php")
+    fun fetchNotifications(@Query("userId") userId: Int, @Query("type") type: String): Call<NotificationListResponse>
 }

@@ -90,6 +90,11 @@ class MainHome : AppCompatActivity() {
         btnProject.setImageResource(R.drawable.ic_project_light)
     }
 
+    override fun onBackPressed() {
+        super.onBackPressed()
+        finish()
+    }
+
     companion object {
         lateinit var USER_ID : String
         lateinit var USER_EMAIL: String
@@ -108,5 +113,6 @@ class MainHome : AppCompatActivity() {
         lateinit var USER_SKILLS: List<String>
         lateinit var USER_FOLLOWERS_COUNT: String
         lateinit var USER_FOLLOWING_COUNT: String
+        lateinit var GEMINI_KEY: String
     }
 }

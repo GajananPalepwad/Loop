@@ -6,18 +6,22 @@ import android.app.Activity
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.Canvas
+import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.FileProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.gn4k.loop.R
 import com.gn4k.loop.adapters.SkillsAdapter
@@ -28,7 +32,10 @@ import com.gn4k.loop.models.response.CreatePostResponse
 import com.gn4k.loop.models.response.Skill
 import com.gn4k.loop.ui.animation.CustomLoading
 import com.gn4k.loop.ui.home.MainHome
+import com.google.ai.client.generativeai.GenerativeModel
+import com.google.ai.client.generativeai.type.content
 import `in`.galaxyofandroid.spinerdialog.SpinnerDialog
+import kotlinx.coroutines.launch
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Call
@@ -57,6 +64,8 @@ class MakePost : AppCompatActivity() {
 
     lateinit var loading: CustomLoading
 
+    lateinit var generativeModel: GenerativeModel
+
     private val selectImageLauncher: ActivityResultLauncher<Intent> =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == Activity.RESULT_OK) {
@@ -67,7 +76,7 @@ class MakePost : AppCompatActivity() {
                         file.outputStream().use { outputStream ->
                             inputStream.copyTo(outputStream)
                         }
-                        imageFile = compressImageIfNeeded(file)  // Compress image if needed
+                        imageFile = compressImageIfNeeded(file)
                         binding.img.setImageURI(uri)
                     }
                 }
@@ -90,6 +99,11 @@ class MakePost : AppCompatActivity() {
         binding = ActivityMakePostBinding.inflate(layoutInflater)
         setContentView(binding.root)
         loading = CustomLoading(this)
+
+        generativeModel = GenerativeModel(
+            modelName = getString(R.string.gemini_model),
+            apiKey = MainHome.GEMINI_KEY
+        )
 
         val BASE_URL = getString(R.string.base_url)
         val retrofit = RetrofitClient.getClient(BASE_URL)
@@ -143,10 +157,12 @@ class MakePost : AppCompatActivity() {
             loading.startLoading()
 
             if (type == "photo") {
-                val context = binding.edContext.text.toString()
+                val context = binding.edCaption.text.toString()
                 val parentPostId = ""
 
+
                 if (context.isEmpty()) {
+                    loading.stopLoading()
                     Toast.makeText(this, "Context is required.", Toast.LENGTH_SHORT)
                         .show()
                     return@setOnClickListener
@@ -164,10 +180,44 @@ class MakePost : AppCompatActivity() {
 
                 val tags = selectedSkills.joinToString(separator = ", ")
 
-                createPostWithImage(context, type, tags, parentPostId, body)
+                lifecycleScope.launch {
+
+
+                    val image1: Bitmap = getBitmapFromImageView(binding.img)
+
+                    val inputContent = content {
+                        image(image1)
+                        text(
+                            "Analyze the following post to determine if it is related to development, coding, programming, or any computer science (CS) or information technology (IT) topics. Provide \"true\" if it is related and \"false\" if it is not related.\n" +
+                                    "\n" +
+                                    "Post Details:\n" +
+                                    "- Image: [given above]\n" +
+                                    "- Caption: \"[$context]\"\n" +
+                                    "\n" +
+                                    "Is this post related to development, coding, programming, or any computer science (CS) or information technology (IT) topics? Answer with \"true\" or \"false\".\n"
+                        )
+                    }
+
+                    try {
+                        val response = generativeModel.generateContent(inputContent)
+                        Toast.makeText(this@MakePost, response.text, Toast.LENGTH_SHORT).show()
+
+                        if (response.text.toString().lowercase().contains("true")) {
+                            createPostWithImage(context, type, tags, parentPostId, body)
+                        }else{
+                            loading.stopLoading()
+                            Toast.makeText(this@MakePost, "Inappropriate Content", Toast.LENGTH_SHORT).show()
+                        }
+                    }catch (e: Exception){
+                        loading.stopLoading()
+                        Toast.makeText(this@MakePost, "Inappropriate Content", Toast.LENGTH_SHORT).show()
+                    }
+
+                }
+
+
             } else {
                 val tags = selectedSkills.joinToString(separator = "\", \"")
-
                 createPostWithLinkAndCode(tags)
             }
         }
@@ -190,6 +240,23 @@ class MakePost : AppCompatActivity() {
         binding.btnAdd.setOnClickListener {
             spinnerDialog.showSpinerDialog()
         }
+    }
+
+    private fun getBitmapFromImageView(imageView: ImageView): Bitmap {
+        val drawable = imageView.drawable
+        return getBitmapFromDrawable(drawable)
+    }
+
+    private fun getBitmapFromDrawable(drawable: Drawable): Bitmap {
+        val bitmap = Bitmap.createBitmap(
+            drawable.intrinsicWidth,
+            drawable.intrinsicHeight,
+            Bitmap.Config.ARGB_8888
+        )
+        val canvas = Canvas(bitmap)
+        drawable.setBounds(0, 0, canvas.width, canvas.height)
+        drawable.draw(canvas)
+        return bitmap
     }
 
     private fun fetchSkills() {
@@ -277,7 +344,8 @@ class MakePost : AppCompatActivity() {
     }
 
     private fun pickImageFromGallery() {
-        val pickPhotoIntent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+        val pickPhotoIntent =
+            Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
         selectImageLauncher.launch(pickPhotoIntent)
     }
 
@@ -319,7 +387,13 @@ class MakePost : AppCompatActivity() {
         return compressedFile
     }
 
-    private fun createPostWithImage(context: String, type: String, tags: String?, parentPostId: String?, image: MultipartBody.Part?) {
+    private fun createPostWithImage(
+        context: String,
+        type: String,
+        tags: String?,
+        parentPostId: String?,
+        image: MultipartBody.Part?
+    ) {
         val userId = MainHome.USER_ID
 
         // Create RequestBody objects
@@ -330,12 +404,26 @@ class MakePost : AppCompatActivity() {
         val parentPostIdPart = parentPostId?.let { RequestBody.create(MultipartBody.FORM, it) }
 
         // Call the API
-        apiService?.createPost(authorIdPart, contextPart, typePart, tagsPart, parentPostIdPart, image)?.enqueue(object :
+        apiService?.createPost(
+            authorIdPart,
+            contextPart,
+            typePart,
+            tagsPart,
+            parentPostIdPart,
+            image
+        )?.enqueue(object :
             Callback<CreatePostResponse> {
-            override fun onResponse(call: Call<CreatePostResponse>, response: Response<CreatePostResponse>) {
+            override fun onResponse(
+                call: Call<CreatePostResponse>,
+                response: Response<CreatePostResponse>
+            ) {
                 if (response.isSuccessful) {
                     val createPostResponse = response.body()
-                    Toast.makeText(this@MakePost, createPostResponse?.message ?: "Post created successfully", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        this@MakePost,
+                        createPostResponse?.message ?: "Post created successfully",
+                        Toast.LENGTH_SHORT
+                    ).show()
                     loading.stopLoading()
                     onBackPressed()
                 } else {
@@ -347,68 +435,114 @@ class MakePost : AppCompatActivity() {
             override fun onFailure(call: Call<CreatePostResponse>, t: Throwable) {
                 Log.d("CreatePostActivity", "Network Error: ${t.message}")
                 loading.stopLoading()
-                Toast.makeText(this@MakePost, "Network Error: ${t.message}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@MakePost, "Network Error: ${t.message}", Toast.LENGTH_SHORT)
+                    .show()
             }
         })
     }
 
     private fun createPostWithLinkAndCode(tags: String) {
         val authorId = MainHome.USER_ID
-        val context = binding.edContext.text.toString()
+        val caption = binding.edCaption.text.toString()
         val parentPostId = ""
         var linkOrCode = ""
         if (type == "code_snippet") {
             linkOrCode = binding.codeContainer.text.toString()
         } else if (type == "link") {
             linkOrCode = binding.edLink.text.toString()
-        } else if (type == "only_caption"){
+        } else if (type == "only_caption") {
             linkOrCode = ""
         }
 
-        if (context.isEmpty()) {
+        if (caption.isEmpty()) {
             Toast.makeText(this, "Context is required.", Toast.LENGTH_SHORT).show()
             loading.stopLoading()
-
             return
         }
 
-        val postData = CreatePostRequestForLinkNCode(authorId, context, type, tags, parentPostId, linkOrCode)
 
-        // Call the API
-        apiService?.createPostWithLinkAndCode(postData)?.enqueue(object : Callback<CreatePostResponse> {
-            override fun onResponse(call: Call<CreatePostResponse>, response: Response<CreatePostResponse>) {
-                if (response.isSuccessful) {
-                    val createPostResponse = response.body()
-                    Toast.makeText(this@MakePost, createPostResponse?.message ?: "Post created successfully", Toast.LENGTH_SHORT).show()
-                    onBackPressed()
+        var isAppropriate = false
+
+        try {
+
+            lifecycleScope.launch {
+                val response = generativeModel.generateContent(
+                    "Analyze the following post to determine if it is related to development, coding, programming, or any computer science (CS) or information technology (IT) topics. Provide \"true\" if it is related and \"false\" if it is not related.\n" +
+                            "\n" +
+                            "Post Details:\n" +
+                            "- Caption: \"$caption\"\n" +
+                            "- Code or Link: \"$linkOrCode\"\n" +
+                            "\n" +
+                            "Is this post related to development, coding, programming, or any computer science (CS) or information technology (IT) topics? Answer with \"true\" or \"false\".\n"
+                )
+
+                if (response.text.toString().lowercase().contains("true")) {
+                    isAppropriate = true
                     loading.stopLoading()
                 } else {
+                    Toast.makeText(baseContext, "Inappropriate Content", Toast.LENGTH_SHORT).show()
                     loading.stopLoading()
-                    handleErrorResponse(response)
                 }
             }
+        }catch (e: Exception) {
+            Toast.makeText(baseContext, "Inappropriate Content", Toast.LENGTH_SHORT).show()
+            loading.stopLoading()
+            return
+        }
 
-            override fun onFailure(call: Call<CreatePostResponse>, t: Throwable) {
-                Log.d("MakePostActivity", "Network Error: ${t.message}")
-                Toast.makeText(this@MakePost, "Network Error: ${t.message}", Toast.LENGTH_SHORT).show()
-                loading.stopLoading()
-            }
-        })
+        if (!isAppropriate) {
+            return
+        }
+
+        val postData = CreatePostRequestForLinkNCode(authorId, caption, type, tags, parentPostId, linkOrCode)
+
+        // Call the API
+        apiService?.createPostWithLinkAndCode(postData)
+            ?.enqueue(object : Callback<CreatePostResponse> {
+                override fun onResponse(
+                    call: Call<CreatePostResponse>,
+                    response: Response<CreatePostResponse>
+                ) {
+                    if (response.isSuccessful) {
+                        val createPostResponse = response.body()
+                        Toast.makeText(
+                            this@MakePost,
+                            createPostResponse?.message ?: "Post created successfully",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        onBackPressed()
+                        loading.stopLoading()
+                    } else {
+                        loading.stopLoading()
+                        handleErrorResponse(response)
+                    }
+                }
+
+                override fun onFailure(call: Call<CreatePostResponse>, t: Throwable) {
+                    Log.d("MakePostActivity", "Network Error: ${t.message}")
+                    Toast.makeText(this@MakePost, "Network Error: ${t.message}", Toast.LENGTH_SHORT).show()
+                    loading.stopLoading()
+                }
+            })
     }
 
     private fun handleErrorResponse(response: Response<CreatePostResponse>) {
         when (response.code()) {
             400 -> {
                 Log.d("MakePostActivity", "Bad Request: ${response.message()}")
-                Toast.makeText(this, "Bad Request: ${response.message()}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Bad Request: ${response.message()}", Toast.LENGTH_SHORT)
+                    .show()
             }
+
             500 -> {
                 Log.d("MakePostActivity", "Internal Server Error")
                 Toast.makeText(this, "Internal Server Error", Toast.LENGTH_SHORT).show()
             }
+
             else -> {
                 Log.d("MakePostActivity", "Unexpected Error: ${response.message()}")
-                Toast.makeText(this, "Unexpected Error: ${response.message()}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Unexpected Error: ${response.message()}", Toast.LENGTH_SHORT)
+                    .show()
             }
         }
     }

@@ -24,6 +24,7 @@ import com.gn4k.loop.api.RetrofitClient
 import com.gn4k.loop.models.request.JoinRequest
 import com.gn4k.loop.models.response.CreateMeetingResponse
 import com.gn4k.loop.models.response.ParticipantList
+import com.gn4k.loop.notificationModel.SaveNotificationInDB
 import com.gn4k.loop.ui.home.MainHome
 import com.gn4k.loop.ui.profile.others.OthersProfile
 import com.gn4k.loop.ui.profile.self.Profile
@@ -35,7 +36,8 @@ class RequestUserAdapter(
     private val imageUrls: MutableList<ParticipantList>,
     private val context: Context,
     private val projectId: Int,
-    private val acceptedUserAdapter: AcceptedUserAdapter
+    private val acceptedUserAdapter: AcceptedUserAdapter,
+    private val authorId: Int
 ) : RecyclerView.Adapter<RequestUserAdapter.ImageViewHolder>() {
 
     inner class ImageViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -62,12 +64,33 @@ class RequestUserAdapter(
             .placeholder(R.drawable.ic_profile)
             .into(holder.photoImageView)
 
+        if (MainHome.USER_ID.toInt() == authorId) {
+            holder.acceptButton.visibility = View.GONE
+            holder.rejectButton.visibility = View.GONE
+        }
+
         holder.acceptButton.setOnClickListener {
             showConfirmationDialog(holder.itemView.context, imageUrl.id, "accept", holder.adapterPosition)
+            SaveNotificationInDB().save(
+                context,
+                MainHome.USER_ID.toInt(),
+                imageUrl.id,
+                projectId,
+                "projects",
+                "${MainHome.USER_NAME} accepted your request to join this project"
+            )
         }
 
         holder.rejectButton.setOnClickListener {
             showConfirmationDialog(holder.itemView.context, imageUrl.id, "reject", holder.adapterPosition)
+            SaveNotificationInDB().save(
+                context,
+                MainHome.USER_ID.toInt(),
+                imageUrl.id,
+                projectId,
+                "projects",
+                "${MainHome.USER_NAME} rejected your request to join this project"
+            )
         }
 
         holder.main.setOnClickListener {

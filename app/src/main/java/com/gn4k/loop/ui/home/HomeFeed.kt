@@ -75,10 +75,14 @@ class HomeFeed : Fragment() {
             startActivity(intent)
         }
 
+        binding.btnNotifications.setOnClickListener {
+            parentFragmentManager.beginTransaction().replace(R.id.container, NotificationScreen()).addToBackStack(null).commit()
+        }
+
+
         binding.btnExplore.setOnClickListener {
             parentFragmentManager.beginTransaction().replace(R.id.container, Explore()).addToBackStack(null).commit()
         }
-
 
         binding.recyclerView.layoutManager = LinearLayoutManager(activity)
 
@@ -144,6 +148,8 @@ class HomeFeed : Fragment() {
                             }
 
                         }
+                        loading.stopLoading()
+                    }else{
                         loading.stopLoading()
                     }
                 }

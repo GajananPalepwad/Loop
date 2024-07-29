@@ -23,6 +23,7 @@ import com.gn4k.loop.models.request.ReplyComment
 import com.gn4k.loop.models.response.Reply
 import com.gn4k.loop.models.response.ReplyListResponse
 import com.gn4k.loop.models.response.UserResponse
+import com.gn4k.loop.notificationModel.SaveNotificationInDB
 import com.gn4k.loop.ui.animation.CustomLoading
 import com.gn4k.loop.ui.home.MainHome
 import com.gn4k.loop.ui.profile.others.OthersProfile
@@ -43,6 +44,8 @@ class CommentReply : AppCompatActivity() {
     var likeCount by Delegates.notNull<Int>()
     var commentCount by Delegates.notNull<Int>()
     lateinit var replyList: MutableList<Reply>
+    var postId by Delegates.notNull<Int>()
+    var authorId: String? = null
 
     lateinit var loading: CustomLoading
 
@@ -61,8 +64,9 @@ class CommentReply : AppCompatActivity() {
         likeCount = intent.getIntExtra("like_count", 0)
         commentCount = intent.getIntExtra("comment_count", 0)
         val commentId = intent.getIntExtra("comment_id", 0)
-        val authorId = intent.getStringExtra("author_id")
+        authorId = intent.getStringExtra("author_id")
         val position = intent.getIntExtra("adapter_position", -1)
+        postId = intent.getIntExtra("postId", 0)
 
         fetchReplyList(commentId)
 
@@ -82,7 +86,7 @@ class CommentReply : AppCompatActivity() {
 
         binding.header.setOnClickListener {
             if (authorId != null) {
-                if (authorId.toInt() == MainHome.USER_ID.toInt()) {
+                if (authorId!!.toInt() == MainHome.USER_ID.toInt()) {
                     val intent = Intent(this, Profile::class.java)
                     intent.putExtra("userId", authorId)
                     startActivity(intent)
@@ -125,10 +129,8 @@ class CommentReply : AppCompatActivity() {
 
     private suspend fun geminiCheckReply(commentId: Int, reply: String, position: Int) {
         val generativeModel = GenerativeModel(
-            // The Gemini 1.5 models are versatile and work with both text-only and multimodal prompts
             modelName = getString(R.string.gemini_model),
-            // Access your API key as a Build Configuration variable (see "Set up your API key" above)
-            apiKey = getString(R.string.gemini_key)
+            apiKey = MainHome.GEMINI_KEY
         )
 
         try {
@@ -167,7 +169,7 @@ class CommentReply : AppCompatActivity() {
                         val commentsResponse = response.body()
                         replyList = commentsResponse?.replies as MutableList<Reply>
 
-                        val adapter = replyList?.let { ReplyAdapter(it, baseContext, binding) }
+                        val adapter = replyList?.let { ReplyAdapter(it, baseContext, binding, postId) }
                         binding.ReplyRecyclerView.layoutManager = LinearLayoutManager(baseContext)
                         binding.ReplyRecyclerView.adapter = adapter
                         loading.stopLoading()
@@ -211,6 +213,14 @@ class CommentReply : AppCompatActivity() {
                             comment.like_count += 1
                             binding.likes.text = comment.like_count.toString()
                             binding.btnLike.setImageResource(R.drawable.ic_red_heart)
+                            SaveNotificationInDB().save(
+                                baseContext,
+                                MainHome.USER_ID.toInt(),
+                                authorId!!.toInt(),
+                                postId,
+                                "likes",
+                                "${MainHome.USER_NAME} liked your comment"
+                            )
                         } else {
                             comment.liked = false
                             comment.like_count -= 1
@@ -226,8 +236,7 @@ class CommentReply : AppCompatActivity() {
 
                 override fun onFailure(call: Call<UserResponse?>, t: Throwable) {
                     Log.d("Reg", "Network Error: ${t.message}")
-                    Toast.makeText(baseContext, "Network Error: ${t.message}", Toast.LENGTH_SHORT)
-                        .show()
+                    Toast.makeText(baseContext, "Network Error: ${t.message}", Toast.LENGTH_SHORT).show()
                 }
             })
     }
@@ -246,20 +255,36 @@ class CommentReply : AppCompatActivity() {
                     response: Response<UserResponse?>
                 ) {
                     if (response.isSuccessful) {
-                        val userResponse = response.body()
-                        val comment = ActivityPost.commentList[position]
 
-                        comment.comment_count += 1
-                        commentCount++
-                        binding.comments.text = commentCount.toString()
-                        binding.edReply.setText("")
-                        fetchReplyList(commentId)
+                        try {
+                            val userResponse = response.body()
+                            fetchReplyList(commentId)
 
-                        if (!StaticVariables.isExplore) {
-                            StaticVariables.postAdapter.notifyItemChanged(position)
+                            val comment = ActivityPost.commentList[position]
+                            comment.comment_count += 1
+                            commentCount++
+                            binding.comments.text = commentCount.toString()
+                            binding.edReply.setText("")
+
+                            SaveNotificationInDB().save(
+                                baseContext,
+                                MainHome.USER_ID.toInt(),
+                                authorId!!.toInt(),
+                                postId,
+                                "comments",
+                                "${MainHome.USER_NAME} replied on your comment"
+                            )
+
+                            if (!StaticVariables.isExplore) {
+                                StaticVariables.postAdapter.notifyItemChanged(position)
+                            }
+                            loading.stopLoading()
+                        }catch (e: Exception){
+                           loading.stopLoading()
                         }
                     } else {
                         handleErrorResponse(response)
+                        loading.stopLoading()
                     }
                 }
 
@@ -267,6 +292,7 @@ class CommentReply : AppCompatActivity() {
                     Log.d("Reg", "Network Error: ${t.message}")
                     Toast.makeText(baseContext, "Network Error: ${t.message}", Toast.LENGTH_SHORT)
                         .show()
+                    loading.stopLoading()
                 }
             })
     }

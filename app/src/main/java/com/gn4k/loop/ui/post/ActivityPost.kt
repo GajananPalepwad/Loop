@@ -23,6 +23,7 @@ import com.gn4k.loop.models.request.MakeCommentRequest
 import com.gn4k.loop.models.response.Comment
 import com.gn4k.loop.models.response.FetchCommentsResponse
 import com.gn4k.loop.models.response.UserResponse
+import com.gn4k.loop.notificationModel.SaveNotificationInDB
 import com.gn4k.loop.ui.animation.CustomLoading
 import com.gn4k.loop.ui.home.MainHome
 import com.gn4k.loop.ui.profile.others.OthersProfile
@@ -43,6 +44,7 @@ class ActivityPost : AppCompatActivity() {
     var isLiked by Delegates.notNull<Boolean>()
     var likeCount by Delegates.notNull<Int>()
     var commentCount by Delegates.notNull<Int>()
+    var authorId: String? = null
 
     lateinit var loading: CustomLoading
 
@@ -64,7 +66,7 @@ class ActivityPost : AppCompatActivity() {
         likeCount = intent.getIntExtra("like_count", 0)
         commentCount = intent.getIntExtra("comment_count", 0)
         val postId = intent.getIntExtra("post_id", 0)
-        val authorId = intent.getStringExtra("author_id")
+        authorId = intent.getStringExtra("author_id")
         val position = intent.getIntExtra("adapter_position", -1)
 
         fetchCommentsList(postId)
@@ -83,10 +85,12 @@ class ActivityPost : AppCompatActivity() {
                     .placeholder(R.drawable.post_placeholder)
                     .into(binding.postImage)
             }
+
             "code_snippet" -> {
                 binding.codeContainer.visibility = View.VISIBLE
                 binding.codeContainer.setText(postLink)
             }
+
             "link" -> {
                 binding.linkPreview.visibility = View.VISIBLE
                 val formattedUrl = postLink?.let { formatUrl(it) }
@@ -95,6 +99,7 @@ class ActivityPost : AppCompatActivity() {
                     override fun onFailedToLoad(e: Exception?) {}
                 })
             }
+
             "only_caption" -> {
                 // Handle only caption
             }
@@ -121,11 +126,11 @@ class ActivityPost : AppCompatActivity() {
 
         binding.header.setOnClickListener {
             if (authorId != null) {
-                if(authorId.toInt()== MainHome.USER_ID.toInt()){
+                if (authorId!!.toInt() == MainHome.USER_ID.toInt()) {
                     val intent = Intent(this, Profile::class.java)
                     intent.putExtra("userId", authorId)
                     startActivity(intent)
-                }else {
+                } else {
                     val intent = Intent(this, OthersProfile::class.java)
                     intent.putExtra("userId", authorId)
                     startActivity(intent)
@@ -149,17 +154,29 @@ class ActivityPost : AppCompatActivity() {
                 binding.btnLike.setImageResource(R.drawable.ic_red_heart)
                 doLike(postId, false, position)
                 isLiked = true
+                SaveNotificationInDB().save(
+                    baseContext,
+                    MainHome.USER_ID.toInt(),
+                    authorId!!.toInt(),
+                    postId,
+                    "likes",
+                    "${MainHome.USER_NAME} liked your post"
+                )
             }
         }
 
         binding.btnComment.setOnClickListener {
-            if(binding.edComment.text.isNotEmpty()){
+            if (binding.edComment.text.isNotEmpty()) {
                 lifecycleScope.launch {
                     loading.startLoading()
                     geminiCheckComment(postId, binding.edComment.text.toString(), position)
                     binding.edComment.setText("")
                 }
             }
+        }
+
+        binding.btnShare.setOnClickListener {
+            sharePostLink(postId)
         }
 
         binding.imgComment.setOnClickListener {
@@ -169,13 +186,20 @@ class ActivityPost : AppCompatActivity() {
 
     }
 
-    private suspend fun
-            geminiCheckComment(postId: Int, comment: String, position: Int) {
+    private fun sharePostLink(postId: Int) {
+        val shareableLink = "https://loop.42web.io?post=$postId"
+        val shareIntent = Intent().apply {
+            action = Intent.ACTION_SEND
+            putExtra(Intent.EXTRA_TEXT, "Check out this post from Loop: $shareableLink")
+            type = "text/plain"
+        }
+        startActivity(Intent.createChooser(shareIntent, "Share post via"))
+    }
+
+    private suspend fun geminiCheckComment(postId: Int, comment: String, position: Int) {
         val generativeModel = GenerativeModel(
-            // The Gemini 1.5 models are versatile and work with both text-only and multimodal prompts
             modelName = getString(R.string.gemini_model),
-            // Access your API key as a Build Configuration variable (see "Set up your API key" above)
-            apiKey = getString(R.string.gemini_key)
+            apiKey = MainHome.GEMINI_KEY
         )
 
         try {
@@ -191,7 +215,7 @@ class ActivityPost : AppCompatActivity() {
                 Toast.makeText(baseContext, "Inappropriate Content", Toast.LENGTH_SHORT).show()
                 loading.stopLoading()
             }
-        }catch (e: Exception) {
+        } catch (e: Exception) {
             Toast.makeText(baseContext, "Inappropriate Content", Toast.LENGTH_SHORT).show()
             loading.stopLoading()
         }
@@ -210,28 +234,34 @@ class ActivityPost : AppCompatActivity() {
         val retrofit = RetrofitClient.getClient(BASE_URL)
         val apiService = retrofit?.create(ApiService::class.java)
 
-        apiService?.fetchComments(LikeDislikeRequest(postId, MainHome.USER_ID.toInt()))?.enqueue(object : Callback<FetchCommentsResponse?> {
-            override fun onResponse(call: Call<FetchCommentsResponse?>, response: Response<FetchCommentsResponse?>) {
-                if (response.isSuccessful) {
-                    val commentsResponse = response.body()
-                    commentList = commentsResponse?.comments as MutableList<Comment>
+        apiService?.fetchComments(LikeDislikeRequest(postId, MainHome.USER_ID.toInt()))
+            ?.enqueue(object : Callback<FetchCommentsResponse?> {
+                override fun onResponse(
+                    call: Call<FetchCommentsResponse?>,
+                    response: Response<FetchCommentsResponse?>
+                ) {
+                    if (response.isSuccessful) {
+                        val commentsResponse = response.body()
+                        commentList = commentsResponse?.comments as MutableList<Comment>
 
-                    adapter = commentList?.let { CommentsAdapter(it, baseContext) }!!
-                    binding.commentsRecyclerView.layoutManager = LinearLayoutManager(baseContext)
-                    binding.commentsRecyclerView.adapter = adapter
-                    loading.stopLoading()
-                } else {
+                        adapter = commentList?.let { CommentsAdapter(it, baseContext) }!!
+                        binding.commentsRecyclerView.layoutManager =
+                            LinearLayoutManager(baseContext)
+                        binding.commentsRecyclerView.adapter = adapter
+                        loading.stopLoading()
+                    } else {
 //                    handleErrorResponse(response)
+                        loading.stopLoading()
+                    }
+                }
+
+                override fun onFailure(call: Call<FetchCommentsResponse?>, t: Throwable) {
+                    Log.d("Reg", "Network Error: ${t.message}")
+                    Toast.makeText(baseContext, "Network Error: ${t.message}", Toast.LENGTH_SHORT)
+                        .show()
                     loading.stopLoading()
                 }
-            }
-
-            override fun onFailure(call: Call<FetchCommentsResponse?>, t: Throwable) {
-                Log.d("Reg", "Network Error: ${t.message}")
-                Toast.makeText(baseContext, "Network Error: ${t.message}", Toast.LENGTH_SHORT).show()
-                loading.stopLoading()
-            }
-        })
+            })
     }
 
     private fun doComment(postId: Int, comment: String, position: Int) {
@@ -239,30 +269,42 @@ class ActivityPost : AppCompatActivity() {
         val retrofit = RetrofitClient.getClient(BASE_URL)
         val apiService = retrofit?.create(ApiService::class.java)
 
-        apiService?.doComment(MakeCommentRequest(postId, MainHome.USER_ID.toInt(), comment))?.enqueue(object : Callback<UserResponse?> {
-            override fun onResponse(call: Call<UserResponse?>, response: Response<UserResponse?>) {
-                if (response.isSuccessful) {
-                    val userResponse = response.body()
-                    if(!StaticVariables.isExplore){
-                        StaticVariables.postAdapter.notifyItemChanged(position)
-                    }
-                    val post = StaticVariables.posts[position]
+        apiService?.doComment(MakeCommentRequest(postId, MainHome.USER_ID.toInt(), comment))
+            ?.enqueue(object : Callback<UserResponse?> {
+                override fun onResponse(
+                    call: Call<UserResponse?>,
+                    response: Response<UserResponse?>
+                ) {
+                    if (response.isSuccessful) {
+                        val userResponse = response.body()
+                        if (!StaticVariables.isExplore) {
+                            StaticVariables.postAdapter.notifyItemChanged(position)
+                        }
+                        val post = StaticVariables.posts[position]
                         post.commentCount += 1
                         commentCount++
                         binding.comments.text = commentCount.toString()
                         binding.edComment.setText("")
-                    fetchCommentsList(postId)
-
-                } else {
-                    handleErrorResponse(response)
+                        fetchCommentsList(postId)
+                        SaveNotificationInDB().save(
+                            baseContext,
+                            MainHome.USER_ID.toInt(),
+                            authorId!!.toInt(),
+                            postId,
+                            "comments",
+                            "${MainHome.USER_NAME} commented on your post"
+                        )
+                    } else {
+                        handleErrorResponse(response)
+                    }
                 }
-            }
 
-            override fun onFailure(call: Call<UserResponse?>, t: Throwable) {
-                Log.d("Reg", "Network Error: ${t.message}")
-                Toast.makeText(baseContext, "Network Error: ${t.message}", Toast.LENGTH_SHORT).show()
-            }
-        })
+                override fun onFailure(call: Call<UserResponse?>, t: Throwable) {
+                    Log.d("Reg", "Network Error: ${t.message}")
+                    Toast.makeText(baseContext, "Network Error: ${t.message}", Toast.LENGTH_SHORT)
+                        .show()
+                }
+            })
     }
 
     private fun doLike(postId: Int, isLike: Boolean, position: Int) {
@@ -278,13 +320,13 @@ class ActivityPost : AppCompatActivity() {
                     val userResponse = response.body()
                     val post = StaticVariables.posts[position]
 
-                        post.isLiked = true
-                        post.likeCount += 1
-                        likeCount++
-                        binding.likes.text = likeCount.toString()
+                    post.isLiked = true
+                    post.likeCount += 1
+                    likeCount++
+                    binding.likes.text = likeCount.toString()
 
 
-                    if(!StaticVariables.isExplore){
+                    if (!StaticVariables.isExplore) {
                         StaticVariables.postAdapter.notifyItemChanged(position)
                     }
                 } else {
@@ -294,7 +336,8 @@ class ActivityPost : AppCompatActivity() {
 
             override fun onFailure(call: Call<UserResponse?>, t: Throwable) {
                 Log.d("Reg", "Network Error: ${t.message}")
-                Toast.makeText(baseContext, "Network Error: ${t.message}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(baseContext, "Network Error: ${t.message}", Toast.LENGTH_SHORT)
+                    .show()
             }
         })
     }
@@ -312,13 +355,13 @@ class ActivityPost : AppCompatActivity() {
                     val userResponse = response.body()
                     val post = StaticVariables.posts[position]
 
-                        post.isLiked = false
-                        post.likeCount -= 1
-                        likeCount--
-                        binding.likes.text = likeCount.toString()
+                    post.isLiked = false
+                    post.likeCount -= 1
+                    likeCount--
+                    binding.likes.text = likeCount.toString()
 
 
-                    if(!StaticVariables.isExplore){
+                    if (!StaticVariables.isExplore) {
                         StaticVariables.postAdapter.notifyItemChanged(position)
                     }
                 } else {
@@ -328,7 +371,8 @@ class ActivityPost : AppCompatActivity() {
 
             override fun onFailure(call: Call<UserResponse?>, t: Throwable) {
                 Log.d("Reg", "Network Error: ${t.message}")
-                Toast.makeText(baseContext, "Network Error: ${t.message}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(baseContext, "Network Error: ${t.message}", Toast.LENGTH_SHORT)
+                    .show()
             }
         })
     }
@@ -338,17 +382,22 @@ class ActivityPost : AppCompatActivity() {
             405 -> {
                 Log.d("Reg", "Invalid request method")
             }
+
             500 -> {
                 Log.d("Reg", "Database connection failed")
                 Toast.makeText(baseContext, "Database connection failed", Toast.LENGTH_SHORT).show()
             }
+
             else -> {
                 Log.d("Reg", "Unexpected Error: ${response.message()}")
-                Toast.makeText(baseContext, "Unexpected Error: ${response.code()}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    baseContext,
+                    "Unexpected Error: ${response.code()}",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         }
     }
-
 
     private fun formatUrl(url: String): String {
         return when {
@@ -359,10 +408,9 @@ class ActivityPost : AppCompatActivity() {
     }
 
     companion object {
-        lateinit var commentList: MutableList<Comment>
+        var commentList: MutableList<Comment> = mutableListOf()
         lateinit var adapter: CommentsAdapter
     }
-
 
 
 }

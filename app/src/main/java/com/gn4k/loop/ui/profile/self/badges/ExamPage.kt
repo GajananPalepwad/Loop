@@ -13,6 +13,7 @@ import com.gn4k.loop.adapters.QuestionAdapter
 import com.gn4k.loop.databinding.ActivityExamPageBinding
 import com.gn4k.loop.models.request.Question
 import com.gn4k.loop.ui.animation.CustomLoading
+import com.gn4k.loop.ui.home.MainHome
 import com.google.ai.client.generativeai.GenerativeModel
 import com.google.gson.Gson
 import kotlinx.coroutines.launch
@@ -57,7 +58,7 @@ class ExamPage : AppCompatActivity() {
             // The Gemini 1.5 models are versatile and work with both text-only and multimodal prompts
             modelName = getString(R.string.gemini_model),
             // Access your API key as a Build Configuration variable (see "Set up your API key" above)
-            apiKey = getString(R.string.gemini_key)
+            apiKey = MainHome.GEMINI_KEY
         )
 
         val response =

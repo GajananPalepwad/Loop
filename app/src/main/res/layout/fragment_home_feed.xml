@@ -113,6 +113,7 @@
                 </androidx.cardview.widget.CardView>
 
                 <androidx.cardview.widget.CardView
+                    android:id="@+id/btnNotifications"
                     android:layout_width="45dp"
                     android:layout_height="45dp"
                     android:layout_gravity="center_vertical"
