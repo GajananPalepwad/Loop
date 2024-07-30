@@ -13,7 +13,7 @@
 <a href="https://discord.gg/yourproject"><img src="https://img.shields.io/discord/yourdiscordchannelid"></img></a>
 <a href="https://github.com/yourusername/yourproject/blob/main/LICENSE"><img src="https://img.shields.io/github/license/yourusername/yourproject" alt="license"/></a>
 
-# Loop
+# Loop: The Social Media for Developers
 Are you tired of scrolling through irrelevant content on generic social media platforms? Welcome to Loop - the exclusive social network crafted specifically for developers, coders, and IT professionals. Immerse yourself in a world where every post, every interaction, and every feature is tailored to enhance your coding journey and professional growth.
 
 <img src="docs/graphics/logos/project_logo.png" align="right" width="40%" height="100%"></img>
