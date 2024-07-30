@@ -114,5 +114,7 @@ class MainHome : AppCompatActivity() {
         lateinit var USER_FOLLOWERS_COUNT: String
         lateinit var USER_FOLLOWING_COUNT: String
         lateinit var GEMINI_KEY: String
+
+        var isSearch: Boolean = false
     }
 }

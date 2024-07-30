@@ -156,4 +156,12 @@ interface ApiService {
 
     @GET("fetch_notifications.php")
     fun fetchNotifications(@Query("userId") userId: Int, @Query("type") type: String): Call<NotificationListResponse>
+
+    @GET("recent_like.php")
+    fun fetchRecentLikes(@Query("login_id") userId: Int): Call<List<Post>>
+
+    @GET("recent_comments.php")
+    fun fetchRecentComments(@Query("login_id") userId: Int): Call<List<Post>>
+
+
 }

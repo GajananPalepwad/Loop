@@ -94,6 +94,13 @@ class NotificationScreen : Fragment() {
                         } }
                         binding.recyclerView.adapter = adapter
                         binding.refreshLayout.isRefreshing = false
+                        if (notificationList != null) {
+                            if (notificationList.isEmpty()) {
+                                binding.imgEmpty.visibility = View.VISIBLE
+                            } else {
+                                binding.imgEmpty.visibility = View.GONE
+                            }
+                        }
                         loading.stopLoading()
                     } else {
 //                    handleErrorResponse(response)

@@ -46,6 +46,12 @@ class Explore : Fragment() {
     ): View? {
         binding = FragmentExploreBinding.inflate(layoutInflater, container, false)
         loading = CustomLoading(activity)
+
+        if(MainHome.isSearch){
+            binding.searchBox.requestFocus()
+            MainHome.isSearch = false
+        }
+
         loading.startLoading()
         posts = mutableListOf()
 

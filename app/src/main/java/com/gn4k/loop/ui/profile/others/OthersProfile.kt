@@ -374,7 +374,7 @@ class OthersProfile : AppCompatActivity(), NavigationView.OnNavigationItemSelect
     }
 
     private fun shareProfileLink() {
-        val shareableLink = "https://loop.42web.io?user=$userId"
+        val shareableLink = getString(R.string.deep_link)+"user=$userId"
         val shareIntent = Intent().apply {
             action = Intent.ACTION_SEND
             putExtra(Intent.EXTRA_TEXT, "See $userName's profile on Loop: $shareableLink")

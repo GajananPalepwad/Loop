@@ -19,6 +19,7 @@ data class Post(
     val author_name: String,
     val author_photo_url: String?,
     @SerializedName("is_liked") var isLiked: Boolean?,
+    val liked_by: String?,
 )
 
 data class Posts(

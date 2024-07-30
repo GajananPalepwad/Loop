@@ -4,6 +4,7 @@ import ApiService
 import android.animation.ValueAnimator
 import android.app.Activity
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Canvas
@@ -20,6 +21,8 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -43,6 +46,7 @@ import retrofit2.Callback
 import retrofit2.Response
 import java.io.ByteArrayOutputStream
 import java.io.File
+import java.util.jar.Manifest
 
 class MakePost : AppCompatActivity() {
 
@@ -65,6 +69,10 @@ class MakePost : AppCompatActivity() {
     lateinit var loading: CustomLoading
 
     lateinit var generativeModel: GenerativeModel
+
+    companion object {
+        private const val CAMERA_PERMISSION_REQUEST_CODE = 100
+    }
 
     private val selectImageLauncher: ActivityResultLauncher<Intent> =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
@@ -131,7 +139,7 @@ class MakePost : AppCompatActivity() {
             binding.tilLink.visibility = View.GONE
             animateBottomMargin(binding.btnContainer, -205)
             binding.btnClosContainer.visibility = View.GONE
-            showImagePickerOptions()
+            checkCameraPermission()
         }
 
         binding.btnAddCode.setOnClickListener {
@@ -241,6 +249,20 @@ class MakePost : AppCompatActivity() {
             spinnerDialog.showSpinerDialog()
         }
     }
+
+    private fun checkCameraPermission() {
+        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.CAMERA)
+            != PackageManager.PERMISSION_GRANTED) {
+            // Permission is not granted, request it
+            ActivityCompat.requestPermissions(this,
+                arrayOf(android.Manifest.permission.CAMERA),
+                CAMERA_PERMISSION_REQUEST_CODE)
+        } else {
+            // Permission has already been granted
+            showImagePickerOptions()
+        }
+    }
+
 
     private fun getBitmapFromImageView(imageView: ImageView): Bitmap {
         val drawable = imageView.drawable

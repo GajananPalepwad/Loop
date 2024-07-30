@@ -34,6 +34,7 @@ import com.gn4k.loop.ui.profile.followLists.FollowList
 import com.gn4k.loop.ui.profile.others.OthersProfile.Companion.userId
 import com.gn4k.loop.ui.profile.others.OthersProfile.Companion.userName
 import com.gn4k.loop.ui.profile.self.badges.ManageBadges
+import com.gn4k.loop.ui.profile.self.drawer.Recent
 import com.gn4k.loop.ui.profile.self.drawer.Settings
 import com.gn4k.loop.ui.projects.MakeProject
 import com.google.android.material.navigation.NavigationView
@@ -327,12 +328,16 @@ class Profile : AppCompatActivity(), NavigationView.OnNavigationItemSelectedList
             R.id.nav_badges_manager -> {
                 startActivity(Intent(this, ManageBadges::class.java))
             }
-//            R.id.nav_recently_commented -> {
-//                startActivity(Intent(this, RecentlyCommented::class.java))
-//            }
-//            R.id.nav_recently_liked -> {
-//                startActivity(Intent(this, RecentlyLiked::class.java))
-//            }
+            R.id.nav_recently_commented -> {
+                val intent = Intent(this, Recent::class.java)
+                intent.putExtra("type", "commented")
+                startActivity(intent)
+            }
+            R.id.nav_recently_liked -> {
+                val intent = Intent(this, Recent::class.java)
+                intent.putExtra("type", "liked")
+                startActivity(intent)
+            }
             R.id.nav_loop_meet -> {
                 startActivity(Intent(this, MeetingLists::class.java))
             }
@@ -351,7 +356,7 @@ class Profile : AppCompatActivity(), NavigationView.OnNavigationItemSelectedList
 
 
     private fun shareProfileLink() {
-        val shareableLink = "https://loop.42web.io?user=${MainHome.USER_ID}"
+        val shareableLink = getString(R.string.deep_link)+"user=${MainHome.USER_ID}"
         val shareIntent = Intent().apply {
             action = Intent.ACTION_SEND
             putExtra(Intent.EXTRA_TEXT, "See my profile on Loop: $shareableLink")

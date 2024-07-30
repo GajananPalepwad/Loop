@@ -139,7 +139,7 @@ class DeepLinkPost : AppCompatActivity() {
     }
 
     private fun sharePostLink(postId: Int) {
-        val shareableLink = "https://loop.42web.io?post=$postId"
+        val shareableLink = getString(R.string.deep_link)+"post=$postId"
         val shareIntent = Intent().apply {
             action = Intent.ACTION_SEND
             putExtra(Intent.EXTRA_TEXT, "Check out this post from Loop: $shareableLink")
