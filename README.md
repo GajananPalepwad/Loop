@@ -1,5 +1,5 @@
 <p align="center">
-<img alt="" src="docs/graphics/logos/banner_readme.png"/>
+<img alt="" src="https://firebasestorage.googleapis.com/v0/b/aicte2-2a28b.appspot.com/o/FDyUvk90yNY2_1024_500.png?alt=media&token=fbaa2ee7-411f-4ca6-9696-45af864236a6"/>
 </p>
 
 <a href="https://github.com/yourusername/yourproject/releases"><img src="https://img.shields.io/github/v/release/yourusername/yourproject" alt="release"/></a>
@@ -14,18 +14,18 @@
 <a href="https://github.com/yourusername/yourproject/blob/main/LICENSE"><img src="https://img.shields.io/github/license/yourusername/yourproject" alt="license"/></a>
 
 # Loop
-A brief description of your project and what it does.
+Are you tired of scrolling through irrelevant content on generic social media platforms? Welcome to Loop - the exclusive social network crafted specifically for developers, coders, and IT professionals. Immerse yourself in a world where every post, every interaction, and every feature is tailored to enhance your coding journey and professional growth.
 
 <img src="docs/graphics/logos/project_logo.png" align="right" width="40%" height="100%"></img>
 
 ### Features
 
-- Feature 1
-- Feature 2
-- Feature 3
-- Feature 4
-- Feature 5
-- Feature 6
+- Dev-Centric Content Stream
+- Project Collaboration Hub
+- Loop Meet - Random Problem-Solving Sessions
+- Skill Verification and Badges
+- AI-Powered Content Moderation
+- Code Snippet Sharing
 
 Install
 ---------
