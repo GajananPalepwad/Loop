@@ -16,7 +16,7 @@
 # Loop: The Social Media for Developers
 Are you tired of scrolling through irrelevant content on generic social media platforms? Welcome to Loop - the exclusive social network crafted specifically for developers, coders, and IT professionals. Immerse yourself in a world where every post, every interaction, and every feature is tailored to enhance your coding journey and professional growth.
 
-<img src="docs/graphics/logos/project_logo.png" align="right" width="40%" height="100%"></img>
+<img src="https://firebasestorage.googleapis.com/v0/b/aicte2-2a28b.appspot.com/o/app_logo%20(1).png?alt=media&token=dcb44397-327e-48be-ab8e-e03f4c30f7a2" align="right" width="25%" height="25%"></img>
 
 ### Features
 
@@ -33,7 +33,9 @@ Install
 
 <a href="https://play.google.com/store/apps/details?id=com.yourproject&utm_source=global_co&utm_medium=prtnr&utm_content=Mar2515&utm_campaign=PartBadge&pcampaignid=MKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1">
     <img alt="Get it on Google Play" height="80"
-        src="docs/graphics/logos/google-badge.png" /></a>
+        src="https://freelogopng.com/images/all_img/1664287128google-play-store-logo-png.png" /></a>
+
+<!--
 
 <a href="https://f-droid.org/repository/browse/?fdid=com.yourproject">
     <img alt="Get it on F-Droid" height="80"
@@ -42,6 +44,8 @@ Install
 <a href="http://www.amazon.com/gp/product/B004L1G7T2/ref=mas_pm_yourproject">
     <img alt="Get it on Amazon app store" height="80"
         src="docs/graphics/logos/amazon-badge.png"/></a>
+        
+        -->
 
 </div>
 
