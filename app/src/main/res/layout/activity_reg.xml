@@ -42,7 +42,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="15dp"
         android:fontFamily="@font/alata"
-        android:text="Hello! Register to get stared"
+        android:text="Hello! Register to get started"
         android:textColor="@color/white"
         android:textSize="25dp" />
 
@@ -52,19 +52,19 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="15dp"
         android:layout_marginTop="30dp"
-        app:boxCornerRadiusTopEnd="15dp"
+        android:layout_marginBottom="10dp"
         app:boxCornerRadiusBottomEnd="15dp"
         app:boxCornerRadiusBottomStart="15dp"
-        app:boxCornerRadiusTopStart="15dp"
-        android:layout_marginBottom="10dp">
+        app:boxCornerRadiusTopEnd="15dp"
+        app:boxCornerRadiusTopStart="15dp">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/edName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/white"
             android:hint="Name"
-            android:inputType="textPersonName" />
+            android:inputType="textPersonName"
+            android:textColor="@color/white" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -72,40 +72,100 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="15dp"
-        app:boxCornerRadiusTopEnd="15dp"
+        android:layout_marginBottom="10dp"
         app:boxCornerRadiusBottomEnd="15dp"
         app:boxCornerRadiusBottomStart="15dp"
-        app:boxCornerRadiusTopStart="15dp"
-        android:layout_marginBottom="10dp">
+        app:boxCornerRadiusTopEnd="15dp"
+        app:boxCornerRadiusTopStart="15dp">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/edUserId"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/white"
             android:hint="UserName"
-            android:inputType="textNoSuggestions" />
+            android:inputType="textNoSuggestions"
+            android:textColor="@color/white" />
     </com.google.android.material.textfield.TextInputLayout>
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/tilEmail"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="15dp"
-        app:boxCornerRadiusTopEnd="15dp"
-        app:boxCornerRadiusBottomEnd="15dp"
-        app:boxCornerRadiusBottomStart="15dp"
-        app:boxCornerRadiusTopStart="15dp"
-        android:layout_marginBottom="10dp">
+        android:orientation="horizontal">
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/edEmail"
-            android:layout_width="match_parent"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/tilEmail"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:textColor="@color/white"
-            android:hint="Email"
-            android:inputType="textEmailAddress" />
-    </com.google.android.material.textfield.TextInputLayout>
+            android:layout_marginHorizontal="15dp"
+            android:layout_marginBottom="10dp"
+            android:layout_weight="4"
+            app:boxCornerRadiusBottomEnd="15dp"
+            app:boxCornerRadiusBottomStart="15dp"
+            app:boxCornerRadiusTopEnd="15dp"
+            app:boxCornerRadiusTopStart="15dp">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edEmail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Email"
+                android:inputType="textEmailAddress"
+                android:textColor="@color/white" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnSendOTP"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="15dp"
+            android:layout_weight="1"
+            android:background="@drawable/button_shape"
+            android:text="OTP"
+            android:textAllCaps="false"
+            android:textColor="@color/app_2background" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/tilOTP"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="15dp"
+            android:layout_marginBottom="10dp"
+            android:layout_weight="1"
+            app:boxCornerRadiusBottomEnd="15dp"
+            app:boxCornerRadiusBottomStart="15dp"
+            app:boxCornerRadiusTopEnd="15dp"
+            app:boxCornerRadiusTopStart="15dp">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edOTP"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="OTP"
+                android:inputType="numberPassword"
+                android:textColor="@color/white" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnVerify"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="15dp"
+            android:layout_weight="1"
+            android:background="@drawable/button_shape"
+            android:text="Verify"
+            android:textAllCaps="false"
+            android:textColor="@color/app_2background" />
+
+
+    </LinearLayout>
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/tilPassword"
@@ -113,19 +173,20 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="15dp"
         android:layout_marginBottom="10dp"
-        app:boxCornerRadiusTopEnd="15dp"
         app:boxCornerRadiusBottomEnd="15dp"
         app:boxCornerRadiusBottomStart="15dp"
+        app:boxCornerRadiusTopEnd="15dp"
         app:boxCornerRadiusTopStart="15dp"
-        app:passwordToggleEnabled="true">
+        app:passwordToggleEnabled="true"
+        app:passwordToggleTint="@color/white">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/edPassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/white"
             android:hint="Password"
-            android:inputType="textPassword" />
+            android:inputType="textPassword"
+            android:textColor="@color/white" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -134,19 +195,20 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="15dp"
         android:layout_marginBottom="10dp"
-        app:boxCornerRadiusTopEnd="15dp"
         app:boxCornerRadiusBottomEnd="15dp"
         app:boxCornerRadiusBottomStart="15dp"
+        app:boxCornerRadiusTopEnd="15dp"
         app:boxCornerRadiusTopStart="15dp"
-        app:passwordToggleEnabled="true">
+        app:passwordToggleEnabled="true"
+        app:passwordToggleTint="@color/white">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/edConfirmPassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/white"
             android:hint="Confirm Password"
-            android:inputType="textPassword" />
+            android:inputType="textPassword"
+            android:textColor="@color/white" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <androidx.appcompat.widget.AppCompatButton
@@ -154,17 +216,17 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="15dp"
-        android:layout_marginBottom="52dp"
         android:layout_marginTop="25dp"
+        android:layout_marginBottom="52dp"
         android:background="@drawable/button_shape"
         android:text="Register"
         android:textAllCaps="false"
-        android:textColor="@color/app_2background"/>
+        android:textColor="@color/app_2background" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"/>
+        android:layout_weight="1" />
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -176,17 +238,18 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/white"
             android:fontFamily="@font/alata"
-            android:text="Already have an account?"/>
+            android:text="Already have an account?"
+            android:textColor="@color/white" />
 
         <TextView
+            android:id="@+id/btnLogin"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/app_color"
-            android:textStyle="bold"
             android:fontFamily="@font/alata"
-            android:text=" Login Now"/>
+            android:text=" Login Now"
+            android:textColor="@color/app_color"
+            android:textStyle="bold" />
 
     </LinearLayout>
 

@@ -2,15 +2,21 @@ package com.gn4k.loop.adapters
 
 
 import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import com.bumptech.glide.Glide
 import com.gn4k.loop.R
 import com.gn4k.loop.models.response.NotificationResponse
+import com.gn4k.loop.ui.home.MainHome
+import com.gn4k.loop.ui.post.DeepLinkPost
+import com.gn4k.loop.ui.profile.others.OthersProfile
+import com.gn4k.loop.ui.profile.self.Profile
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
@@ -24,6 +30,7 @@ class NotificationAdapter(private val notifications: List<NotificationResponse>,
         val photoImageView: ImageView = itemView.findViewById(R.id.photoImageView)
         val tvMessage: TextView = itemView.findViewById(R.id.tvMessage)
         val tvTime: TextView = itemView.findViewById(R.id.tvTime)
+        val item: LinearLayout = itemView.findViewById(R.id.item)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NotificationViewHolder {
@@ -39,6 +46,37 @@ class NotificationAdapter(private val notifications: List<NotificationResponse>,
             .load(context.getString(R.string.base_url)+notification.sender_profile_url)
             .placeholder(R.drawable.ic_profile)
             .into(holder.photoImageView)
+
+        holder.item.setOnClickListener {
+            if(notification.type.equals("comments")){
+
+                val intent = Intent(context, DeepLinkPost::class.java)
+                intent.putExtra("postId", notification.post_id)
+                context.startActivity(intent)
+
+            }else if(notification.type.equals("follows")){
+
+                val intent = Intent(context, OthersProfile::class.java)
+                intent.putExtra("userId", notification.sender_user_id.toString())
+                context.startActivity(intent)
+
+            }else if(notification.type.equals("likes")){
+
+                val intent = Intent(context, DeepLinkPost::class.java)
+                intent.putExtra("postId", notification.post_id)
+                context.startActivity(intent)
+
+            }else if(notification.type.equals("projects")){
+
+                val intent = Intent(context, Profile::class.java)
+                intent.putExtra("userId", MainHome.USER_ID)
+                intent.putExtra("fragment", "projects")
+                context.startActivity(intent)
+
+            }
+
+        }
+
 
         holder.tvMessage.text = notification.message
         holder.tvTime.text = formatDateTime(notification.created_at)

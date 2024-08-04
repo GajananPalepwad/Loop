@@ -5,7 +5,7 @@
     <string name="gemini_model">gemini-1.5-flash</string>
     <string name="base_url">https://sggsapp.co.in/loop/</string>
     <string name="deep_link">https://loop.42web.io?</string>
-
+    <string name="videocall_key">eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcGlrZXkiOiI5MGM5NzUxOS04YmI3LTQ4MGQtOTA5Ny05OWQzOWFiYjkwMjgiLCJwZXJtaXNzaW9ucyI6WyJhbGxvd19qb2luIl0sImlhdCI6MTcyMjc2NDk0NiwiZXhwIjoxODgwNTUyOTQ2fQ.ACDGUHPUQ2_wHhDKLeJrbT4HcsXgbxQION91-TYAr_E</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 </resources>

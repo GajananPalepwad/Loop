@@ -267,12 +267,37 @@
                 android:textColor="@color/white"
                 android:textSize="23dp" />
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/badges"
-                android:layout_width="wrap_content"
-                android:layout_height="20dp"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginBottom="10dp"/>
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/badges"
+                    android:layout_width="wrap_content"
+                    android:layout_height="20dp"
+                    android:layout_gravity="center_horizontal"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/btnCollectBadges"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:fontFamily="@font/alata"
+                    android:text="Click here to collect badges"
+                    android:textColor="@color/app_color"
+                    android:textStyle="bold"
+                    android:visibility="gone"
+                    app:layout_constraintBottom_toBottomOf="@+id/badges"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/badges" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
             <TextView
                 android:id="@+id/tvAbout"
@@ -347,6 +372,7 @@
                 </androidx.cardview.widget.CardView>
 
                 <androidx.cardview.widget.CardView
+                    android:id="@+id/btnInterest"
                     android:layout_width="45dp"
                     android:layout_height="45dp"
                     android:layout_gravity="center_vertical"
@@ -372,7 +398,7 @@
                             android:layout_weight="1"
                             android:fontFamily="@font/alata"
                             android:gravity="center"
-                            android:text="Message"
+                            android:text="Add Interest"
                             android:textColor="#FFFFFF"
                             android:textSize="17sp" />
 

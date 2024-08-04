@@ -18,7 +18,7 @@ import com.gn4k.loop.models.request.JoinLeaveMeetRequest
 import com.gn4k.loop.models.response.CreateMeetingResponse
 import com.gn4k.loop.models.response.MeetingObject
 import com.gn4k.loop.ui.home.MainHome
-import com.gn4k.loop.ui.home.loopmeeting.VideoCallScreen
+import com.gn4k.loop.ui.home.loopMeeting.VideoCallScreen
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

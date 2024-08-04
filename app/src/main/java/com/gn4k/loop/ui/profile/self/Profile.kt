@@ -9,6 +9,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.view.MenuItem
+import android.view.View
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -28,11 +29,10 @@ import com.gn4k.loop.models.response.UserResponse
 import com.gn4k.loop.ui.SplashScreen
 import com.gn4k.loop.ui.animation.CustomLoading
 import com.gn4k.loop.ui.home.MainHome
-import com.gn4k.loop.ui.home.loopmeeting.MeetingLists
+import com.gn4k.loop.ui.home.loopMeeting.MeetingLists
 import com.gn4k.loop.ui.post.MakePost
+import com.gn4k.loop.ui.profile.SkillSelector
 import com.gn4k.loop.ui.profile.followLists.FollowList
-import com.gn4k.loop.ui.profile.others.OthersProfile.Companion.userId
-import com.gn4k.loop.ui.profile.others.OthersProfile.Companion.userName
 import com.gn4k.loop.ui.profile.self.badges.ManageBadges
 import com.gn4k.loop.ui.profile.self.drawer.Recent
 import com.gn4k.loop.ui.profile.self.drawer.Settings
@@ -105,6 +105,29 @@ class Profile : AppCompatActivity(), NavigationView.OnNavigationItemSelectedList
 
         var intentMake = Intent(this, MakePost::class.java)
 
+
+        val frag = intent.getStringExtra("fragment")
+
+        if (frag != null) {
+            if (frag == "projects"){
+                intentMake = Intent(this, MakeProject::class.java)
+                binding.btnProjects.setTextColor(getColor(R.color.app_color))
+                binding.btnPost.setTextColor(getColor(R.color.white))
+                setFragment(ProfileProjects())
+            }else if(frag == "posts"){
+                intentMake = Intent(this, MakePost::class.java)
+                binding.btnPost.setTextColor(getColor(R.color.app_color))
+                binding.btnProjects.setTextColor(getColor(R.color.white))
+                setFragment(ProfilePost())
+            }
+        }else{
+            intentMake = Intent(this, MakePost::class.java)
+            binding.btnPost.setTextColor(getColor(R.color.app_color))
+            binding.btnProjects.setTextColor(getColor(R.color.white))
+            setFragment(ProfilePost())
+        }
+
+
         // Set up DrawerLayout and NavigationView
         drawerLayout = binding.drawerLayout
         navView = binding.navView
@@ -112,7 +135,6 @@ class Profile : AppCompatActivity(), NavigationView.OnNavigationItemSelectedList
         binding.back.setOnClickListener {
             onBackPressed()
         }
-
 
         toggle = ActionBarDrawerToggle(
             this,
@@ -141,17 +163,31 @@ class Profile : AppCompatActivity(), NavigationView.OnNavigationItemSelectedList
         binding.tvLocation.text = MainHome.USER_LOCATION
         binding.tvWebsite.text = MainHome.USER_WEBSITE
 
-        val badgeAdapter = ProfileBadgeAdapter(MainHome.USER_BADGES, this)
+        val badgeAdapter = ProfileBadgeAdapter(MainHome.USER_BADGES, MainHome.USER_ID.toInt(), MainHome.USER_NAME, this)
         val layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         binding.badges.layoutManager = layoutManager
         binding.badges.adapter = badgeAdapter
+
+        if (MainHome.USER_BADGES.isEmpty()) {
+            binding.btnCollectBadges.visibility = View.VISIBLE
+        }
+
+        binding.btnCollectBadges.setOnClickListener {
+            val intent = Intent(this, ManageBadges::class.java)
+            intent.putExtra("userId", MainHome.USER_ID)
+            startActivity(intent)
+        }
 
         binding.btnEditProfile.setOnClickListener {
             val intent = Intent(this, ProfileEditing::class.java)
             startActivity(intent)
         }
 
-        setFragment(ProfilePost())
+        binding.btnInterest.setOnClickListener {
+            val intent = Intent(this, SkillSelector::class.java)
+            startActivity(intent)
+        }
+
 
         val BASE_URL = getString(R.string.base_url)
         val retrofit = RetrofitClient.getClient(BASE_URL)
@@ -201,6 +237,7 @@ class Profile : AppCompatActivity(), NavigationView.OnNavigationItemSelectedList
 
         binding.badges.setOnClickListener {
             val intent = Intent(this, ManageBadges::class.java)
+            intent.putExtra("userId", MainHome.USER_ID)
             startActivity(intent)
         }
 

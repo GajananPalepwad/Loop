@@ -12,8 +12,8 @@ android {
         applicationId = "com.gn4k.loop"
         minSdk = 26
         targetSdk = 34
-        versionCode = 2
-        versionName = "1.1"
+        versionCode = 3
+        versionName = "1.2"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -37,6 +37,18 @@ android {
     }
     kotlinOptions {
         jvmTarget = "1.8"
+    }
+
+    packagingOptions {
+        exclude("META-INF/DEPENDENCIES")
+        exclude("META-INF/LICENSE")
+        exclude("META-INF/LICENSE.txt")
+        exclude("META-INF/license.txt")
+        exclude("META-INF/NOTICE")
+        exclude("META-INF/NOTICE.txt")
+        exclude("META-INF/notice.txt")
+        exclude("META-INF/ASL2.0")
+        exclude("META-INF/*.kotlin_module")
     }
 }
 
@@ -88,6 +100,8 @@ dependencies {
     implementation("com.google.code.gson:gson:2.10.1")
 
     implementation ("com.github.MikeOrtiz:TouchImageView:1.4.1")
+
+    implementation ("com.google.auth:google-auth-library-oauth2-http:1.19.0")
 
 
 

@@ -22,30 +22,70 @@
         android:layout_height="1dp"
         android:background="?android:attr/listDivider" />
 
-<!--    <LinearLayout-->
-<!--        android:id="@+id/deleteProfile"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:orientation="horizontal"-->
-<!--        android:paddingTop="16dp"-->
-<!--        android:paddingBottom="16dp"-->
-<!--        android:clickable="true"-->
-<!--        android:focusable="true"-->
-<!--        android:background="@color/app_2background"-->
-<!--        android:onClick="deleteProfile">-->
+    <LinearLayout
+        android:id="@+id/deleteProfile"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingTop="16dp"
+        android:clickable="true"
+        android:background="@color/app_2background">
 
-<!--        <TextView-->
-<!--            android:layout_width="0dp"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_weight="1"-->
-<!--            android:text="Delete Profile"-->
-<!--            android:fontFamily="@font/alata"-->
-<!--            android:paddingStart="16dp"-->
-<!--            android:layout_marginHorizontal="16dp"-->
-<!--            android:textSize="16dp"-->
-<!--            android:textColor="@color/white"-->
-<!--            android:gravity="center_vertical" />-->
-<!--    </LinearLayout>-->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Delete Account"
+            android:fontFamily="@font/alata"
+            android:paddingStart="16dp"
+            android:layout_marginBottom="16dp"
+            android:layout_marginHorizontal="16dp"
+            android:textSize="16sp"
+            android:textColor="@color/white"
+            android:gravity="center_vertical" />
+
+        <LinearLayout
+            android:id="@+id/deleteContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:orientation="vertical">
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tilPassword"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="30dp"
+                android:layout_marginBottom="10dp"
+                app:boxCornerRadiusTopEnd="15dp"
+                app:boxCornerRadiusBottomEnd="15dp"
+                app:boxCornerRadiusBottomStart="15dp"
+                app:boxCornerRadiusTopStart="15dp"
+                app:passwordToggleTint="@color/white"
+                app:passwordToggleEnabled="true">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/edPassword"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/white"
+                    android:hint="Password"
+                    android:inputType="textPassword" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btnConfirmDelete"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="30dp"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="5dp"
+                android:backgroundTint="@color/red"
+                android:background="@drawable/button_shape"
+                android:text="Delete Permently"
+                android:textAllCaps="false"
+                android:textColor="@color/white"/>
+        </LinearLayout>
+    </LinearLayout>
 
     <View
         android:layout_width="match_parent"
@@ -60,7 +100,6 @@
         android:paddingTop="16dp"
         android:paddingBottom="16dp"
         android:clickable="true"
-        android:focusable="true"
         android:background="@color/app_2background">
 
         <Switch
@@ -81,26 +120,4 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="?android:attr/listDivider" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingTop="16dp"
-        android:paddingBottom="16dp"
-        android:clickable="true"
-        android:focusable="true"
-        android:background="@color/app_2background">
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Logout"
-            android:textSize="16dp"
-            android:layout_marginHorizontal="15dp"
-            android:textColor="@color/white"
-            android:paddingStart="16dp"
-            android:gravity="center_vertical" />
-    </LinearLayout>
 </LinearLayout>

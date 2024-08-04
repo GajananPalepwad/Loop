@@ -208,7 +208,7 @@ class MakePost : AppCompatActivity() {
 
                     try {
                         val response = generativeModel.generateContent(inputContent)
-                        Toast.makeText(this@MakePost, response.text, Toast.LENGTH_SHORT).show()
+//                        Toast.makeText(this@MakePost, response.text, Toast.LENGTH_SHORT).show()
 
                         if (response.text.toString().lowercase().contains("true")) {
                             createPostWithImage(context, type, tags, parentPostId, body)
@@ -483,8 +483,6 @@ class MakePost : AppCompatActivity() {
         }
 
 
-        var isAppropriate = false
-
         try {
 
             lifecycleScope.launch {
@@ -499,8 +497,37 @@ class MakePost : AppCompatActivity() {
                 )
 
                 if (response.text.toString().lowercase().contains("true")) {
-                    isAppropriate = true
-                    loading.stopLoading()
+
+                    val postData = CreatePostRequestForLinkNCode(authorId, caption, type, tags, parentPostId, linkOrCode)
+                    // Call the API
+                    apiService?.createPostWithLinkAndCode(postData)
+                        ?.enqueue(object : Callback<CreatePostResponse> {
+                            override fun onResponse(
+                                call: Call<CreatePostResponse>,
+                                response: Response<CreatePostResponse>
+                            ) {
+                                if (response.isSuccessful) {
+                                    val createPostResponse = response.body()
+                                    Toast.makeText(
+                                        this@MakePost,
+                                        createPostResponse?.message ?: "Post created successfully",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                    onBackPressed()
+                                    loading.stopLoading()
+                                } else {
+                                    loading.stopLoading()
+                                    handleErrorResponse(response)
+                                }
+                            }
+
+                            override fun onFailure(call: Call<CreatePostResponse>, t: Throwable) {
+                                Log.d("MakePostActivity", "Network Error: ${t.message}")
+                                Toast.makeText(this@MakePost, "Network Error: ${t.message}", Toast.LENGTH_SHORT).show()
+                                loading.stopLoading()
+                            }
+                        })
+
                 } else {
                     Toast.makeText(baseContext, "Inappropriate Content", Toast.LENGTH_SHORT).show()
                     loading.stopLoading()
@@ -512,40 +539,6 @@ class MakePost : AppCompatActivity() {
             return
         }
 
-        if (!isAppropriate) {
-            return
-        }
-
-        val postData = CreatePostRequestForLinkNCode(authorId, caption, type, tags, parentPostId, linkOrCode)
-
-        // Call the API
-        apiService?.createPostWithLinkAndCode(postData)
-            ?.enqueue(object : Callback<CreatePostResponse> {
-                override fun onResponse(
-                    call: Call<CreatePostResponse>,
-                    response: Response<CreatePostResponse>
-                ) {
-                    if (response.isSuccessful) {
-                        val createPostResponse = response.body()
-                        Toast.makeText(
-                            this@MakePost,
-                            createPostResponse?.message ?: "Post created successfully",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                        onBackPressed()
-                        loading.stopLoading()
-                    } else {
-                        loading.stopLoading()
-                        handleErrorResponse(response)
-                    }
-                }
-
-                override fun onFailure(call: Call<CreatePostResponse>, t: Throwable) {
-                    Log.d("MakePostActivity", "Network Error: ${t.message}")
-                    Toast.makeText(this@MakePost, "Network Error: ${t.message}", Toast.LENGTH_SHORT).show()
-                    loading.stopLoading()
-                }
-            })
     }
 
     private fun handleErrorResponse(response: Response<CreatePostResponse>) {

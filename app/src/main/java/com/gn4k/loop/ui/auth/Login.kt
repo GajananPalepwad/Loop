@@ -103,6 +103,12 @@ class Login : AppCompatActivity() {
 
         })
 
+        binding.btnReg.setOnClickListener {
+            val intent: Intent = Intent(baseContext, Reg::class.java)
+            startActivity(intent)
+            finish()
+        }
+
 
         binding.btnLogin.setOnClickListener {
 
@@ -129,8 +135,6 @@ class Login : AppCompatActivity() {
 
             val user = LoginRequest(email, password)
             loginUser(user);
-
-
         }
 
     }

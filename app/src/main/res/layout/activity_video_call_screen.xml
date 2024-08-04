@@ -8,13 +8,15 @@
     android:gravity="center"
     android:orientation="vertical"
     android:paddingBottom="16dp"
-    tools:context=".ui.home.loopmeeting.VideoCallScreen">
+    tools:context=".ui.home.loopMeeting.VideoCallScreen">
 
     <TextView
+        android:id="@+id/tvSwipeLeft"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Swip For More"
         android:textStyle="bold"
+        android:visibility="gone"
         android:layout_marginVertical="5dp"
         android:textColor="@color/white"
         app:drawableStartCompat="@drawable/ic_right_arrow"

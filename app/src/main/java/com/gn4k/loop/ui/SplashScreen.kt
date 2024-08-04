@@ -11,6 +11,7 @@ import com.gn4k.loop.R
 import com.gn4k.loop.api.RetrofitClient
 import com.gn4k.loop.models.request.UserRequest
 import com.gn4k.loop.models.response.UserAllDataResponse
+//import com.gn4k.loop.notificationModel.FCMService
 import com.gn4k.loop.ui.auth.ChooseRegOrLog
 import com.gn4k.loop.ui.home.MainHome
 import com.gn4k.loop.ui.post.DeepLinkPost
@@ -32,7 +33,7 @@ class SplashScreen : AppCompatActivity() {
         val sharedPref = getSharedPreferences("user_data", Context.MODE_PRIVATE)
         MainHome.USER_ID = sharedPref.getString("user_id", "").toString()
 
-        if (MainHome.USER_ID == "" || MainHome.USER_ID == null) {
+        if (MainHome.USER_ID == "" || MainHome.USER_ID == null || MainHome.USER_ID == "-1") {
             val intent: Intent = Intent(baseContext, ChooseRegOrLog::class.java)
             startActivity(intent)
             finish()
@@ -41,6 +42,8 @@ class SplashScreen : AppCompatActivity() {
             getUserData(user)
         }
 
+//        var fcm = FCMService(this)
+//        fcm.sendNotification("gswr", "hgrfd")
 
     }
 
@@ -151,7 +154,11 @@ class SplashScreen : AppCompatActivity() {
                 Log.d("Reg", "Network Error: ${t.message}")
                 Toast.makeText(this@SplashScreen, "Network Error: ${t.message}", Toast.LENGTH_SHORT)
                     .show()
+                val intent: Intent = Intent(baseContext, ChooseRegOrLog::class.java)
+                startActivity(intent)
+                finish()
             }
+
         })
     }
 
@@ -160,21 +167,33 @@ class SplashScreen : AppCompatActivity() {
             400 -> {
                 Log.d("Reg", "Missing required fields")
                 Toast.makeText(this, "Missing required fields", Toast.LENGTH_SHORT).show()
+                val intent: Intent = Intent(baseContext, ChooseRegOrLog::class.java)
+                startActivity(intent)
+                finish()
             }
 
             404 -> {
                 Log.d("Reg", "User not found")
+                val intent: Intent = Intent(baseContext, ChooseRegOrLog::class.java)
+                startActivity(intent)
+                finish()
             }
 
             500 -> {
                 Log.d("Reg", "Database connection failed")
                 Toast.makeText(this, "Database connection failed", Toast.LENGTH_SHORT).show()
+                val intent: Intent = Intent(baseContext, ChooseRegOrLog::class.java)
+                startActivity(intent)
+                finish()
             }
 
             else -> {
                 Log.d("Reg", "Unexpected Error: ${response.message()}")
                 Toast.makeText(this, "Unexpected Error: ${response.code()}", Toast.LENGTH_SHORT)
                     .show()
+                val intent: Intent = Intent(baseContext, ChooseRegOrLog::class.java)
+                startActivity(intent)
+                finish()
             }
         }
     }

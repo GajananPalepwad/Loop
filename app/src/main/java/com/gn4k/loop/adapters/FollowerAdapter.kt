@@ -59,7 +59,7 @@ class FollowerAdapter(
         fun bind(follower: Follower, position: Int) {
             usernameTextView.text = follower.name
 
-            val badgeAdapter = follower.badges?.let { ProfileBadgeAdapter(it, context) }
+            val badgeAdapter = follower.badges?.let { ProfileBadgeAdapter(it, follower.id, follower.name, context) }
             val layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
             badges.layoutManager = layoutManager
             badges.adapter = badgeAdapter

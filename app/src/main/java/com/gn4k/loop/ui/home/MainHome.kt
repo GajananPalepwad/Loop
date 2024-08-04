@@ -10,7 +10,8 @@ import androidx.fragment.app.Fragment
 import com.gn4k.loop.R
 import com.gn4k.loop.notifi1.NotificationSender
 import com.gn4k.loop.notifi1.NotificationSubscription
-import com.gn4k.loop.ui.home.loopmeeting.MeetingLists
+import com.gn4k.loop.ui.SplashScreen
+import com.gn4k.loop.ui.home.loopMeeting.MeetingLists
 
 class MainHome : AppCompatActivity() {
 
@@ -30,8 +31,12 @@ class MainHome : AppCompatActivity() {
 
         setFragment(HomeFeed())
 
-        val notificationSubscription = NotificationSubscription(this)
+        if(MainHome.USER_ID == "-1"){
+            startActivity(Intent(this, SplashScreen::class.java))
+            finish()
+        }
 
+        val notificationSubscription = NotificationSubscription(this)
 //        notificationSubscription.subscribeToTopic("gn")
 
 
@@ -95,8 +100,16 @@ class MainHome : AppCompatActivity() {
         finish()
     }
 
+    override fun onRestart() {
+        super.onRestart()
+        if(MainHome.USER_ID == "-1"){
+            startActivity(Intent(this, SplashScreen::class.java))
+            finish()
+        }
+    }
+
     companion object {
-        lateinit var USER_ID : String
+        var USER_ID : String = "-1"
         lateinit var USER_EMAIL: String
         lateinit var USER_USERNAME: String
         lateinit var USER_NAME: String

@@ -37,7 +37,7 @@ class SearchUserAdapter(private val userList: List<SearchUser>, private val acti
 
         holder.usernameTextView.text = user.name
 
-        val badgeAdapter = user.badges?.let { ProfileBadgeAdapter(it, activity) }
+        val badgeAdapter = user.badges?.let { ProfileBadgeAdapter(it, user.id, user.name, activity) }
         val layoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
         holder.badges.layoutManager = layoutManager
         holder.badges.adapter = badgeAdapter
@@ -48,16 +48,23 @@ class SearchUserAdapter(private val userList: List<SearchUser>, private val acti
             .into(holder.photoImageView)
 
         holder.item.setOnClickListener {
+            goToProfile(user.id)
+        }
 
-            if(user.id==MainHome.USER_ID.toInt()){
-                val intent = Intent(activity, Profile::class.java)
-                intent.putExtra("userId", user.id.toString())
-                activity.startActivity(intent)
-            }else {
-                val intent = Intent(activity, OthersProfile::class.java)
-                intent.putExtra("userId", user.id.toString())
-                activity.startActivity(intent)
-            }
+        holder.badges.setOnClickListener {
+            goToProfile(user.id)
+        }
+    }
+
+    private fun goToProfile(userId: Int){
+        if(userId==MainHome.USER_ID.toInt()){
+            val intent = Intent(activity, Profile::class.java)
+            intent.putExtra("userId", userId.toString())
+            activity.startActivity(intent)
+        }else {
+            val intent = Intent(activity, OthersProfile::class.java)
+            intent.putExtra("userId", userId.toString())
+            activity.startActivity(intent)
         }
     }
 

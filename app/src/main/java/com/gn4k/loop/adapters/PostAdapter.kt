@@ -4,14 +4,17 @@ import ApiService
 import android.app.Activity
 import android.content.Intent
 import android.util.Log
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.PopupMenu
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.colormoon.readmoretextview.ReadMoreTextView
@@ -21,7 +24,10 @@ import com.gn4k.loop.models.StaticVariables
 import com.gn4k.loop.ui.post.ActivityPost
 import com.gn4k.loop.models.response.Post
 import com.gn4k.loop.models.request.LikeDislikeRequest
+import com.gn4k.loop.models.response.CreateMeetingResponse
+import com.gn4k.loop.models.response.GetProjects
 import com.gn4k.loop.models.response.UserResponse
+import com.gn4k.loop.notificationModel.SaveNotificationInDB
 import com.gn4k.loop.ui.home.MainHome
 import com.gn4k.loop.ui.post.ViewImageInFull
 import com.gn4k.loop.ui.profile.others.OthersProfile
@@ -148,17 +154,101 @@ class PostAdapter(private val postList: MutableList<Post>, private val userName:
         holder.btnLikes.setOnClickListener {
             if (post.isLiked == true) {
                 holder.btnLikes.setImageResource(R.drawable.ic_heart)
-                doUnlike(post.postId.toInt(), false, holder, position)
+                doUnlike(post.postId.toInt(), false, position)
             } else {
                 holder.btnLikes.setImageResource(R.drawable.ic_red_heart)
-                doLike(post.postId.toInt(), true, holder, position)
+                doLike(post.postId.toInt(), true, position)
             }
         }
 
         holder.btnShares.setOnClickListener {
             sharePostLink(post.postId.toInt())
         }
+
+        holder.btnOptions.setOnClickListener {
+            if(post.authorId.toString()==MainHome.USER_ID) {
+                showOptionMenu(holder.btnOptions, position, post.postId.toInt())
+            }
+        }
     }
+
+    private fun showOptionMenu(view: View, position: Int, postId: Int) {
+        val optionMenu = PopupMenu(activity, view, Gravity.END, 0, R.style.CustomPopupMenu)
+        optionMenu.inflate(R.menu.self_post_menu)
+
+        // Apply custom layout to menu items
+        for (i in 0 until optionMenu.menu.size()) {
+            val menuItem = optionMenu.menu.getItem(i)
+            val customView = activity.layoutInflater.inflate(R.layout.popup_menu_item, null)
+            customView.findViewById<TextView>(R.id.menu_item_text).text = menuItem.title
+            customView.setOnClickListener {
+                // Manually trigger the PopupMenu item click listener
+                optionMenu.menu.performIdentifierAction(menuItem.itemId, 0)
+            }
+            menuItem.actionView = customView
+        }
+
+        optionMenu.setOnMenuItemClickListener { item ->
+            when (item.itemId) {
+                R.id.btnDelete -> {
+                    showDeleteConfirmationDialog(position, postId)
+                    true
+                }
+                else -> false
+            }
+        }
+
+        optionMenu.show()
+    }
+
+
+    private fun showDeleteConfirmationDialog(position: Int, postId: Int) {
+        AlertDialog.Builder(activity, R.style.DarkAlertDialogTheme)
+            .setTitle("Confirm Delete")
+            .setMessage("Are you sure you want to delete this post?")
+            .setPositiveButton("Yes") { _, _ ->
+                deletePost(postId, position)
+            }
+            .setNegativeButton("No") { dialog, _ ->
+                dialog.dismiss()
+            }
+            .show()
+    }
+
+    private fun deletePost(postId: Int, position: Int) {
+        val BASE_URL = activity.getString(R.string.base_url)
+        val retrofit = RetrofitClient.getClient(BASE_URL)
+        val apiService = retrofit?.create(ApiService::class.java)
+
+        apiService?.deletePost(MainHome.USER_ID.toInt(), postId)
+            ?.enqueue(object : Callback<CreateMeetingResponse?> {
+                override fun onResponse(
+                    call: Call<CreateMeetingResponse?>,
+                    response: Response<CreateMeetingResponse?>
+                ) {
+                    if (response.isSuccessful) {
+                        val msgResponse = response.body()
+                        // Remove the participant from the list and notify the adapter
+                        if (msgResponse != null) {
+                            Toast.makeText(activity, "Post deleted", Toast.LENGTH_SHORT).show()
+                        }
+                        if (position >= 0 && position < postList.size) {
+                            postList.removeAt(position)
+                            notifyItemRemoved(position)
+                        }
+                    } else {
+                        // Handle error response
+                    }
+                }
+
+                override fun onFailure(call: Call<CreateMeetingResponse?>, t: Throwable) {
+                    Log.d("Reg", "Network Error: ${t.message}")
+                    Toast.makeText(activity, "Network Error: ${t.message}", Toast.LENGTH_SHORT)
+                        .show()
+                }
+            })
+    }
+
 
     fun openPost(post: Post, position: Int){
         StaticVariables.isExplore = false
@@ -189,7 +279,7 @@ class PostAdapter(private val postList: MutableList<Post>, private val userName:
         activity.startActivity(Intent.createChooser(shareIntent, "Share post via"))
     }
 
-    private fun doLike(postId: Int, isLike: Boolean, holder: PostViewHolder, position: Int) {
+    private fun doLike(postId: Int, isLike: Boolean, position: Int) {
         val BASE_URL = activity.getString(R.string.base_url)
         val retrofit = RetrofitClient.getClient(BASE_URL)
         val apiService = retrofit?.create(ApiService::class.java)
@@ -223,7 +313,7 @@ class PostAdapter(private val postList: MutableList<Post>, private val userName:
         })
     }
 
-    private fun doUnlike(postId: Int, isLike: Boolean, holder: PostViewHolder, position: Int) {
+    private fun doUnlike(postId: Int, isLike: Boolean, position: Int) {
         val BASE_URL = activity.getString(R.string.base_url)
         val retrofit = RetrofitClient.getClient(BASE_URL)
         val apiService = retrofit?.create(ApiService::class.java)

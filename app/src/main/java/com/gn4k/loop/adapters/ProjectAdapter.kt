@@ -16,14 +16,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.colormoon.readmoretextview.ReadMoreTextView
 import com.gn4k.loop.R
 import com.gn4k.loop.api.RetrofitClient
-import com.gn4k.loop.models.request.AddBadgeRequest
 import com.gn4k.loop.models.request.JoinRequest
-import com.gn4k.loop.models.request.UserRequest
 import com.gn4k.loop.models.response.CreateMeetingResponse
 import com.gn4k.loop.models.response.Project
 import com.gn4k.loop.notificationModel.SaveNotificationInDB
 import com.gn4k.loop.ui.home.MainHome
-import com.gn4k.loop.ui.projects.ProjectRequestList
+import com.gn4k.loop.ui.projects.ProjectDetails
 import com.overflowarchives.linkpreview.TelegramPreview
 import com.overflowarchives.linkpreview.ViewListener
 import retrofit2.Call
@@ -82,7 +80,7 @@ class ProjectAdapter(
             holder.joinButton.text = "Requested"
         }
 
-        val badgeAdapter = ProfileBadgeAdapter(project.tags, context)
+        val badgeAdapter = ProfileBadgeAdapter(project.tags, project.author_id, project.title, context)
         val layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         holder.rcTags.layoutManager = layoutManager
         holder.rcTags.adapter = badgeAdapter
@@ -111,11 +109,16 @@ class ProjectAdapter(
         }
 
         holder.item.setOnClickListener {
-            val intent = Intent(context, ProjectRequestList::class.java)
+            val intent = Intent(context, ProjectDetails::class.java)
             intent.putExtra("joinedPersons", ArrayList(project.joined_persons))
             intent.putExtra("requestPersons", ArrayList(project.requested_people))
             intent.putExtra("projectId", project.project_id.toString())
             intent.putExtra("authorId", project.author_id.toString())
+            intent.putExtra("title", project.title)
+            intent.putExtra("description", project.description)
+            intent.putExtra("status", project.status)
+            intent.putExtra("link", project.link_preview)
+            intent.putExtra("tags", ArrayList(project.tags))
             context.startActivity(intent)
         }
 

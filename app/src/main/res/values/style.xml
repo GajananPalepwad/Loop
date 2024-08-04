@@ -1,9 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-<!--    <style name="UCropTheme" parent="Theme.AppCompat.Light.NoActionBar">-->
-<!--        <item name=""-->
-<!--    </style>-->
-
 
     <style name="DialogAnimations"/>
     <style name="DialogAnimations.SmileWindow">
@@ -37,8 +33,15 @@
 
     <!-- Define a style for the PopupMenu -->
     <style name="CustomPopupMenu" parent="Widget.AppCompat.PopupMenu.Overflow">
-        <item name="android:popupBackground">@drawable/popup_shape</item>
-        <item name="android:textColor">@color/white</item>
+<!--        <item name="android:popupBackground">@color/app_background</item>-->
+<!--        <item name="android:itemBackground">@color/app_background</item>-->
+<!--        <item name="android:textColor">@color/white</item>-->
+<!--        <item name="android:textColorPrimary">@color/white</item>-->
+<!--        <item name="android:textColorSecondary">@color/white</item>-->
+<!--        <item name="buttonBarPositiveButtonStyle">@style/DarkDialogButtonStyle</item>-->
+<!--        <item name="buttonBarNegativeButtonStyle">@style/DarkDialogButtonStyle</item>-->
+<!--        <item name="android:textColorAlertDialogListItem">@color/white</item>-->
+<!--        <item name="textColorAlertDialogListItem">@color/white</item>-->
     </style>
 
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">

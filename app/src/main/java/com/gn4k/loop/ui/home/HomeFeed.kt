@@ -153,7 +153,6 @@ class HomeFeed : Fragment() {
                             } else {
                                 binding.empty.visibility = View.GONE
                             }
-
                         }
                         loading.stopLoading()
                     }else{
@@ -163,8 +162,7 @@ class HomeFeed : Fragment() {
 
                 override fun onFailure(call: Call<Posts?>, t: Throwable) {
                     Log.d("Reg", "Network Error: ${t.message}")
-                    Toast.makeText(context, "Network Error: ${t.message}", Toast.LENGTH_SHORT)
-                        .show()
+//                    Toast.makeText(context, "Network Error: ${t.message}", Toast.LENGTH_SHORT).show()
                     loading.stopLoading()
                 }
             })

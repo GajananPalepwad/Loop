@@ -64,7 +64,7 @@ class RequestUserAdapter(
             .placeholder(R.drawable.ic_profile)
             .into(holder.photoImageView)
 
-        if (MainHome.USER_ID.toInt() == authorId) {
+        if (MainHome.USER_ID.toInt() != authorId) {
             holder.acceptButton.visibility = View.GONE
             holder.rejectButton.visibility = View.GONE
         }

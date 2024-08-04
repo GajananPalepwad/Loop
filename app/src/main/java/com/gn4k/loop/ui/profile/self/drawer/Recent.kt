@@ -47,7 +47,7 @@ class Recent : AppCompatActivity() {
         val retrofit = RetrofitClient.getClient(BASE_URL)
         val apiService = retrofit?.create(ApiService::class.java)
 
-        apiService?.fetchRecentLikes(MainHome.USER_ID.toInt())
+        apiService?.fetchRecentLikes()
             ?.enqueue(object : Callback<List<Post>?> {
                 override fun onResponse(
                     call: Call<List<Post>?>,
@@ -84,7 +84,7 @@ class Recent : AppCompatActivity() {
         val retrofit = RetrofitClient.getClient(BASE_URL)
         val apiService = retrofit?.create(ApiService::class.java)
 
-        apiService?.fetchRecentComments(MainHome.USER_ID.toInt())
+        apiService?.fetchRecentComments()
             ?.enqueue(object : Callback<List<Post>?> {
                 override fun onResponse(
                     call: Call<List<Post>?>,

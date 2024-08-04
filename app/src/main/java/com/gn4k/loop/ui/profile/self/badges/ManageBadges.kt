@@ -4,6 +4,7 @@ import ApiService
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -35,6 +36,16 @@ class ManageBadges : AppCompatActivity() {
         binding = ActivityManageBadgesBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        var badges = MainHome.USER_BADGES
+        val userId = intent.getStringExtra("userId")
+        val userName = intent.getStringExtra("userName")
+
+        if (!userId.equals(MainHome.USER_ID)) {
+            badges = intent.getStringArrayListExtra("badges") ?: ArrayList()
+            binding.btnAddBadge.visibility = View.GONE
+            binding.tvTitle.text = "$userName's Badges"
+        }
+
 
         val BASE_URL = getString(R.string.base_url)
         val retrofit = RetrofitClient.getClient(BASE_URL)
@@ -50,7 +61,6 @@ class ManageBadges : AppCompatActivity() {
 
         fetchSkills()
 
-        val badges = MainHome.USER_BADGES
 
         binding.recyclerView.layoutManager = LinearLayoutManager(this)
         binding.recyclerView.adapter = BadgeAdapter(this, badges)

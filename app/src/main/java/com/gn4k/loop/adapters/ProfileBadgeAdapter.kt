@@ -12,7 +12,7 @@ import com.gn4k.loop.R
 import com.gn4k.loop.models.StaticVariables
 import com.gn4k.loop.ui.profile.self.badges.ManageBadges
 
-class ProfileBadgeAdapter(private val badges: List<String>, private val context: Context) :
+class ProfileBadgeAdapter(private val badges: List<String>, private val userId: Int, private val userName: String, private val context: Context) :
     RecyclerView.Adapter<ProfileBadgeAdapter.BadgeViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BadgeViewHolder {
@@ -26,8 +26,13 @@ class ProfileBadgeAdapter(private val badges: List<String>, private val context:
 
         holder.badgeIcon.setOnClickListener {
             val intent = Intent(context, ManageBadges::class.java)
+            intent.putStringArrayListExtra("badges", ArrayList(badges))
+            intent.putExtra("userId", userId.toString())
+            intent.putExtra("userName", userName)
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             context.startActivity(intent)
         }
+
 
     }
 

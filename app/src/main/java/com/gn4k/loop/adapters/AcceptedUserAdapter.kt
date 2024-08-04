@@ -67,7 +67,7 @@ class AcceptedUserAdapter(
             showConfirmationDialog(holder.itemView.context, imageUrl.id, imageUrl.name)
         }
 
-        if(MainHome.USER_ID.toInt() != authorId){
+        if(MainHome.USER_ID.toInt() == authorId){
             holder.rejectButton.visibility = View.GONE
         }
 
@@ -138,6 +138,7 @@ class AcceptedUserAdapter(
                 }
             })
     }
+
     fun addParticipant(participant: ParticipantList) {
         imageUrls.add(participant)
         notifyDataSetChanged()

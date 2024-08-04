@@ -7,14 +7,18 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import com.gn4k.loop.R
 import com.gn4k.loop.api.RetrofitClient
 import com.gn4k.loop.databinding.ActivityLoginBinding
 import com.gn4k.loop.databinding.ActivityRegBinding
+import com.gn4k.loop.models.request.OtpResponse
 import com.gn4k.loop.models.request.RegisterRequest
 import com.gn4k.loop.models.request.UserRequest
+import com.gn4k.loop.models.response.GetProjects
 import com.gn4k.loop.models.response.UserAllDataResponse
 import com.gn4k.loop.models.response.UserResponse
+import com.gn4k.loop.notificationModel.SaveNotificationInDB
 import com.gn4k.loop.ui.home.MainHome
 import retrofit2.Call
 import retrofit2.Callback
@@ -24,6 +28,8 @@ class Reg : AppCompatActivity() {
 
     private var apiService: ApiService? = null
     private lateinit var binding : ActivityRegBinding
+    var otp: String = ""
+    var isOTPVerified = false
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,6 +43,40 @@ class Reg : AppCompatActivity() {
 
         binding.back.setOnClickListener {
             onBackPressed()
+        }
+
+        binding.btnLogin.setOnClickListener {
+            val intent: Intent = Intent(baseContext, Login::class.java)
+            startActivity(intent)
+            finish()
+        }
+
+        binding.btnSendOTP.setOnClickListener {
+            val email = binding.edEmail.text.toString().trim()
+            if (email.isEmpty()) {
+                // Show error message for empty email field
+                binding.tilEmail.error = "Please enter your email address"
+                return@setOnClickListener // Exit the function if email is empty
+            }
+            sendOTP(email)
+        }
+
+        binding.btnVerify.setOnClickListener {
+            val otp = binding.edOTP.text.toString().trim()
+            if (otp.isEmpty()) {
+                // Show error message for empty OTP field
+                binding.tilOTP.error = "Please enter the OTP"
+                return@setOnClickListener
+            }
+            if (otp == this.otp) {
+                isOTPVerified = true
+                binding.btnVerify.backgroundTintList =
+                    ContextCompat.getColorStateList(baseContext, R.color.green)
+                binding.btnVerify.setTextColor(getResources().getColor(R.color.white))
+                binding.tilOTP.error = null
+            } else {
+                binding.tilOTP.error = "Invalid OTP"
+            }
         }
 
         binding.btnReg.setOnClickListener {
@@ -78,6 +118,16 @@ class Reg : AppCompatActivity() {
                 return@setOnClickListener
             }
 
+            if(otp.isEmpty()){
+                binding.tilEmail.error = "Please send your OTP"
+                return@setOnClickListener
+            }
+
+            if (!isOTPVerified) {
+                binding.tilOTP.error = "Please verify your OTP"
+                return@setOnClickListener
+            }
+
             val password = binding.edPassword.text.toString().trim()
             if (password.isEmpty()) {
                 // Show error message for empty password field
@@ -95,7 +145,7 @@ class Reg : AppCompatActivity() {
             // Check password strength
             if (!isPasswordStrong(password)) {
                 // Show error message for weak password
-                binding.tilPassword.error = "Password is weak. Please use a combination of letters, numbers, and symbols."
+                binding.tilPassword.error = "Password is weak. Please use a combination of uppercase letters, lowercase letters, numbers, and symbols."
                 return@setOnClickListener
             }
 
@@ -160,6 +210,42 @@ class Reg : AppCompatActivity() {
                 Toast.makeText(this, "Unexpected Error: ${response.code()}", Toast.LENGTH_SHORT).show()
             }
         }
+    }
+
+    private fun sendOTP(email: String) {
+        val BASE_URL = getString(R.string.base_url)
+        val retrofit = RetrofitClient.getClient(BASE_URL)
+        val apiService = retrofit?.create(ApiService::class.java)
+
+        apiService?.sendOtp(email)
+            ?.enqueue(object : Callback<OtpResponse?> {
+                override fun onResponse(
+                    call: Call<OtpResponse?>,
+                    response: Response<OtpResponse?>
+                ) {
+                    if (response.isSuccessful) {
+                        val msgResponse = response.body()
+                        Log.d("Reg", "OTP sent successfully")
+                        if (msgResponse != null) {
+                            if(msgResponse.Error == "200") {
+                                binding.btnSendOTP.backgroundTintList =
+                                    ContextCompat.getColorStateList(baseContext, R.color.app_color)
+                                otp = msgResponse.OTP
+                                binding.tilEmail.error = null
+                            }
+                        }
+
+                    } else {
+                        // Handle error response
+                    }
+                }
+
+                override fun onFailure(call: Call<OtpResponse?>, t: Throwable) {
+                    Log.d("Reg", "Network Error: ${t.message}")
+                    Toast.makeText(baseContext, "Network Error: ${t.message}", Toast.LENGTH_SHORT)
+                        .show()
+                }
+            })
     }
 
     fun getUserData(user: UserRequest) {

@@ -29,7 +29,7 @@ class SkillSelector : AppCompatActivity() {
 
     private lateinit var apiService: ApiService
 
-    private val selectedSkills = mutableSetOf<String>()
+    private var selectedSkills = mutableSetOf<String>()
     private lateinit var skillsAdapter: SkillsAdapter
 
     var tagListSpinner: List<String> = java.util.ArrayList()
@@ -43,6 +43,8 @@ class SkillSelector : AppCompatActivity() {
         val BASE_URL = getString(R.string.base_url)
         val retrofit = RetrofitClient.getClient(BASE_URL)
         apiService = retrofit?.create(ApiService::class.java)!!
+
+        selectedSkills = MainHome.USER_SKILLS.toMutableSet()
 
         // Initialize RecyclerView and Adapter
         binding.recyclerView.layoutManager = LinearLayoutManager(this)

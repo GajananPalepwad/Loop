@@ -32,7 +32,7 @@
             android:name=".ui.post.ViewImageInFull"
             android:exported="false" />
         <activity
-            android:name=".ui.projects.ProjectRequestList"
+            android:name=".ui.projects.ProjectDetails"
             android:exported="false" />
         <activity
             android:name=".ui.profile.self.drawer.Settings"
@@ -56,10 +56,10 @@
             android:name=".ui.profile.self.badges.ManageBadges"
             android:exported="false" />
         <activity
-            android:name=".ui.home.loopmeeting.VideoCallScreen"
+            android:name=".ui.home.loopMeeting.VideoCallScreen"
             android:exported="true" />
         <activity
-            android:name=".ui.home.loopmeeting.MeetingLists"
+            android:name=".ui.home.loopMeeting.MeetingLists"
             android:exported="false" />
         <activity
             android:name=".ui.profile.self.ProfileEditing"

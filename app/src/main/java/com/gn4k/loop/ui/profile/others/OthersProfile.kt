@@ -20,23 +20,15 @@ import com.gn4k.loop.R
 import com.gn4k.loop.adapters.ProfileBadgeAdapter
 import com.gn4k.loop.api.RetrofitClient
 import com.gn4k.loop.databinding.ActivityOthersProfileBinding
-import com.gn4k.loop.models.StaticVariables
 import com.gn4k.loop.models.request.FollowUnfollowRequest
-import com.gn4k.loop.models.request.MakeCommentRequest
 import com.gn4k.loop.models.request.UserRequest
 import com.gn4k.loop.models.response.FollowUnfollowResponse
 import com.gn4k.loop.models.response.UserAllDataResponse
-import com.gn4k.loop.models.response.UserResponse
 import com.gn4k.loop.notificationModel.SaveNotificationInDB
 import com.gn4k.loop.ui.animation.CustomLoading
 import com.gn4k.loop.ui.home.MainHome
-import com.gn4k.loop.ui.home.loopmeeting.MeetingLists
 import com.gn4k.loop.ui.msg.Chatting
 import com.gn4k.loop.ui.profile.followLists.FollowList
-import com.gn4k.loop.ui.profile.self.ProfilePost
-import com.gn4k.loop.ui.profile.self.ProfileProjects
-import com.gn4k.loop.ui.profile.self.badges.ManageBadges
-import com.gn4k.loop.ui.profile.self.drawer.Settings
 import com.google.android.material.navigation.NavigationView
 import retrofit2.Call
 import retrofit2.Callback
@@ -107,6 +99,7 @@ class OthersProfile : AppCompatActivity(), NavigationView.OnNavigationItemSelect
             onBackPressed()
             finish()
         }
+
 
         binding.btnPost.setOnClickListener {
             binding.btnPost.setTextColor(getColor(R.color.app_color))
@@ -269,7 +262,7 @@ class OthersProfile : AppCompatActivity(), NavigationView.OnNavigationItemSelect
                         binding.tvFollowersC.text = userFollowersCount
                         binding.tvFollowingC.text = userFollowingCount
 
-                        val badgeAdapter = ProfileBadgeAdapter(userBadges, baseContext)
+                        val badgeAdapter = ProfileBadgeAdapter(userBadges, userId, userName, baseContext)
                         val layoutManager =
                             LinearLayoutManager(baseContext, LinearLayoutManager.HORIZONTAL, false)
                         binding.badges.layoutManager = layoutManager

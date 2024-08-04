@@ -1,9 +1,11 @@
 import com.gn4k.loop.models.request.*
 import com.gn4k.loop.models.response.*
+import com.gn4k.loop.ui.home.MainHome
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Call
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.Multipart
 import retrofit2.http.POST
@@ -158,10 +160,19 @@ interface ApiService {
     fun fetchNotifications(@Query("userId") userId: Int, @Query("type") type: String): Call<NotificationListResponse>
 
     @GET("recent_like.php")
-    fun fetchRecentLikes(@Query("login_id") userId: Int): Call<List<Post>>
+    fun fetchRecentLikes(@Query("login_id") userId: Int = MainHome.USER_ID.toInt()): Call<List<Post>>
 
     @GET("recent_comments.php")
-    fun fetchRecentComments(@Query("login_id") userId: Int): Call<List<Post>>
+    fun fetchRecentComments(@Query("login_id") userId: Int = MainHome.USER_ID.toInt()): Call<List<Post>>
+
+    @DELETE("delete_post.php")
+    fun deletePost(@Query("author_id") authorId: Int, @Query("post_id") postId: Int): Call<CreateMeetingResponse>
+
+    @POST("delete_user.php")
+    fun deleteUser(@Body request: DeleteUserRequest): Call<CreateMeetingResponse>
+
+    @GET("otp_sender.php")
+    fun sendOtp(@Query("email_id") email: String): Call<OtpResponse>
 
 
 }

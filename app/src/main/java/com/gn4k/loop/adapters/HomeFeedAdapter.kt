@@ -135,7 +135,7 @@ class HomeFeedAdapter(private val postList: MutableList<Post>, private val activ
         }
 
         holder.btnOptions.setOnClickListener {
-            showOptionMenu(it)
+//            showOptionMenu(it)
         }
 
         holder.item.setOnClickListener {
@@ -200,7 +200,7 @@ class HomeFeedAdapter(private val postList: MutableList<Post>, private val activ
 
     private fun showOptionMenu(view: View) {
         val optionMenu = PopupMenu(activity, view, Gravity.END, 0, R.style.CustomPopupMenu)
-        optionMenu.inflate(R.menu.home_feed_post_menu)
+        optionMenu.inflate(R.menu.self_post_menu)
 
         // Apply custom layout to menu items
         for (i in 0 until optionMenu.menu.size()) {
