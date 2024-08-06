@@ -12,6 +12,7 @@ import com.gn4k.loop.notifi1.NotificationSender
 import com.gn4k.loop.notifi1.NotificationSubscription
 import com.gn4k.loop.ui.SplashScreen
 import com.gn4k.loop.ui.home.loopMeeting.MeetingLists
+import kotlin.properties.Delegates
 
 class MainHome : AppCompatActivity() {
 
@@ -124,8 +125,8 @@ class MainHome : AppCompatActivity() {
         lateinit var USER_LOCATION: String
         lateinit var USER_WEBSITE: String
         lateinit var USER_SKILLS: List<String>
-        lateinit var USER_FOLLOWERS_COUNT: String
-        lateinit var USER_FOLLOWING_COUNT: String
+        var USER_FOLLOWERS_COUNT by Delegates.notNull<Int>()
+        var USER_FOLLOWING_COUNT by Delegates.notNull<Int>()
         lateinit var GEMINI_KEY: String
 
         var isSearch: Boolean = false

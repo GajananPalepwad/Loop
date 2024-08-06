@@ -20,6 +20,7 @@ import com.gn4k.loop.R
 import com.gn4k.loop.adapters.ProfileBadgeAdapter
 import com.gn4k.loop.api.RetrofitClient
 import com.gn4k.loop.databinding.ActivityOthersProfileBinding
+import com.gn4k.loop.models.FetchUserData
 import com.gn4k.loop.models.request.FollowUnfollowRequest
 import com.gn4k.loop.models.request.UserRequest
 import com.gn4k.loop.models.response.FollowUnfollowResponse
@@ -52,8 +53,8 @@ class OthersProfile : AppCompatActivity(), NavigationView.OnNavigationItemSelect
         var userLocation: String = ""
         var userWebsite: String = ""
         var userSkills: List<String> = emptyList()
-        var userFollowersCount: String = ""
-        var userFollowingCount: String = ""
+        var userFollowersCount: Int = 0
+        var userFollowingCount: Int = 0
         var isFollowing: Boolean = false
         var isFollowedBy: Boolean = false
         lateinit var loading: CustomLoading
@@ -76,6 +77,11 @@ class OthersProfile : AppCompatActivity(), NavigationView.OnNavigationItemSelect
         userId = intent.getStringExtra("userId")?.toInt()!!
 
         setFragment(OthersProfilePost())
+
+        binding.refreshLayout.setOnRefreshListener {
+            getUserData(UserRequest(MainHome.USER_ID.toInt(), userId))
+            setFragment(OthersProfilePost())
+        }
 
         drawerLayout = binding.drawerLayout
         navView = binding.navView
@@ -246,8 +252,8 @@ class OthersProfile : AppCompatActivity(), NavigationView.OnNavigationItemSelect
                         userLocation = it.user.location ?: ""
                         userWebsite = it.user.website ?: ""
                         userSkills = it.user.skills ?: emptyList()
-                        userFollowersCount = it.user.followers_count.toString()
-                        userFollowingCount = it.user.following_count.toString()
+                        userFollowersCount = it.user.followers_count
+                        userFollowingCount = it.user.following_count
                         isFollowing = it.is_following
                         isFollowedBy = it.is_followed_by
 
@@ -259,8 +265,8 @@ class OthersProfile : AppCompatActivity(), NavigationView.OnNavigationItemSelect
                             .placeholder(R.drawable.ic_profile)
                             .into(binding.imgProfile)
 
-                        binding.tvFollowersC.text = userFollowersCount
-                        binding.tvFollowingC.text = userFollowingCount
+                        binding.tvFollowersC.text = FetchUserData().formatCount(userFollowersCount)
+                        binding.tvFollowingC.text = FetchUserData().formatCount(userFollowingCount)
 
                         val badgeAdapter = ProfileBadgeAdapter(userBadges, userId, userName, baseContext)
                         val layoutManager =
@@ -307,9 +313,12 @@ class OthersProfile : AppCompatActivity(), NavigationView.OnNavigationItemSelect
                             )
                         }
                     }
+                    binding.refreshLayout.isRefreshing = false
 
                 } else {
                     handleErrorResponse(response)
+                    binding.refreshLayout.isRefreshing = false
+
                 }
             }
 
@@ -317,6 +326,8 @@ class OthersProfile : AppCompatActivity(), NavigationView.OnNavigationItemSelect
                 Log.d("Reg", "Network Error: ${t.message}")
                 Toast.makeText(baseContext, "Network Error: ${t.message}", Toast.LENGTH_SHORT)
                     .show()
+                binding.refreshLayout.isRefreshing = false
+
             }
         })
     }

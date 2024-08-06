@@ -3,6 +3,7 @@ package com.gn4k.loop.ui.profile.self.drawer
 import ApiService
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -64,6 +65,12 @@ class Recent : AppCompatActivity() {
                         binding.recyclerView.layoutManager = LinearLayoutManager(baseContext)
                         binding.recyclerView.adapter = adapter
 
+                        if (postResponse.isEmpty()) {
+                            binding.imgEmpty.visibility = View.VISIBLE
+                        } else {
+                            binding.imgEmpty.visibility = View.GONE
+                        }
+
                         loading.stopLoading()
                     } else {
                         loading.stopLoading()
@@ -104,6 +111,12 @@ class Recent : AppCompatActivity() {
                         val adapter = RecentPostAdapter(postResponse, this@Recent)
                         binding.recyclerView.layoutManager = LinearLayoutManager(baseContext)
                         binding.recyclerView.adapter = adapter
+
+                        if (postResponse.isEmpty()) {
+                            binding.imgEmpty.visibility = View.VISIBLE
+                        } else {
+                            binding.imgEmpty.visibility = View.GONE
+                        }
 
                         loading.stopLoading()
                     } else {

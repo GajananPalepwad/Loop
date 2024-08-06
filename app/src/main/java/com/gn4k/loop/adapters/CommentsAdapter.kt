@@ -15,12 +15,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.gn4k.loop.R
 import com.gn4k.loop.api.RetrofitClient
+import com.gn4k.loop.models.FetchUserData
 import com.gn4k.loop.models.request.LikeDislikeCommentRequest
 import com.gn4k.loop.models.response.Comment
 import com.gn4k.loop.models.response.UserResponse
 import com.gn4k.loop.notificationModel.SaveNotificationInDB
 import com.gn4k.loop.ui.home.MainHome
-import com.gn4k.loop.ui.post.ActivityPost
 import com.gn4k.loop.ui.post.CommentReply
 import com.gn4k.loop.ui.profile.others.OthersProfile
 import com.gn4k.loop.ui.profile.self.Profile
@@ -59,8 +59,8 @@ class CommentsAdapter(private val commentsList: List<Comment>, private val activ
         holder.username.text = comment.author_name
         holder.timeAgo.text = timeAgo(comment.created_at)
         holder.commentText.text = comment.comment_text
-        holder.likeCount.text = comment.like_count.toString()
-        holder.commentCount.text = comment.comment_count.toString()
+        holder.likeCount.text = FetchUserData().formatCount(comment.like_count).toString()
+        holder.commentCount.text = FetchUserData().formatCount(comment.comment_count).toString()
 
         holder.header.setOnClickListener {
             if(comment.author_id== MainHome.USER_ID.toInt()){

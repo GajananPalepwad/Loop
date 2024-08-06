@@ -4,6 +4,8 @@ import ApiService
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -58,6 +60,7 @@ class Reg : AppCompatActivity() {
                 binding.tilEmail.error = "Please enter your email address"
                 return@setOnClickListener // Exit the function if email is empty
             }
+            binding.btnSendOTP.isEnabled = false
             sendOTP(email)
         }
 
@@ -74,6 +77,7 @@ class Reg : AppCompatActivity() {
                     ContextCompat.getColorStateList(baseContext, R.color.green)
                 binding.btnVerify.setTextColor(getResources().getColor(R.color.white))
                 binding.tilOTP.error = null
+                binding.btnVerify.setText("Verified")
             } else {
                 binding.tilOTP.error = "Invalid OTP"
             }
@@ -232,6 +236,9 @@ class Reg : AppCompatActivity() {
                                     ContextCompat.getColorStateList(baseContext, R.color.app_color)
                                 otp = msgResponse.OTP
                                 binding.tilEmail.error = null
+                                Handler(Looper.getMainLooper()).postDelayed({
+                                    binding.btnSendOTP.isEnabled = true
+                                }, 3000)
                             }
                         }
 
@@ -279,8 +286,8 @@ class Reg : AppCompatActivity() {
                         MainHome.USER_LOCATION = userResponse.user.location ?: ""
                         MainHome.USER_WEBSITE = userResponse.user.website ?: ""
                         MainHome.USER_SKILLS = userResponse.user.skills ?: emptyList()
-                        MainHome.USER_FOLLOWERS_COUNT = userResponse.user.followers_count.toString()
-                        MainHome.USER_FOLLOWING_COUNT = userResponse.user.following_count.toString()
+                        MainHome.USER_FOLLOWERS_COUNT = userResponse.user.followers_count
+                        MainHome.USER_FOLLOWING_COUNT = userResponse.user.following_count
                         userResponse.is_following
                     }
 

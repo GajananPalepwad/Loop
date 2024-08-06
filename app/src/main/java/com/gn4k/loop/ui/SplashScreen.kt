@@ -42,12 +42,9 @@ class SplashScreen : AppCompatActivity() {
             getUserData(user)
         }
 
-//        var fcm = FCMService(this)
-//        fcm.sendNotification("gswr", "hgrfd")
-
     }
 
-    fun getUserData(user: UserRequest) {
+    private fun getUserData(user: UserRequest) {
 
         val BASE_URL = getString(R.string.base_url)
         val retrofit = RetrofitClient.getClient(BASE_URL)
@@ -78,8 +75,8 @@ class SplashScreen : AppCompatActivity() {
                         MainHome.USER_LOCATION = userResponse.user.location ?: ""
                         MainHome.USER_WEBSITE = userResponse.user.website ?: ""
                         MainHome.USER_SKILLS = userResponse.user.skills ?: emptyList()
-                        MainHome.USER_FOLLOWERS_COUNT = userResponse.user.followers_count.toString()
-                        MainHome.USER_FOLLOWING_COUNT = userResponse.user.following_count.toString()
+                        MainHome.USER_FOLLOWERS_COUNT = userResponse.user.followers_count
+                        MainHome.USER_FOLLOWING_COUNT = userResponse.user.following_count
                         MainHome.GEMINI_KEY = userResponse.gemini_key
                         userResponse.is_following
                     }

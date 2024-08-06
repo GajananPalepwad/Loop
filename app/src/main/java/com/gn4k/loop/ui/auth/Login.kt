@@ -246,8 +246,8 @@ class Login : AppCompatActivity() {
                         MainHome.USER_LOCATION = userResponse.user.location ?: ""
                         MainHome.USER_WEBSITE = userResponse.user.website ?: ""
                         MainHome.USER_SKILLS = userResponse.user.skills ?: emptyList()
-                        MainHome.USER_FOLLOWERS_COUNT = userResponse.user.followers_count.toString()
-                        MainHome.USER_FOLLOWING_COUNT = userResponse.user.following_count.toString()
+                        MainHome.USER_FOLLOWERS_COUNT = userResponse.user.followers_count
+                        MainHome.USER_FOLLOWING_COUNT = userResponse.user.following_count
                         userResponse.is_following
                     }
 

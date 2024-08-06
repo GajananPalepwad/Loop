@@ -18,6 +18,12 @@ import com.gn4k.loop.models.response.Conversation
 import com.gn4k.loop.ui.msg.Chatting
 import com.gn4k.loop.ui.post.ActivityPost
 import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.LocalTime
+import java.time.ZoneId
+import java.time.ZonedDateTime
+import java.time.format.DateTimeFormatter
 import java.util.Calendar
 import java.util.Locale
 import java.util.TimeZone
@@ -74,7 +80,7 @@ class ConversationAdapter(
                 .placeholder(R.drawable.ic_profile)
                 .into(imgProfile)
 
-            time.text = formatDateTime(conversation.last_message_sent_at)
+            time.text = convertUtcToLocal(formatDateTime(conversation.last_message_sent_at))
 
             item.setOnClickListener {
                 val intent = Intent(activity, Chatting::class.java)
@@ -86,6 +92,17 @@ class ConversationAdapter(
                 activity.startActivity(intent)
             }
         }
+    }
+
+    fun convertUtcToLocal(timeString: String): String {
+        val inputFormatter = DateTimeFormatter.ofPattern("h:mm a")
+        val outputFormatter = DateTimeFormatter.ofPattern("h:mm a")
+        val localTime = LocalTime.parse(timeString, inputFormatter).plusHours(-11)
+        val currentDate = LocalDate.now()
+        val dateTime = LocalDateTime.of(currentDate, localTime)
+        val utcZonedDateTime = dateTime.atZone(ZoneId.of("UTC"))
+        val localZonedDateTime = utcZonedDateTime.withZoneSameInstant(ZoneId.systemDefault())
+        return localZonedDateTime.format(outputFormatter)
     }
 
     fun formatDateTime(dateTimeString: String): String {

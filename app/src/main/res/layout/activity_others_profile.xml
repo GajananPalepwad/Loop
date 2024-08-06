@@ -1,11 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/drawer_layout"
+    android:id="@+id/refreshLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/app_background">
+
+    <androidx.drawerlayout.widget.DrawerLayout
+        android:id="@+id/drawer_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
@@ -111,7 +117,7 @@
                             android:layout_weight="1"
                             android:fontFamily="@font/alata"
                             android:gravity="bottom"
-                            android:text="8.3k"
+                            android:text="0"
                             android:textColor="#FFFFFF"
                             android:textSize="17sp"
                             android:textStyle="bold" />
@@ -184,7 +190,7 @@
                             android:layout_weight="1"
                             android:fontFamily="@font/alata"
                             android:gravity="bottom"
-                            android:text="35.5k"
+                            android:text="0"
                             android:textColor="#FFFFFF"
                             android:textSize="17sp"
                             android:textStyle="bold" />
@@ -221,7 +227,7 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/badges"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="20dp"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginBottom="10dp" />
 
@@ -393,4 +399,7 @@
         app:itemTextColor="@color/white"
         android:width="210dp" />
 
-</androidx.drawerlayout.widget.DrawerLayout>
+    </androidx.drawerlayout.widget.DrawerLayout>
+
+
+</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

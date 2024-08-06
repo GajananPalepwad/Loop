@@ -25,6 +25,7 @@ import com.gn4k.loop.R
 import com.gn4k.loop.adapters.ProfileBadgeAdapter
 import com.gn4k.loop.api.RetrofitClient
 import com.gn4k.loop.databinding.ActivityProfileBinding
+import com.gn4k.loop.models.FetchUserData
 import com.gn4k.loop.models.response.UserResponse
 import com.gn4k.loop.ui.SplashScreen
 import com.gn4k.loop.ui.animation.CustomLoading
@@ -60,6 +61,9 @@ class Profile : AppCompatActivity(), NavigationView.OnNavigationItemSelectedList
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var navView: NavigationView
     private lateinit var toggle: ActionBarDrawerToggle
+
+    var frag = "posts"
+    lateinit var intentMake: Intent
 
     companion object {
         lateinit var loading: CustomLoading
@@ -103,29 +107,9 @@ class Profile : AppCompatActivity(), NavigationView.OnNavigationItemSelectedList
         setContentView(binding.root)
         loading = CustomLoading(this)
 
-        var intentMake = Intent(this, MakePost::class.java)
+        intentMake = Intent(this, MakePost::class.java)
 
-
-        val frag = intent.getStringExtra("fragment")
-
-        if (frag != null) {
-            if (frag == "projects"){
-                intentMake = Intent(this, MakeProject::class.java)
-                binding.btnProjects.setTextColor(getColor(R.color.app_color))
-                binding.btnPost.setTextColor(getColor(R.color.white))
-                setFragment(ProfileProjects())
-            }else if(frag == "posts"){
-                intentMake = Intent(this, MakePost::class.java)
-                binding.btnPost.setTextColor(getColor(R.color.app_color))
-                binding.btnProjects.setTextColor(getColor(R.color.white))
-                setFragment(ProfilePost())
-            }
-        }else{
-            intentMake = Intent(this, MakePost::class.java)
-            binding.btnPost.setTextColor(getColor(R.color.app_color))
-            binding.btnProjects.setTextColor(getColor(R.color.white))
-            setFragment(ProfilePost())
-        }
+        frag = intent.getStringExtra("fragment").toString()
 
 
         // Set up DrawerLayout and NavigationView
@@ -149,28 +133,14 @@ class Profile : AppCompatActivity(), NavigationView.OnNavigationItemSelectedList
 
         navView.setNavigationItemSelectedListener(this)
 
-        binding.tvName.text = MainHome.USER_NAME
-        Glide
-            .with(baseContext)
-            .load(getString(R.string.base_url) + MainHome.USER_PHOTO_URL)
-            .centerCrop()
-            .placeholder(R.drawable.ic_profile)
-            .into(binding.imgProfile)
+        setUI()
 
-        binding.tvFollowersC.text = MainHome.USER_FOLLOWERS_COUNT
-        binding.tvFollowingC.text = MainHome.USER_FOLLOWING_COUNT
-        binding.tvAbout.text = MainHome.USER_ABOUT
-        binding.tvLocation.text = MainHome.USER_LOCATION
-        binding.tvWebsite.text = MainHome.USER_WEBSITE
-
-        val badgeAdapter = ProfileBadgeAdapter(MainHome.USER_BADGES, MainHome.USER_ID.toInt(), MainHome.USER_NAME, this)
-        val layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-        binding.badges.layoutManager = layoutManager
-        binding.badges.adapter = badgeAdapter
-
-        if (MainHome.USER_BADGES.isEmpty()) {
-            binding.btnCollectBadges.visibility = View.VISIBLE
+        binding.refreshLayout.setOnRefreshListener {
+            val temp = FetchUserData().getUserData(this)
+            setUI()
         }
+
+
 
         binding.btnCollectBadges.setOnClickListener {
             val intent = Intent(this, ManageBadges::class.java)
@@ -187,7 +157,6 @@ class Profile : AppCompatActivity(), NavigationView.OnNavigationItemSelectedList
             val intent = Intent(this, SkillSelector::class.java)
             startActivity(intent)
         }
-
 
         val BASE_URL = getString(R.string.base_url)
         val retrofit = RetrofitClient.getClient(BASE_URL)
@@ -206,6 +175,7 @@ class Profile : AppCompatActivity(), NavigationView.OnNavigationItemSelectedList
             binding.btnPost.setTextColor(getColor(R.color.app_color))
             binding.btnProjects.setTextColor(getColor(R.color.white))
             setFragment(ProfilePost())
+            frag = "posts"
         }
 
         binding.btnProjects.setOnClickListener {
@@ -213,6 +183,7 @@ class Profile : AppCompatActivity(), NavigationView.OnNavigationItemSelectedList
             binding.btnProjects.setTextColor(getColor(R.color.app_color))
             binding.btnPost.setTextColor(getColor(R.color.white))
             setFragment(ProfileProjects())
+            frag = "projects"
         }
 
         binding.btnFollowings.setOnClickListener {
@@ -247,11 +218,61 @@ class Profile : AppCompatActivity(), NavigationView.OnNavigationItemSelectedList
         }
     }
 
+    private fun setUI() {
+        binding.tvName.text = MainHome.USER_NAME
+        Glide
+            .with(baseContext)
+            .load(getString(R.string.base_url) + MainHome.USER_PHOTO_URL)
+            .centerCrop()
+            .placeholder(R.drawable.ic_profile)
+            .into(binding.imgProfile)
+
+        binding.tvFollowersC.text = FetchUserData().formatCount(MainHome.USER_FOLLOWERS_COUNT)
+        binding.tvFollowingC.text = FetchUserData().formatCount(MainHome.USER_FOLLOWING_COUNT)
+        binding.tvAbout.text = MainHome.USER_ABOUT
+        binding.tvLocation.text = MainHome.USER_LOCATION
+        binding.tvWebsite.text = MainHome.USER_WEBSITE
+
+        val badgeAdapter = ProfileBadgeAdapter(
+            MainHome.USER_BADGES,
+            MainHome.USER_ID.toInt(),
+            MainHome.USER_NAME,
+            this
+        )
+        val layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+        binding.badges.layoutManager = layoutManager
+        binding.badges.adapter = badgeAdapter
+
+        if (MainHome.USER_BADGES.isEmpty()) {
+            binding.btnCollectBadges.visibility = View.VISIBLE
+        }
+
+        if (frag == null) {
+            if (frag == "projects") {
+                intentMake = Intent(this, MakeProject::class.java)
+                binding.btnProjects.setTextColor(getColor(R.color.app_color))
+                binding.btnPost.setTextColor(getColor(R.color.white))
+                setFragment(ProfileProjects())
+            } else if (frag == "posts") {
+                intentMake = Intent(this, MakePost::class.java)
+                binding.btnPost.setTextColor(getColor(R.color.app_color))
+                binding.btnProjects.setTextColor(getColor(R.color.white))
+                setFragment(ProfilePost())
+            }
+        } else {
+            intentMake = Intent(this, MakePost::class.java)
+            binding.btnPost.setTextColor(getColor(R.color.app_color))
+            binding.btnProjects.setTextColor(getColor(R.color.white))
+            setFragment(ProfilePost())
+        }
+        binding.refreshLayout.isRefreshing = false
+    }
+
     override fun onRestart() {
         super.onRestart()
         binding.tvName.text = MainHome.USER_NAME
-        binding.tvFollowersC.text = MainHome.USER_FOLLOWERS_COUNT
-        binding.tvFollowingC.text = MainHome.USER_FOLLOWING_COUNT
+        binding.tvFollowersC.text = FetchUserData().formatCount(MainHome.USER_FOLLOWERS_COUNT)
+        binding.tvFollowingC.text = FetchUserData().formatCount(MainHome.USER_FOLLOWING_COUNT)
         binding.tvAbout.text = MainHome.USER_ABOUT
         binding.tvLocation.text = MainHome.USER_LOCATION
         binding.tvWebsite.text = MainHome.USER_WEBSITE
@@ -362,19 +383,27 @@ class Profile : AppCompatActivity(), NavigationView.OnNavigationItemSelectedList
             R.id.nav_share -> {
                 shareProfileLink()
             }
+
             R.id.nav_badges_manager -> {
-                startActivity(Intent(this, ManageBadges::class.java))
+                val intent = Intent(baseContext, ManageBadges::class.java)
+                intent.putStringArrayListExtra("badges", ArrayList(MainHome.USER_BADGES))
+                intent.putExtra("userId", MainHome.USER_ID.toString())
+                intent.putExtra("userName", MainHome.USER_NAME)
+                startActivity(intent)
             }
+
             R.id.nav_recently_commented -> {
                 val intent = Intent(this, Recent::class.java)
                 intent.putExtra("type", "commented")
                 startActivity(intent)
             }
+
             R.id.nav_recently_liked -> {
                 val intent = Intent(this, Recent::class.java)
                 intent.putExtra("type", "liked")
                 startActivity(intent)
             }
+
             R.id.nav_loop_meet -> {
                 startActivity(Intent(this, MeetingLists::class.java))
             }
@@ -393,7 +422,7 @@ class Profile : AppCompatActivity(), NavigationView.OnNavigationItemSelectedList
 
 
     private fun shareProfileLink() {
-        val shareableLink = getString(R.string.deep_link)+"user=${MainHome.USER_ID}"
+        val shareableLink = getString(R.string.deep_link) + "user=${MainHome.USER_ID}"
         val shareIntent = Intent().apply {
             action = Intent.ACTION_SEND
             putExtra(Intent.EXTRA_TEXT, "See my profile on Loop: $shareableLink")

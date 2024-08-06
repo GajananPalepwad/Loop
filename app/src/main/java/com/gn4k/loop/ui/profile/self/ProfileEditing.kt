@@ -87,7 +87,7 @@ class ProfileEditing : AppCompatActivity() {
                         MainHome.USER_NAME = name
                         MainHome.USER_ABOUT = about
                         MainHome.USER_LOCATION = location
-                        MainHome.USER_WEBSITE = website
+                        MainHome.USER_WEBSITE = formatUrl(website)
                         onBackPressed()
                     } else {
 //                    handleErrorResponse(response)
@@ -100,5 +100,13 @@ class ProfileEditing : AppCompatActivity() {
                         .show()
                 }
             })
+    }
+
+    private fun formatUrl(url: String): String {
+        return when {
+            url.startsWith("http://") -> url.replace("http://", "https://")
+            url.startsWith("https://") -> url
+            else -> "https://$url"
+        }
     }
 }

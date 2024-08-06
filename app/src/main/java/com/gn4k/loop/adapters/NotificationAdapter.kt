@@ -18,6 +18,12 @@ import com.gn4k.loop.ui.post.DeepLinkPost
 import com.gn4k.loop.ui.profile.others.OthersProfile
 import com.gn4k.loop.ui.profile.self.Profile
 import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.LocalTime
+import java.time.ZoneId
+import java.time.ZonedDateTime
+import java.time.format.DateTimeFormatter
 import java.util.Calendar
 import java.util.Locale
 import java.util.TimeZone
@@ -79,10 +85,22 @@ class NotificationAdapter(private val notifications: List<NotificationResponse>,
 
 
         holder.tvMessage.text = notification.message
-        holder.tvTime.text = formatDateTime(notification.created_at)
+        holder.tvTime.text = convertUtcToLocal(formatDateTime(notification.created_at))
     }
 
     override fun getItemCount() = notifications.size
+
+    private fun convertUtcToLocal(timeString: String): String {
+        val inputFormatter = DateTimeFormatter.ofPattern("h:mm a")
+        val outputFormatter = DateTimeFormatter.ofPattern("h:mm a")
+        val localTime = LocalTime.parse(timeString, inputFormatter).plusHours(-11)
+        val currentDate = LocalDate.now()
+        val dateTime = LocalDateTime.of(currentDate, localTime)
+        val utcZonedDateTime = dateTime.atZone(ZoneId.of("UTC"))
+        val localZonedDateTime = utcZonedDateTime.withZoneSameInstant(ZoneId.systemDefault())
+        return localZonedDateTime.format(outputFormatter)
+    }
+
 
     fun formatDateTime(dateTimeString: String): String {
         // Define the input and output date formats

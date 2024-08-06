@@ -16,6 +16,7 @@ import com.gn4k.loop.R
 import com.gn4k.loop.adapters.ReplyAdapter
 import com.gn4k.loop.api.RetrofitClient
 import com.gn4k.loop.databinding.ActivityCommentReplyBinding
+import com.gn4k.loop.models.FetchUserData
 import com.gn4k.loop.models.StaticVariables
 import com.gn4k.loop.models.request.LikeDislikeCommentRequest
 import com.gn4k.loop.models.request.Question
@@ -104,8 +105,9 @@ class CommentReply : AppCompatActivity() {
             binding.btnLike.setImageResource(R.drawable.ic_heart)
         }
 
-        binding.likes.text = likeCount.toString()
-        binding.comments.text = commentCount.toString()
+        binding.likes.text = FetchUserData().formatCount(likeCount)
+        binding.comments.text = FetchUserData().formatCount(commentCount)
+
 
         binding.btnReply.setOnClickListener {
             if (binding.edReply.text.isNotEmpty()) {
