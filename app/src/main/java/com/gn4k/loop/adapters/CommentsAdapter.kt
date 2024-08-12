@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.gn4k.loop.R
 import com.gn4k.loop.api.RetrofitClient
-import com.gn4k.loop.models.FetchUserData
+import com.gn4k.loop.models.RepetitiveFun
 import com.gn4k.loop.models.request.LikeDislikeCommentRequest
 import com.gn4k.loop.models.response.Comment
 import com.gn4k.loop.models.response.UserResponse
@@ -58,9 +58,9 @@ class CommentsAdapter(private val commentsList: List<Comment>, private val activ
 
         holder.username.text = comment.author_name
         holder.timeAgo.text = timeAgo(comment.created_at)
-        holder.commentText.text = comment.comment_text
-        holder.likeCount.text = FetchUserData().formatCount(comment.like_count).toString()
-        holder.commentCount.text = FetchUserData().formatCount(comment.comment_count).toString()
+        RepetitiveFun().makeLinksClickable(holder.commentText, comment.comment_text)
+        holder.likeCount.text = RepetitiveFun().formatCount(comment.like_count).toString()
+        holder.commentCount.text = RepetitiveFun().formatCount(comment.comment_count).toString()
 
         holder.header.setOnClickListener {
             if(comment.author_id== MainHome.USER_ID.toInt()){

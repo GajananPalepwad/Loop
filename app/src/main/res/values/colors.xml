@@ -9,4 +9,5 @@
     <color name="green">#25802E</color>
     <color name="my_light_primary">#FFD233</color>
     <color name="my_dark_primary">#FFD233</color>
+    <color name="link_color">#3396FF</color>
 </resources>

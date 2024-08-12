@@ -52,7 +52,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="15dp"
-                android:text="2. You must achieve at least 85% to earn a badge."
+                android:text="2. You must achieve at least 60% to earn a badge."
                 android:textColor="#FFFFFF"
                 android:textSize="16sp"
                 android:fontFamily="@font/alata" />

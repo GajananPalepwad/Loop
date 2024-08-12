@@ -16,10 +16,9 @@ import com.gn4k.loop.R
 import com.gn4k.loop.adapters.ReplyAdapter
 import com.gn4k.loop.api.RetrofitClient
 import com.gn4k.loop.databinding.ActivityCommentReplyBinding
-import com.gn4k.loop.models.FetchUserData
+import com.gn4k.loop.models.RepetitiveFun
 import com.gn4k.loop.models.StaticVariables
 import com.gn4k.loop.models.request.LikeDislikeCommentRequest
-import com.gn4k.loop.models.request.Question
 import com.gn4k.loop.models.request.ReplyComment
 import com.gn4k.loop.models.response.Reply
 import com.gn4k.loop.models.response.ReplyListResponse
@@ -29,7 +28,6 @@ import com.gn4k.loop.ui.animation.CustomLoading
 import com.gn4k.loop.ui.home.MainHome
 import com.gn4k.loop.ui.profile.others.OthersProfile
 import com.gn4k.loop.ui.profile.self.Profile
-import com.gn4k.loop.ui.profile.self.ProfilePost
 import com.google.ai.client.generativeai.GenerativeModel
 import kotlinx.coroutines.launch
 import retrofit2.Call
@@ -105,8 +103,8 @@ class CommentReply : AppCompatActivity() {
             binding.btnLike.setImageResource(R.drawable.ic_heart)
         }
 
-        binding.likes.text = FetchUserData().formatCount(likeCount)
-        binding.comments.text = FetchUserData().formatCount(commentCount)
+        binding.likes.text = RepetitiveFun().formatCount(likeCount)
+        binding.comments.text = RepetitiveFun().formatCount(commentCount)
 
 
         binding.btnReply.setOnClickListener {

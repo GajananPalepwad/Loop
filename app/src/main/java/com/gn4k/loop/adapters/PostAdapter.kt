@@ -20,15 +20,13 @@ import com.bumptech.glide.Glide
 import com.colormoon.readmoretextview.ReadMoreTextView
 import com.gn4k.loop.R
 import com.gn4k.loop.api.RetrofitClient
-import com.gn4k.loop.models.FetchUserData
+import com.gn4k.loop.models.RepetitiveFun
 import com.gn4k.loop.models.StaticVariables
 import com.gn4k.loop.ui.post.ActivityPost
 import com.gn4k.loop.models.response.Post
 import com.gn4k.loop.models.request.LikeDislikeRequest
 import com.gn4k.loop.models.response.CreateMeetingResponse
-import com.gn4k.loop.models.response.GetProjects
 import com.gn4k.loop.models.response.UserResponse
-import com.gn4k.loop.notificationModel.SaveNotificationInDB
 import com.gn4k.loop.ui.home.MainHome
 import com.gn4k.loop.ui.post.ViewImageInFull
 import com.gn4k.loop.ui.profile.others.OthersProfile
@@ -105,7 +103,10 @@ class PostAdapter(private val postList: MutableList<Post>, private val userName:
 
         holder.username.text = userName
         holder.timeAgo.text = timeAgo(post.time)
-        holder.tvCaption.text = post.context
+//        holder.tvCaption.text = post.context
+
+        RepetitiveFun().makeLinksClickable(holder.tvCaption, post.context)
+//        DetailTv.setText(discription);
 
         holder.tvCaption.setCollapsedTextColor(R.color.app_color)
         holder.tvCaption.setExpandedTextColor(R.color.app_color)
@@ -116,8 +117,8 @@ class PostAdapter(private val postList: MutableList<Post>, private val userName:
             holder.btnLikes.setImageResource(R.drawable.ic_heart)
         }
 
-        holder.likes.text = FetchUserData().formatCount(post.likeCount).toString()
-        holder.comments.text = FetchUserData().formatCount(post.commentCount).toString()
+        holder.likes.text = RepetitiveFun().formatCount(post.likeCount).toString()
+        holder.comments.text = RepetitiveFun().formatCount(post.commentCount).toString()
 
         holder.header.setOnClickListener {
             if(post.authorId.toInt()== MainHome.USER_ID.toInt()){

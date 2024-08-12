@@ -68,45 +68,44 @@ class ExploreAdapter(private val posts: List<Post>, private val activity: Contex
         }
 
         holder.item.setOnClickListener {
-
-            StaticVariables.isExplore = true
-
-            val intent = Intent(activity, ActivityPost::class.java)
-            intent.putExtra("post_type", post.type)
-            intent.putExtra("post_link", post.link)
-            intent.putExtra("user_photo_url", post.author_photo_url)
-            intent.putExtra("user_name", post.author_name)
-            intent.putExtra("post_time", timeAgo(post.time))
-            intent.putExtra("post_context", post.context)
-            intent.putExtra("is_liked", post.isLiked)
-            intent.putExtra("like_count", post.likeCount.toInt())
-            intent.putExtra("comment_count", post.commentCount.toInt())
-            intent.putExtra("post_id", post.postId.toInt())
-            intent.putExtra("author_id", post.authorId)
-            intent.putExtra("adapter_position", position.toInt())
-            activity.startActivity(intent)
+            openPost(post, position)
         }
 
         holder.codeContainer.setOnClickListener {
-
-            StaticVariables.isExplore = true
-
-            val intent = Intent(activity, ActivityPost::class.java)
-            intent.putExtra("post_type", post.type)
-            intent.putExtra("post_link", post.link)
-            intent.putExtra("user_photo_url", post.author_photo_url)
-            intent.putExtra("user_name", post.author_name)
-            intent.putExtra("post_time", timeAgo(post.time))
-            intent.putExtra("post_context", post.context)
-            intent.putExtra("is_liked", post.isLiked)
-            intent.putExtra("like_count", post.likeCount.toInt())
-            intent.putExtra("comment_count", post.commentCount.toInt())
-            intent.putExtra("post_id", post.postId.toInt())
-            intent.putExtra("author_id", post.authorId)
-            intent.putExtra("adapter_position", position.toInt())
-            activity.startActivity(intent)
+            openPost(post, position)
         }
 
+        holder.tvContext.setOnClickListener {
+            openPost(post, position)
+        }
+
+        holder.username.setOnClickListener {
+            openPost(post, position)
+        }
+
+        holder.profileImage.setOnClickListener {
+            openPost(post, position)
+        }
+
+    }
+
+    fun openPost(post: Post, position: Int){
+        StaticVariables.isExplore = true
+
+        val intent = Intent(activity, ActivityPost::class.java)
+        intent.putExtra("post_type", post.type)
+        intent.putExtra("post_link", post.link)
+        intent.putExtra("user_photo_url", post.author_photo_url)
+        intent.putExtra("user_name", post.author_name)
+        intent.putExtra("post_time", timeAgo(post.time))
+        intent.putExtra("post_context", post.context)
+        intent.putExtra("is_liked", post.isLiked)
+        intent.putExtra("like_count", post.likeCount.toInt())
+        intent.putExtra("comment_count", post.commentCount.toInt())
+        intent.putExtra("post_id", post.postId.toInt())
+        intent.putExtra("author_id", post.authorId)
+        intent.putExtra("adapter_position", position.toInt())
+        activity.startActivity(intent)
     }
 
     private fun formatUrl(url: String): String {

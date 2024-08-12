@@ -17,8 +17,7 @@ import com.gn4k.loop.adapters.CommentsAdapter
 import com.gn4k.loop.R
 import com.gn4k.loop.api.RetrofitClient
 import com.gn4k.loop.databinding.ActivityPostBinding
-import com.gn4k.loop.models.FetchUserData
-import com.gn4k.loop.models.StaticVariables
+import com.gn4k.loop.models.RepetitiveFun
 import com.gn4k.loop.models.request.GetPostByIdRequest
 import com.gn4k.loop.models.request.LikeDislikeRequest
 import com.gn4k.loop.models.request.MakeCommentRequest
@@ -211,7 +210,9 @@ class DeepLinkPost : AppCompatActivity() {
 
                         binding.username.text = userName
                         binding.timeAgo.text = timeAgo(postTime)
-                        binding.tvContext.text = postContext
+//                        binding.tvContext.text = postContext
+
+                        RepetitiveFun().makeLinksClickable(binding.tvContext, postContext)
 
                         if (isLiked) {
                             binding.btnLike.setImageResource(R.drawable.ic_red_heart)
@@ -219,8 +220,8 @@ class DeepLinkPost : AppCompatActivity() {
                             binding.btnLike.setImageResource(R.drawable.ic_heart)
                         }
 
-                        binding.likes.text = FetchUserData().formatCount(likeCount)
-                        binding.comments.text = FetchUserData().formatCount(commentCount)
+                        binding.likes.text = RepetitiveFun().formatCount(likeCount)
+                        binding.comments.text = RepetitiveFun().formatCount(commentCount)
 
                         fetchCommentsList(postId)
 

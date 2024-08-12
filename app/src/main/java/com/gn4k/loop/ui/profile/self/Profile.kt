@@ -25,7 +25,7 @@ import com.gn4k.loop.R
 import com.gn4k.loop.adapters.ProfileBadgeAdapter
 import com.gn4k.loop.api.RetrofitClient
 import com.gn4k.loop.databinding.ActivityProfileBinding
-import com.gn4k.loop.models.FetchUserData
+import com.gn4k.loop.models.RepetitiveFun
 import com.gn4k.loop.models.response.UserResponse
 import com.gn4k.loop.ui.SplashScreen
 import com.gn4k.loop.ui.animation.CustomLoading
@@ -136,7 +136,7 @@ class Profile : AppCompatActivity(), NavigationView.OnNavigationItemSelectedList
         setUI()
 
         binding.refreshLayout.setOnRefreshListener {
-            val temp = FetchUserData().getUserData(this)
+            val temp = RepetitiveFun().getUserData(this)
             setUI()
         }
 
@@ -227,8 +227,8 @@ class Profile : AppCompatActivity(), NavigationView.OnNavigationItemSelectedList
             .placeholder(R.drawable.ic_profile)
             .into(binding.imgProfile)
 
-        binding.tvFollowersC.text = FetchUserData().formatCount(MainHome.USER_FOLLOWERS_COUNT)
-        binding.tvFollowingC.text = FetchUserData().formatCount(MainHome.USER_FOLLOWING_COUNT)
+        binding.tvFollowersC.text = RepetitiveFun().formatCount(MainHome.USER_FOLLOWERS_COUNT)
+        binding.tvFollowingC.text = RepetitiveFun().formatCount(MainHome.USER_FOLLOWING_COUNT)
         binding.tvAbout.text = MainHome.USER_ABOUT
         binding.tvLocation.text = MainHome.USER_LOCATION
         binding.tvWebsite.text = MainHome.USER_WEBSITE
@@ -271,8 +271,8 @@ class Profile : AppCompatActivity(), NavigationView.OnNavigationItemSelectedList
     override fun onRestart() {
         super.onRestart()
         binding.tvName.text = MainHome.USER_NAME
-        binding.tvFollowersC.text = FetchUserData().formatCount(MainHome.USER_FOLLOWERS_COUNT)
-        binding.tvFollowingC.text = FetchUserData().formatCount(MainHome.USER_FOLLOWING_COUNT)
+        binding.tvFollowersC.text = RepetitiveFun().formatCount(MainHome.USER_FOLLOWERS_COUNT)
+        binding.tvFollowingC.text = RepetitiveFun().formatCount(MainHome.USER_FOLLOWING_COUNT)
         binding.tvAbout.text = MainHome.USER_ABOUT
         binding.tvLocation.text = MainHome.USER_LOCATION
         binding.tvWebsite.text = MainHome.USER_WEBSITE

@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.colormoon.readmoretextview.ReadMoreTextView
 import com.gn4k.loop.R
 import com.gn4k.loop.api.RetrofitClient
+import com.gn4k.loop.models.RepetitiveFun
 import com.gn4k.loop.models.request.JoinRequest
 import com.gn4k.loop.models.response.CreateMeetingResponse
 import com.gn4k.loop.models.response.Project
@@ -63,7 +64,9 @@ class ProjectAdapter(
             "On hold" -> holder.status.setTextColor(holder.itemView.context.getColor(R.color.white))
         }
 
-        holder.description.text = project.description
+//        holder.description.text = project.description
+        RepetitiveFun().makeLinksClickable(holder.description, project.description)
+
         holder.description.setCollapsedTextColor(R.color.app_color)
         holder.description.setExpandedTextColor(R.color.app_color)
 

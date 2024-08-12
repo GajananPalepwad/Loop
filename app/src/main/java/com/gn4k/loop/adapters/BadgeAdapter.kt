@@ -23,7 +23,6 @@ class BadgeAdapter(
     override fun onBindViewHolder(holder: BadgeViewHolder, position: Int) {
         val badge = badges[position]
         holder.badgeTextView.text = badge
-        // You can set the icon dynamically if needed, for example:
 
         StaticVariables.badgeDrawables.get(badge)?.let { holder.iconImageView.setImageResource(it) }
     }

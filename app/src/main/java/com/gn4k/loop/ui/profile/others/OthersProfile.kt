@@ -20,7 +20,7 @@ import com.gn4k.loop.R
 import com.gn4k.loop.adapters.ProfileBadgeAdapter
 import com.gn4k.loop.api.RetrofitClient
 import com.gn4k.loop.databinding.ActivityOthersProfileBinding
-import com.gn4k.loop.models.FetchUserData
+import com.gn4k.loop.models.RepetitiveFun
 import com.gn4k.loop.models.request.FollowUnfollowRequest
 import com.gn4k.loop.models.request.UserRequest
 import com.gn4k.loop.models.response.FollowUnfollowResponse
@@ -265,8 +265,8 @@ class OthersProfile : AppCompatActivity(), NavigationView.OnNavigationItemSelect
                             .placeholder(R.drawable.ic_profile)
                             .into(binding.imgProfile)
 
-                        binding.tvFollowersC.text = FetchUserData().formatCount(userFollowersCount)
-                        binding.tvFollowingC.text = FetchUserData().formatCount(userFollowingCount)
+                        binding.tvFollowersC.text = RepetitiveFun().formatCount(userFollowersCount)
+                        binding.tvFollowingC.text = RepetitiveFun().formatCount(userFollowingCount)
 
                         val badgeAdapter = ProfileBadgeAdapter(userBadges, userId, userName, baseContext)
                         val layoutManager =

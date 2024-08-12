@@ -8,6 +8,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.gn4k.loop.R
+import com.gn4k.loop.models.RepetitiveFun
 import com.gn4k.loop.models.response.Msg
 import com.gn4k.loop.ui.home.MainHome
 import java.time.LocalDateTime
@@ -23,7 +24,9 @@ class MessageAdapter(private val messages: List<Msg>) : RecyclerView.Adapter<Mes
     override fun onBindViewHolder(holder: MessageViewHolder, position: Int) {
         val message = messages[position]
 
-        holder.messageTextView.text = message.message
+//        holder.messageTextView.text = message.message
+        RepetitiveFun().makeLinksClickable(holder.messageTextView, message.message)
+
         holder.sentAtTextView.text = getFormatedDateTime(message.sent_at)
 
         // Set chat bubble background color and alignment

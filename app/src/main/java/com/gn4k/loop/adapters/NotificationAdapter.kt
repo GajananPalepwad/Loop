@@ -85,7 +85,7 @@ class NotificationAdapter(private val notifications: List<NotificationResponse>,
 
 
         holder.tvMessage.text = notification.message
-        holder.tvTime.text = convertUtcToLocal(formatDateTime(notification.created_at))
+        holder.tvTime.text = formatDateTime(notification.created_at)
     }
 
     override fun getItemCount() = notifications.size

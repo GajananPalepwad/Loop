@@ -17,7 +17,7 @@ import com.gn4k.loop.adapters.CommentsAdapter
 import com.gn4k.loop.R
 import com.gn4k.loop.api.RetrofitClient
 import com.gn4k.loop.databinding.ActivityPostBinding
-import com.gn4k.loop.models.FetchUserData
+import com.gn4k.loop.models.RepetitiveFun
 import com.gn4k.loop.models.StaticVariables
 import com.gn4k.loop.models.request.LikeDislikeRequest
 import com.gn4k.loop.models.request.MakeCommentRequest
@@ -29,7 +29,6 @@ import com.gn4k.loop.ui.animation.CustomLoading
 import com.gn4k.loop.ui.home.MainHome
 import com.gn4k.loop.ui.profile.others.OthersProfile
 import com.gn4k.loop.ui.profile.self.Profile
-import com.gn4k.loop.ui.profile.self.ProfilePost
 import com.google.ai.client.generativeai.GenerativeModel
 import com.overflowarchives.linkpreview.ViewListener
 import kotlinx.coroutines.launch
@@ -116,14 +115,18 @@ class ActivityPost : AppCompatActivity() {
         binding.timeAgo.text = postTime
         binding.tvContext.text = postContext
 
+        if (postContext != null) {
+            RepetitiveFun().makeLinksClickable(binding.tvContext, postContext)
+        }
+
         if (isLiked) {
             binding.btnLike.setImageResource(R.drawable.ic_red_heart)
         } else {
             binding.btnLike.setImageResource(R.drawable.ic_heart)
         }
 
-        binding.likes.text = FetchUserData().formatCount(likeCount)
-        binding.comments.text = FetchUserData().formatCount(commentCount)
+        binding.likes.text = RepetitiveFun().formatCount(likeCount)
+        binding.comments.text = RepetitiveFun().formatCount(commentCount)
 
 
         binding.header.setOnClickListener {

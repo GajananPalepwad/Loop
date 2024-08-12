@@ -70,6 +70,11 @@ class HomeFeed : Fragment() {
             startActivity(intent)
         }
 
+        binding.nameContainer.setOnClickListener {
+            val intent = Intent(activity, Profile::class.java)
+            startActivity(intent)
+        }
+
         binding.btnMakePost.setOnClickListener {
             val intent = Intent(activity, MakePost::class.java)
             startActivity(intent)

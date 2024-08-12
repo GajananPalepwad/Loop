@@ -14,11 +14,9 @@ import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.gn4k.loop.R
-import com.gn4k.loop.adapters.CommentsAdapter.CommentViewHolder
 import com.gn4k.loop.api.RetrofitClient
 import com.gn4k.loop.databinding.ActivityCommentReplyBinding
-import com.gn4k.loop.models.FetchUserData
-import com.gn4k.loop.models.request.LikeDislikeCommentRequest
+import com.gn4k.loop.models.RepetitiveFun
 import com.gn4k.loop.models.request.LikeDislikeReplyRequest
 import com.gn4k.loop.models.response.Reply
 import com.gn4k.loop.models.response.UserResponse
@@ -61,8 +59,10 @@ class ReplyAdapter(private val commentsList: MutableList<Reply>, private val act
 
         holder.username.text = comment.author_name
         holder.timeAgo.text = timeAgo(comment.created_at)
-        holder.replyText.text = comment.reply_text
-        holder.likeCount.text = FetchUserData().formatCount(comment.like_count).toString()
+//        holder.replyText.text = comment.reply_text
+        RepetitiveFun().makeLinksClickable(holder.replyText, comment.reply_text)
+
+        holder.likeCount.text = RepetitiveFun().formatCount(comment.like_count).toString()
 
         holder.header.setOnClickListener {
             if(comment.author_id== MainHome.USER_ID.toInt()){

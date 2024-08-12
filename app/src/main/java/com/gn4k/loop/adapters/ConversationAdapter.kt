@@ -80,7 +80,7 @@ class ConversationAdapter(
                 .placeholder(R.drawable.ic_profile)
                 .into(imgProfile)
 
-            time.text = convertUtcToLocal(formatDateTime(conversation.last_message_sent_at))
+            time.text = formatDateTime(conversation.last_message_sent_at)
 
             item.setOnClickListener {
                 val intent = Intent(activity, Chatting::class.java)

@@ -19,7 +19,7 @@ import com.bumptech.glide.Glide
 import com.colormoon.readmoretextview.ReadMoreTextView
 import com.gn4k.loop.R
 import com.gn4k.loop.api.RetrofitClient
-import com.gn4k.loop.models.FetchUserData
+import com.gn4k.loop.models.RepetitiveFun
 import com.gn4k.loop.models.StaticVariables
 import com.gn4k.loop.ui.post.ActivityPost
 import com.gn4k.loop.models.response.Post
@@ -101,7 +101,8 @@ class HomeFeedAdapter(private val postList: MutableList<Post>, private val activ
 
         holder.username.text = post.author_name
         holder.timeAgo.text = timeAgo(post.time)
-        holder.tvCaption.text = post.context
+//        holder.tvCaption.text = post.context
+        RepetitiveFun().makeLinksClickable(holder.tvCaption, post.context)
 
         holder.tvCaption.setCollapsedTextColor(R.color.app_color)
         holder.tvCaption.setExpandedTextColor(R.color.app_color)
@@ -112,8 +113,8 @@ class HomeFeedAdapter(private val postList: MutableList<Post>, private val activ
             holder.btnLikes.setImageResource(R.drawable.ic_heart)
         }
 
-        holder.likes.text = FetchUserData().formatCount(post.likeCount).toString()
-        holder.comments.text = FetchUserData().formatCount(post.commentCount).toString()
+        holder.likes.text = RepetitiveFun().formatCount(post.likeCount).toString()
+        holder.comments.text = RepetitiveFun().formatCount(post.commentCount).toString()
 
         holder.header.setOnClickListener {
             if(post.authorId.toInt()== MainHome.USER_ID.toInt()){
