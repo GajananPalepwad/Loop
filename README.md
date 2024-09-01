@@ -11,7 +11,7 @@
 <a href="https://crowdin.com/project/Loop"><img src="https://badges.crowdin.net/Loop/localized.svg"></img></a>
 <a href="https://github.com/GajananPalepwad/Loop/graphs/contributors"><img src="https://img.shields.io/github/contributors/GajananPalepwad/Loop" alt="contributors"/></a>
 <a href="https://discord.gg/9ryQcpKv"><img src="https://img.shields.io/discord/1269975536189571173/1269975536189571176"></img></a>
-<a href="https://github.com/GajananPalepwad/Loop/blob/main/LICENSE"><img src="https://img.shields.io/github/license/GajananPalepwad/Loop" alt="license"/></a>
+<a href="https://github.com/GajananPalepwad/Loop?tab=GPL-3.0-1-ov-file"><img src="https://img.shields.io/github/license/GajananPalepwad/Loop" alt="license"/></a>
 
 # Loop: The Social Media for Developers
 Are you tired of scrolling through irrelevant content on generic social media platforms? Welcome to Loop - the exclusive social network crafted specifically for developers, coders, and IT professionals. Immerse yourself in a world where every post, every interaction, and every feature is tailored to enhance your coding journey and professional growth.
