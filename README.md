@@ -75,21 +75,11 @@ Thanks to these awesome code contributors who keep this project going
 
 <a href="https://github.com/GajananPalepwad/Loop/graphs/contributors"><img src="https://opencollective.com/LoopApp/contributors.svg?width=890&button=false" /></a>
 
-### [Sponsors](https://opencollective.com/Loop#sponsor)
-<a href="https://opencollective.com/LoopApp#sponsor" target="_blank">
-  <img alt="YourProject Sponsors" src="https://opencollective.com/LoopApp/sponsors.svg?width=890" />
-</a>
 
 ### [Backers](https://opencollective.com/Loop#backer)
 
 A big thank you to each of our backers 🙏
 <a href="https://opencollective.com/LoopApp#backers" target="_blank"><img width=110 src="https://opencollective.com/LoopApp/backers/badge.svg?"></a>
-
-<p>Your generous donations mean the world to us, and we can't express our gratitude enough. Your support fuels our mission and helps us make a real difference</p>
-
-<a href="https://opencollective.com/LoopApp/donate" target="_blank">
-  <img alt="Donate to YourProject" src="https://opencollective.com/LoopApp/donate/button@2x.png?color=blue" width=200 />
-</a>
 
 ### [Translators](https://crowdin.com/project/yourproject/activity-stream)
 
@@ -97,5 +87,4 @@ Thanks to our translators for making this project accessible in various language
 
 License
 -------
-* [GPL-3.0 License](https://github.com/yourusername/yourproject/blob/main/LICENSE)
-* [Additional Licenses](https://github.com/yourusername/yourproject/blob/main/ADDITIONAL_LICENSES)
+* [GPL-3.0 License](https://github.com/GajananPalepwad/Loop?tab=GPL-3.0-1-ov-file)
