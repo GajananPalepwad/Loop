@@ -1,6 +1,6 @@
 package com.gn4k.loop.ui.auth
 
-import ApiService
+import com.gn4k.loop.api.ApiService
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -12,15 +12,12 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.gn4k.loop.R
 import com.gn4k.loop.api.RetrofitClient
-import com.gn4k.loop.databinding.ActivityLoginBinding
 import com.gn4k.loop.databinding.ActivityRegBinding
 import com.gn4k.loop.models.request.OtpResponse
 import com.gn4k.loop.models.request.RegisterRequest
 import com.gn4k.loop.models.request.UserRequest
-import com.gn4k.loop.models.response.GetProjects
 import com.gn4k.loop.models.response.UserAllDataResponse
 import com.gn4k.loop.models.response.UserResponse
-import com.gn4k.loop.notificationModel.SaveNotificationInDB
 import com.gn4k.loop.ui.home.MainHome
 import retrofit2.Call
 import retrofit2.Callback

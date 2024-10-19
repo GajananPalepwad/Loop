@@ -1,6 +1,6 @@
 package com.gn4k.loop.ui.msg
 
-import ApiService
+import com.gn4k.loop.api.ApiService
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log

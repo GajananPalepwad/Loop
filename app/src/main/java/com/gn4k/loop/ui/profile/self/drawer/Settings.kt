@@ -1,12 +1,11 @@
 package com.gn4k.loop.ui.profile.self.drawer
 
-import ApiService
+import com.gn4k.loop.api.ApiService
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.CompoundButton
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.edit
@@ -14,7 +13,6 @@ import com.gn4k.loop.R
 import com.gn4k.loop.api.RetrofitClient
 import com.gn4k.loop.databinding.ActivitySettingsBinding
 import com.gn4k.loop.models.request.DeleteUserRequest
-import com.gn4k.loop.models.request.NotificationRequest
 import com.gn4k.loop.models.response.CreateMeetingResponse
 import com.gn4k.loop.ui.SplashScreen
 import com.gn4k.loop.ui.home.MainHome

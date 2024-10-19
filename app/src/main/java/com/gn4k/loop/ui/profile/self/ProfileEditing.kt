@@ -1,19 +1,14 @@
 package com.gn4k.loop.ui.profile.self
 
-import ApiService
+import com.gn4k.loop.api.ApiService
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import com.gn4k.loop.R
 import com.gn4k.loop.api.RetrofitClient
 import com.gn4k.loop.databinding.ActivityProfileEditingBinding
-import com.gn4k.loop.models.request.JoinLeaveMeetRequest
 import com.gn4k.loop.models.request.UpdateProfileRequest
-import com.gn4k.loop.models.response.CreateMeetingResponse
 import com.gn4k.loop.models.response.UserResponse
 import com.gn4k.loop.ui.home.MainHome
 import retrofit2.Call

@@ -1,12 +1,11 @@
 package com.gn4k.loop.ui.projects
 
-import ApiService
+import com.gn4k.loop.api.ApiService
 import android.app.AlertDialog
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
-import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -14,13 +13,10 @@ import com.gn4k.loop.R
 import com.gn4k.loop.adapters.SkillsAdapter
 import com.gn4k.loop.api.RetrofitClient
 import com.gn4k.loop.databinding.ActivityMakeProjectBinding
-import com.gn4k.loop.models.request.AddProjectRequest
-import com.gn4k.loop.models.request.Person
 import com.gn4k.loop.models.request.UpdateProjectRequest
 import com.gn4k.loop.models.response.CreateMeetingResponse
 import com.gn4k.loop.models.response.Skill
 import com.gn4k.loop.ui.animation.CustomLoading
-import com.gn4k.loop.ui.home.MainHome
 import com.overflowarchives.linkpreview.ViewListener
 import `in`.galaxyofandroid.spinerdialog.SpinnerDialog
 import retrofit2.Call

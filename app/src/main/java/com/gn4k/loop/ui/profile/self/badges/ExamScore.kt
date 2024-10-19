@@ -1,26 +1,20 @@
 package com.gn4k.loop.ui.profile.self.badges
 
-import ApiService
+import com.gn4k.loop.api.ApiService
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Toast
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import com.gn4k.loop.R
 import com.gn4k.loop.api.RetrofitClient
 import com.gn4k.loop.databinding.ActivityExamScoreBinding
 import com.gn4k.loop.models.request.AddBadgeRequest
-import com.gn4k.loop.models.request.JoinLeaveMeetRequest
 import com.gn4k.loop.models.request.UserRequest
 import com.gn4k.loop.models.response.CreateMeetingResponse
 import com.gn4k.loop.models.response.UserAllDataResponse
-import com.gn4k.loop.ui.auth.ChooseRegOrLog
 import com.gn4k.loop.ui.home.MainHome
-import com.gn4k.loop.ui.profile.SkillSelector
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

@@ -1,6 +1,6 @@
 package com.gn4k.loop.notificationModel
 
-import ApiService
+import com.gn4k.loop.api.ApiService
 import android.content.Context
 import android.util.Log
 import android.widget.Toast

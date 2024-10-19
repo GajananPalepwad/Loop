@@ -1,6 +1,6 @@
 package com.gn4k.loop.adapters
 
-import ApiService
+import com.gn4k.loop.api.ApiService
 import android.content.Context
 import android.content.Intent
 import android.util.Log
@@ -14,9 +14,6 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-import androidx.cardview.widget.CardView
-import androidx.core.widget.NestedScrollView
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.gn4k.loop.R

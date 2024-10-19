@@ -1,3 +1,5 @@
+package com.gn4k.loop.api
+
 import com.gn4k.loop.models.request.*
 import com.gn4k.loop.models.response.*
 import com.gn4k.loop.ui.home.MainHome

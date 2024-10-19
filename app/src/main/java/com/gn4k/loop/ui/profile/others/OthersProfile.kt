@@ -1,6 +1,6 @@
 package com.gn4k.loop.ui.profile.others
 
-import ApiService
+import com.gn4k.loop.api.ApiService
 import android.content.Intent
 import android.content.res.ColorStateList
 import android.graphics.Color

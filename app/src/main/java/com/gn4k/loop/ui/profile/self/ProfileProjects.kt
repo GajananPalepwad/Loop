@@ -1,6 +1,6 @@
 package com.gn4k.loop.ui.profile.self
 
-import ApiService
+import com.gn4k.loop.api.ApiService
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -11,12 +11,10 @@ import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.gn4k.loop.R
 import com.gn4k.loop.adapters.ProfileProjectAdapter
-import com.gn4k.loop.adapters.ProjectAdapter
 import com.gn4k.loop.api.RetrofitClient
 import com.gn4k.loop.databinding.FragmentProfileProjectsBinding
 import com.gn4k.loop.models.response.GetProjects
 import com.gn4k.loop.ui.home.MainHome
-import com.gn4k.loop.ui.profile.others.OthersProfile
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

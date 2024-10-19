@@ -1,6 +1,6 @@
 package com.gn4k.loop.ui.profile.self.drawer
 
-import ApiService
+import com.gn4k.loop.api.ApiService
 import android.os.Bundle
 import android.util.Log
 import android.view.View

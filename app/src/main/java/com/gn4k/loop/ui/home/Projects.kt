@@ -1,6 +1,6 @@
 package com.gn4k.loop.ui.home
 
-import ApiService
+import com.gn4k.loop.api.ApiService
 import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
@@ -16,7 +16,6 @@ import com.gn4k.loop.R
 import com.gn4k.loop.adapters.ProjectAdapter
 import com.gn4k.loop.api.RetrofitClient
 import com.gn4k.loop.databinding.FragmentProjectsBinding
-import com.gn4k.loop.models.StaticVariables.Companion.posts
 import com.gn4k.loop.models.response.GetProjects
 import com.gn4k.loop.models.response.Project
 import com.gn4k.loop.ui.animation.CustomLoading

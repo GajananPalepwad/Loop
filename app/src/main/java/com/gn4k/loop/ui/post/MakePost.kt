@@ -1,6 +1,6 @@
 package com.gn4k.loop.ui.post
 
-import ApiService
+import com.gn4k.loop.api.ApiService
 import android.animation.ValueAnimator
 import android.app.Activity
 import android.content.Intent
@@ -46,7 +46,6 @@ import retrofit2.Callback
 import retrofit2.Response
 import java.io.ByteArrayOutputStream
 import java.io.File
-import java.util.jar.Manifest
 
 class MakePost : AppCompatActivity() {
 

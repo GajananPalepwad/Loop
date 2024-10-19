@@ -1,12 +1,11 @@
 package com.gn4k.loop.ui.projects
 
-import ApiService
+import com.gn4k.loop.api.ApiService
 import android.app.AlertDialog
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
-import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager

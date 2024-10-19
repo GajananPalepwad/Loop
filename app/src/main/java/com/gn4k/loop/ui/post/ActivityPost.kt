@@ -1,6 +1,6 @@
 package com.gn4k.loop.ui.post
 
-import ApiService
+import com.gn4k.loop.api.ApiService
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle

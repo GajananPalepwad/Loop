@@ -1,6 +1,6 @@
 package com.gn4k.loop.ui.home
 
-import ApiService
+import com.gn4k.loop.api.ApiService
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -10,11 +10,9 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.gn4k.loop.R
-import com.gn4k.loop.adapters.MeetingListAdapter
 import com.gn4k.loop.adapters.NotificationAdapter
 import com.gn4k.loop.api.RetrofitClient
 import com.gn4k.loop.databinding.FragmentNotificationScreenBinding
-import com.gn4k.loop.models.response.MeetingResponse
 import com.gn4k.loop.models.response.NotificationListResponse
 import com.gn4k.loop.ui.animation.CustomLoading
 import retrofit2.Call

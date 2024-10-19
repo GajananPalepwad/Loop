@@ -1,6 +1,6 @@
 package com.gn4k.loop.adapters
 
-import ApiService
+import com.gn4k.loop.api.ApiService
 import android.app.Activity
 import android.content.Intent
 import android.util.Log

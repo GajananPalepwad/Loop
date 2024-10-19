@@ -1,7 +1,6 @@
 package com.gn4k.loop.ui.home
 
-import ApiService
-import android.animation.ValueAnimator
+import com.gn4k.loop.api.ApiService
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -10,21 +9,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.gn4k.loop.adapters.PostAdapter
 import com.gn4k.loop.R
-import com.gn4k.loop.adapters.ExploreAdapter
 import com.gn4k.loop.adapters.HomeFeedAdapter
 import com.gn4k.loop.api.RetrofitClient
 import com.gn4k.loop.databinding.FragmentHomeFeedBinding
 import com.gn4k.loop.models.StaticVariables.Companion.posts
 import com.gn4k.loop.models.request.HomeFeedRequest
 import com.gn4k.loop.models.request.MarkSeenPostRequest
-import com.gn4k.loop.models.request.MarkSeenRequest
-import com.gn4k.loop.models.response.ExploreResponse
 import com.gn4k.loop.models.response.MarkSeenResponse
 import com.gn4k.loop.ui.post.MakePost
 import com.gn4k.loop.ui.profile.self.Profile

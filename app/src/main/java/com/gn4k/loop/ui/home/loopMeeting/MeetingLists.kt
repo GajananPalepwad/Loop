@@ -1,6 +1,6 @@
 package com.gn4k.loop.ui.home.loopMeeting
 
-import ApiService
+import com.gn4k.loop.api.ApiService
 import android.Manifest
 import android.app.DatePickerDialog
 import android.app.Dialog

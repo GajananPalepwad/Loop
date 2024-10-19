@@ -1,6 +1,6 @@
 package com.gn4k.loop.ui.profile.followLists
 
-import ApiService
+import com.gn4k.loop.api.ApiService
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher

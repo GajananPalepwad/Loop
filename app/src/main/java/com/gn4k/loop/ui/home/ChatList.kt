@@ -1,6 +1,6 @@
 package com.gn4k.loop.ui.home
 
-import ApiService
+import com.gn4k.loop.api.ApiService
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -15,12 +15,9 @@ import com.gn4k.loop.R
 import com.gn4k.loop.adapters.ConversationAdapter
 import com.gn4k.loop.api.RetrofitClient
 import com.gn4k.loop.databinding.FragmentChatListBinding
-import com.gn4k.loop.models.StaticVariables.Companion.posts
 import com.gn4k.loop.models.response.Conversation
 import com.gn4k.loop.models.response.ConversationsResponse
 import com.gn4k.loop.ui.animation.CustomLoading
-import com.gn4k.loop.ui.profile.followLists.FollowerList
-import com.gn4k.loop.ui.profile.followLists.FollowingList
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

@@ -1,6 +1,6 @@
 package com.gn4k.loop.ui.profile.self
 
-import ApiService
+import com.gn4k.loop.api.ApiService
 import android.app.Activity
 import android.content.Context
 import android.content.Intent

@@ -1,6 +1,6 @@
 package com.gn4k.loop.ui.profile.followLists
 
-import ApiService
+import com.gn4k.loop.api.ApiService
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -13,14 +13,11 @@ import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.gn4k.loop.R
 import com.gn4k.loop.adapters.FollowerAdapter
-import com.gn4k.loop.adapters.FollowingAdapter
-import com.gn4k.loop.adapters.SearchUserAdapter
 import com.gn4k.loop.api.RetrofitClient
 import com.gn4k.loop.databinding.FragmentFollowingListBinding
 import com.gn4k.loop.models.request.UserRequest
 import com.gn4k.loop.models.response.Follower
 import com.gn4k.loop.models.response.FollowerResponse
-import com.gn4k.loop.models.response.SearchUserResponse
 import com.gn4k.loop.ui.animation.CustomLoading
 import retrofit2.Call
 import retrofit2.Callback

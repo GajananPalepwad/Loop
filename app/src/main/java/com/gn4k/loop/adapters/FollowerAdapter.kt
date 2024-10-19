@@ -1,7 +1,7 @@
 package com.gn4k.loop.adapters
 
 
-import ApiService
+import com.gn4k.loop.api.ApiService
 import android.content.Context
 import android.content.Intent
 import android.util.Log
@@ -13,7 +13,6 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.widget.AppCompatButton
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide

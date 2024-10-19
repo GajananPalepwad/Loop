@@ -1,8 +1,7 @@
 package com.gn4k.loop.models
 
-import ApiService
+import com.gn4k.loop.api.ApiService
 import android.content.Context
-import android.graphics.Color
 import android.text.SpannableString
 import android.text.Spanned
 import android.text.method.LinkMovementMethod
