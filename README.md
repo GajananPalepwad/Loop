@@ -31,7 +31,7 @@ Install
 ---------
 <div style="display:flex;">
 
-<a href="https://play.google.com/store/apps/details?id=com.yourproject&utm_source=global_co&utm_medium=prtnr&utm_content=Mar2515&utm_campaign=PartBadge&pcampaignid=MKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1">
+<a href="https://play.google.com/store/apps/details?id=com.gn4k.loop">
     <img alt="Get it on Google Play" height="80"
         src="https://freelogopng.com/images/all_img/1664287128google-play-store-logo-png.png" /></a>
 
